@@ -1,0 +1,20 @@
+1. Buat database di phpmyadmin / mysql dengan nama university_exam
+2. Jalankan aplikasi pada folder backend dengan menggunakan intellij
+3. Jalankan aplikasi pada folder frontend dengan menggunakan vscode dengan langkah-langkah seperti berikut:
+	1. yarn install
+	2. yarn start
+4. Daftarkan akun dengan menggunakan aplikasi postman dengan langkah-langkah seperti berikut:
+	1. pada bagian url berikan localhost:8080/api/auth/signup
+	2. pada body isikan
+		1. photo		=> type file
+		2. name		=> type text
+		3. username		=> type text
+		4. email		=> type text
+		5. password		=> type text
+
+ATAU
+
+lakukan import data dari file university_exam.sql pada phpmyadmin / mysql
+dan login pada frontend dengan menggunakan akun berikut:
+	- email	=> dito@gmail.com
+	- password	=> password

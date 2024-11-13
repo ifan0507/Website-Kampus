@@ -1,0 +1,13 @@
+package com.doyatama.university.payload.galeri_kampus;
+import org.springframework.web.multipart.MultipartFile;
+
+public class GaleriKampusRequest {
+    private MultipartFile file;
+
+    public MultipartFile getFile(){
+        return file;
+    }
+    public void setFile(MultipartFile file){
+        this.file = file;
+    }
+}

@@ -1,0 +1,104 @@
+import React, { Component } from "react";
+import axios from 'axios';
+
+import { Form, Input, Modal, Select, Upload, Icon } from "antd";
+const { TextArea } = Input;
+class AddPendaftaranForm extends Component {
+  state = {
+    selectedFile: null,
+  };
+
+  fileSelectedHandler = (event) => {
+    this.setState({
+      selectedFile: event.target.files[0],
+    });
+  };
+
+  fileUploadHandler = () => {
+    const formData = new FormData();
+    const options = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      data: formData,
+      method: 'POST',
+    };
+  
+    return axios('api/pendaftaran', options);
+
+  };
+
+  render() {
+    const { visible, onCancel, onOk, form, confirmLoading } = this.props;
+    const { getFieldDecorator } = form;
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 8 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 },
+      },
+    };
+    return (
+      <Modal
+        title="Tambah Jalur Pendaftaran"
+        visible={visible}
+        onCancel={onCancel}
+        onOk={onOk}
+        confirmLoading={confirmLoading}
+      >
+        <Form {...formItemLayout}>
+          <Form.Item label="Jalur:">
+            {getFieldDecorator("name", {
+              rules: [
+                { required: true, message: "Silahkan isikan jalur pendaftaran" },
+              ],
+            })(<Select style={{ width: 250 }}>
+              <Select.Option value="Seleksi Nasional Berdasarkan Prestasi (SNBP)">Jalur SNBP</Select.Option>
+              <Select.Option value="Seleksi Nasional Berdasarkan Tes (SNBT)">Jalur SNBT</Select.Option>
+              <Select.Option value="Jalur Mandiri Khusus">Jalur Mandiri Khusus</Select.Option>
+              <Select.Option value="Jalur Mandiri Khusus Tahap 2">Jalur Mandiri Khusus Tahap 2</Select.Option>
+              <Select.Option value="Jalur Mandiri Prestasi">Jalur Mandiri Prestasi</Select.Option>
+              <Select.Option value="Jalur Mandiri Gelombang 1">Jalur Mandiri Gelombang 1</Select.Option>
+              <Select.Option value="Jalur Mandiri Gelombang 2">Jalur Mandiri Gelombang 2</Select.Option>
+              <Select.Option value="Jalur Mandiri Gelombang 3">Jalur Mandiri Gelombang 3</Select.Option>
+              <Select.Option value="Jalur Mandiri Kampus Lumajang">Jalur Mandiri Kampus Lumajang</Select.Option>
+            </Select>)}
+          </Form.Item>
+          <Form.Item label="Deskripsi:">
+            {getFieldDecorator("description", {
+              rules: [
+                {
+                  required: true,
+                  message: "Silahkan isikan deskripsi jalur pendaftaran",
+                },
+              ],
+            })(<TextArea rows={4} placeholder="Deskripsi Jalur" />)}
+          </Form.Item>
+          <Form.Item label="File" name="file">
+            {getFieldDecorator("file")(
+              <Upload.Dragger
+              beforeUpload={() => false}
+              listType="picture"
+            >
+              <p className="ant-upload-drag-icon">
+                <Icon type="inbox" />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to this area to upload
+              </p>
+              <p className="ant-upload-hint">
+                Support for a single or bulk upload.
+              </p>
+            </Upload.Dragger>
+            )}
+          </Form.Item>
+        </Form>
+      </Modal>
+    );
+  }
+}
+
+export default Form.create({ name: "AddPendaftaranForm" })(AddPendaftaranForm);

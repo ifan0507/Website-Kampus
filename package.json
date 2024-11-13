@@ -1,0 +1,27 @@
+{
+  "name": "psdku-lumajang",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "admin": "npm start --prefix admin",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run admin\" \"npm run client\"",
+    "build": "npm run build --prefix client --prefic admin"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/naufalyukafi/psdku-lumajang.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/naufalyukafi/psdku-lumajang/issues"
+  },
+  "homepage": "https://github.com/naufalyukafi/psdku-lumajang#readme",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}
