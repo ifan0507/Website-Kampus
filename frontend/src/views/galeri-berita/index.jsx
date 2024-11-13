@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Card, Button, Table, message, Divider } from "antd";
-import { getGaleriBaru, deleteGaleriBaru, editGaleriBaru, addGaleriBaru, getGaleryBaruById } from "@/api/galeri-baru";
+import { getGaleriBaru, deleteGaleriBaru, editGaleriBaru, addGaleriBaru, getGaleryBaruById } from "@/api/galeri-berita";
 import TypingCard from "@/components/TypingCard";
 import EditGaleriBaruForm from "./forms/edit-galeribaru-form";
 import AddGaleriBaruForm from "./forms/add-galeribaru-form";

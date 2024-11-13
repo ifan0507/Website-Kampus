@@ -15,7 +15,7 @@ export function addGaleriBaru(data) {
   }
 
   return request({
-    url: "/galeri-baru",
+    url: "/galeri-berita",
     method: "post",
     data: formData, // Mengirim FormData dengan file
   });
@@ -30,14 +30,14 @@ export function addGaleriBaru(data) {
 
 export function getGaleriBaru(page = 0, size = 5) {
   return request({
-    url: `/galeri-baru?page=${page}&size=${size}`,
+    url: `/galeri-berita?page=${page}&size=${size}`,
     method: "get",
   });
 }
 
 export function getGaleryBaruById(id) {
   return request({
-    url: `/galeri-baru/${id}`,
+    url: `/galeri-berita/${id}`,
     method: "get",
   });
 }
@@ -56,7 +56,7 @@ export function editGaleriBaru(data, id) {
   }
   console.log(formData);
   return request({
-    url: `/galeri-baru/${id}`,
+    url: `/galeri-berita/${id}`,
     // method: "put",
     method: "put",
     data: formData, // Mengirim FormData dengan file
@@ -65,7 +65,7 @@ export function editGaleriBaru(data, id) {
 
 export function deleteGaleriBaru(data) {
   return request({
-    url: `/galeri-baru/${data.id}`,
+    url: `/galeri-berita/${data.id}`,
     method: "delete",
     data,
   });

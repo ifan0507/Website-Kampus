@@ -125,7 +125,7 @@ const GaleriKampus = Loadable({
   loading: Loading,
 });
 const GaleriBaru = Loadable({
-  loader: () => import(/*webpackChunkName:'GaleriKampus'*/ "@/views/galeri-baru"),
+  loader: () => import(/*webpackChunkName:'GaleriKampus'*/ "@/views/galeri-berita"),
   loading: Loading,
 });
 const CampusLife = Loadable({
@@ -288,7 +288,7 @@ export default [
   { path: "/kalender", component: Kalender, roles: ["ROLE_ADMINISTRATOR"] },
   { path: "/campus_life", component: CampusLife, roles: ["ROLE_ADMINISTRATOR"] },
   { path: "/galeri-kampus", component: GaleriKampus, roles: ["ROLE_ADMINISTRATOR"] },
-  { path: "/galeri-baru", component: GaleriBaru, roles: ["ROLE_ADMINISTRATOR"] },
+  { path: "/galeri-berita", component: GaleriBaru, roles: ["ROLE_ADMINISTRATOR"] },
 
   {
     path: "/study-program",

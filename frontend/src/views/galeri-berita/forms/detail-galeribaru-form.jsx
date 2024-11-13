@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Modal, Table } from "antd";
-import { getGaleryBaruById } from "@/api/galeri-baru";
+import { getGaleryBaruById } from "@/api/galeri-berita";
 
 const { Column } = Table;
 

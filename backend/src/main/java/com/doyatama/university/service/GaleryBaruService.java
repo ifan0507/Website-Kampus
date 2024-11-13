@@ -144,67 +144,8 @@ public class GaleryBaruService {
         return galeryBaruResponse;
     }
 
-    // @Transactional
-    // public GaleryBaru updateGaleryBaru(@Valid @RequestBody GaleryBaruRequest
-    // galeryBaruRequest, Long id,
-    // UserPrincipal currentUser,
-    // @RequestParam("files") List<MultipartFile> files) throws IOException {
-
-    // return galeryBaruRepository.findById(id).map(galeryBarus -> {
-    // // Update basic fields
-    // galeryBarus.setName(galeryBaruRequest.getName());
-    // galeryBarus.setDescription(galeryBaruRequest.getDescription());
-    // galeryBarus.setFileType(files.isEmpty() ? null :
-    // files.get(0).getContentType());
-    // galeryBarus.getFileNames().removeIf(existFileName -> {
-    // boolean shouldRemove = files.stream().noneMatch(
-    // file ->
-    // existFileName.getFileName().equals(StringUtils.cleanPath(file.getOriginalFilename())));
-    // if (shouldRemove) {
-    // existFileName.setGallery(null);
-    // }
-    // return shouldRemove;
-    // });
-
-    // // // Tambahkan atau update file baru
-    // for (MultipartFile file : files) {
-    // String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-    // GaleryFileName existingFile = galeryBarus.getFileNames().stream()
-    // .filter(existFileName -> existFileName.getFileName().equals(fileName))
-    // .findFirst()
-    // .orElse(null);
-
-    // if (existingFile == null) {
-    // // Jika file tidak ada, tambahkan baru
-    // GaleryFileName galeryFileName = new GaleryFileName();
-    // galeryFileName.setFileName(fileName);
-    // galeryFileName.setGallery(galeryBarus);
-
-    // try {
-    // galeryFileName.setData(file.getBytes());
-    // } catch (IOException e) {
-    // throw new RuntimeException("Error reading file content: " + e.getMessage(),
-    // e);
-    // }
-
-    // galeryBarus.getFileNames().add(galeryFileName);
-    // } else {
-
-    // try {
-    // existingFile.setData(file.getBytes());
-    // } catch (IOException e) {
-    // throw new RuntimeException("Error reading file content: " + e.getMessage(),
-    // e);
-    // }
-    // }
-    // }
-
-    // return galeryBaruRepository.save(galeryBarus);
-    // }).orElseThrow(() -> new ResourceNotFoundException("Galery", "id", id));
-    // }
-
     @Transactional
-    public GaleryBaru updateGaleryBaru(@Valid @RequestBody GaleryBaruRequest galeryBaruRequest, Long id,
+    public GaleryBaru updateGaleryBaru(@Valid GaleryBaruRequest galeryBaruRequest, Long id,
             UserPrincipal currentUser,
             @RequestParam("files") List<MultipartFile> files) throws IOException {
 
@@ -213,45 +154,49 @@ public class GaleryBaruService {
             galeryBarus.setName(galeryBaruRequest.getName());
             galeryBarus.setDescription(galeryBaruRequest.getDescription());
             galeryBarus.setFileType(files.isEmpty() ? null : files.get(0).getContentType());
-            galeryBarus.getFileNames().removeIf(existFileName -> {
-                boolean shouldRemove = files.stream().noneMatch(
-                        file -> existFileName.getFileName().equals(StringUtils.cleanPath(file.getOriginalFilename())));
+
+            // Buat daftar nama file baru
+            List<String> newFileNames = files.stream()
+                    .map(file -> StringUtils.cleanPath(file.getOriginalFilename()))
+                    .toList();
+
+            // Hapus file lama yang tidak ada dalam daftar file baru
+            galeryBarus.getFileNames().removeIf(existingFile -> {
+                boolean shouldRemove = !newFileNames.contains(existingFile.getFileName());
                 if (shouldRemove) {
-                    existFileName.setGallery(null);
+                    existingFile.setGallery(null); // Putuskan relasi dengan galeri
                 }
                 return shouldRemove;
             });
 
-            // // Tambahkan atau update file baru
+            // Tambahkan atau perbarui file baru
             for (MultipartFile file : files) {
                 String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+
+                // Cari file dengan nama yang sama
                 GaleryFileName existingFile = galeryBarus.getFileNames().stream()
-                        .filter(existFileName -> existFileName.getFileName().equals(fileName))
+                        .filter(f -> f.getFileName().equals(fileName))
                         .findFirst()
                         .orElse(null);
 
-                if (existingFile == null) {
-                    // Jika file tidak ada, tambahkan baru
-                    GaleryFileName galeryFileName = new GaleryFileName();
-                    galeryFileName.setFileName(fileName);
-                    galeryFileName.upGallery(id);
-
-                    try {
-                        galeryFileName.setData(file.getBytes());
-                    } catch (IOException e) {
-                        throw new RuntimeException("Error reading file content: " + e.getMessage(),
-                                e);
-                    }
-
-                    galeryBarus.getFileNames().add(galeryFileName);
-                } else {
-
+                if (existingFile != null) {
+                    // Update data file jika sudah ada
                     try {
                         existingFile.setData(file.getBytes());
                     } catch (IOException e) {
-                        throw new RuntimeException("Error reading file content: " + e.getMessage(),
-                                e);
+                        throw new RuntimeException("Failed to update file content for file: " + fileName, e);
                     }
+                } else {
+                    // Tambahkan file baru jika belum ada
+                    GaleryFileName newFile = new GaleryFileName();
+                    newFile.setFileName(fileName);
+                    newFile.setGallery(galeryBarus);
+                    try {
+                        newFile.setData(file.getBytes());
+                    } catch (IOException e) {
+                        throw new RuntimeException("Failed to read file content for file: " + fileName, e);
+                    }
+                    galeryBarus.getFileNames().add(newFile);
                 }
             }
 

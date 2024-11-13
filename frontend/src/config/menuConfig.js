@@ -82,8 +82,8 @@ const menuList = [
     roles: ["ROLE_ADMINISTRATOR"],
   },
   {
-    title: "Galeri Baru",
-    path: "/galeri-baru",
+    title: "Galeri Berita",
+    path: "/galeri-berita",
     icon: "picture",
     roles: ["ROLE_ADMINISTRATOR"],
   },
