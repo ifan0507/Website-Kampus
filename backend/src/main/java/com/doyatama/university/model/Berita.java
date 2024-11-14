@@ -46,6 +46,7 @@ public class Berita {
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("category_id")
+
     private CategoryBerita categoryBerita;
 
     public Berita() {
