@@ -72,28 +72,34 @@ public class BeritaService {
     public PagedResponse<BeritaResponse> getAllBerita(int page, int size) {
         validatePageNumberAndSize(page, size);
 
-        // Retrieve Polls
+        // Retrieve Berita
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id");
         Page<Berita> beritas = beritaRepository.findAll(pageable);
+
         if (beritas.getNumberOfElements() == 0) {
             return new PagedResponse<>(Collections.emptyList(), beritas.getNumber(),
                     beritas.getSize(), beritas.getTotalElements(), beritas.getTotalPages(), beritas.isLast(), 200);
         }
-        // Map Polls to PollResponses containing vote counts and poll creator details
+
         List<BeritaResponse> beritaResponses = beritas.map(asResponse -> {
             BeritaResponse beritaResponse = new BeritaResponse();
             beritaResponse.setId(asResponse.getId());
-            // organisasiResponse.setCreatedAt(asResponse.getCreatedAt());
-            // organisasiResponse.setUpdatedAt(asResponse.getUpdatedAt());
             beritaResponse.setName(asResponse.getName());
-            beritaResponse.setCategoryId(
-                    asResponse.getCategoryBerita() != null ? asResponse.getCategoryBerita().getId() : null);
+
+            // Mengambil nama kategori jika ada, jika tidak maka null
+            beritaResponse.setCategoryName(asResponse.getCategoryBerita() != null
+                    ? asResponse.getCategoryBerita().getName()
+                    : "Kategori Tidak Ditemukan"); // default value jika category null
+
+            // Mengambil nama galeri jika ada
+            beritaResponse.setGalleryName(asResponse.getGallery() != null
+                    ? asResponse.getGallery().getName()
+                    : "Galeri Tidak Ditemukan"); // default value jika gallery null
+
             beritaResponse.setDescription(asResponse.getDescription());
             beritaResponse.setSelengkapnya(asResponse.getSelengkapnya());
+
             beritaResponse.setGaleryId(asResponse.getGallery() != null ? asResponse.getGallery().getId() : null);
-            // beritaResponse.setFileName(asResponse.getFileName());
-            // beritaResponse.setFileType(asResponse.getFileType());
-            beritaResponse.setData(asResponse.getData());
 
             return beritaResponse;
         }).getContent();

@@ -1,11 +1,6 @@
 import React, { Component } from "react";
 import { Card, Button, Table, message, Divider } from "antd";
-import {
-  getBeritas,
-  deleteBerita,
-  editBerita,
-  addBerita,
-} from "@/api/berita";
+import { getBeritas, deleteBerita, editBerita, addBerita } from "@/api/berita";
 import TypingCard from "@/components/TypingCard";
 import EditBeritaForm from "./forms/edit-question-form";
 import AddBeritaForm from "./forms/add-question-form";
@@ -128,37 +123,13 @@ class Berita extends Component {
         <TypingCard title="Manajemen Berita" source={cardContent} />
         <br />
         <Card title={title}>
-          <Table
-            bordered
-            rowKey="id"
-            dataSource={beritas}
-            pagination={{ pageSize: 5 }}
-          >
+          <Table bordered rowKey="id" dataSource={beritas} pagination={{ pageSize: 5 }}>
             {/* <Column title="ID Selayang" dataIndex="id" key="id" align="center" /> */}
             <Column title="Judul" dataIndex="name" key="name" align="center" />
-            <Column
-              title="Deskripsi"
-              dataIndex="description"
-              key="description"
-              align="center"
-            />
-            <Column
-              title="Selengkapnya"
-              dataIndex="selengkapnya"
-              key="selengkapnya"
-              align="center"
-            />
-            <Column
-              title="Images"
-              dataIndex="image"
-              key="image"
-              align="center"
-              render={(text, row) => {
-                // console.log(row.data)
-                return row.data != null ? 
-                <BlobImageDisplay blob={row.data} /> : <></> 
-            }}
-            />
+            <Column title="Categori Berita" dataIndex="categoryName" key="categoryName" align="center" />
+            <Column title="Galeri Berita" dataIndex="galleryName" key="galleryName" align="center" />
+            <Column title="Deskripsi" dataIndex="description" key="description" align="center" />
+            <Column title="Selengkapnya" dataIndex="selengkapnya" key="selengkapnya" align="center" />
             <Column
               title="Operasi"
               key="action"
@@ -166,21 +137,9 @@ class Berita extends Component {
               align="center"
               render={(text, row) => (
                 <span>
-                  <Button
-                    type="primary"
-                    shape="circle"
-                    icon="edit"
-                    title="edit"
-                    onClick={this.handleEditBerita.bind(null, row)}
-                  />
+                  <Button type="primary" shape="circle" icon="edit" title="edit" onClick={this.handleEditBerita.bind(null, row)} />
                   <Divider type="vertical" />
-                  <Button
-                    type="primary"
-                    shape="circle"
-                    icon="delete"
-                    title="delete"
-                    onClick={this.handleDeleteBerita.bind(null, row)}
-                  />
+                  <Button type="primary" shape="circle" icon="delete" title="delete" onClick={this.handleDeleteBerita.bind(null, row)} />
                 </span>
               )}
             />
@@ -188,18 +147,14 @@ class Berita extends Component {
         </Card>
         <EditBeritaForm
           currentRowData={this.state.currentRowData}
-          wrappedComponentRef={(formRef) =>
-            (this.editBeritaFormRef = formRef)
-          }
+          wrappedComponentRef={(formRef) => (this.editBeritaFormRef = formRef)}
           visible={this.state.editBeritaModalVisible}
           confirmLoading={this.state.editBeritaModalLoading}
           onCancel={this.handleCancel}
           onOk={this.handleEditBeritaOk}
         />
         <AddBeritaForm
-          wrappedComponentRef={(formRef) =>
-            (this.addBeritaFormRef = formRef)
-          }
+          wrappedComponentRef={(formRef) => (this.addBeritaFormRef = formRef)}
           visible={this.state.addBeritaModalVisible}
           confirmLoading={this.state.addBeritaModalLoading}
           onCancel={this.handleCancel}
