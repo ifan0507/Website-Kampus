@@ -54,15 +54,33 @@ public class BeritaController {
         public ResponseEntity<?> createBerita(@AuthenticationPrincipal UserPrincipal currentUser,
                         @Valid @RequestBody BeritaRequest beritaRequest) throws IOException {
                 System.out.println("Received request: " + beritaRequest);
+                System.out.println("CategoryId: " + beritaRequest.getCategoryId());
+                System.out.println("GaleryId: " + beritaRequest.getGaleryId());
+                System.out.println("Name: " + beritaRequest.getName());
+                System.out.println("Description: " + beritaRequest.getDescription());
+                System.out.println("Selengkapnya: " + beritaRequest.getSelengkapnya());
+
+                if (currentUser == null) {
+                        System.out.println("currentUser is null!");
+                } else {
+                        System.out.println("Current user: " + currentUser.getId());
+                }
+
                 // Proses Berita
-                Berita berita = beritaService.createBerita(currentUser, beritaRequest);
+                try {
+                        Berita berita = beritaService.createBerita(currentUser, beritaRequest);
 
-                URI location = ServletUriComponentsBuilder
-                                .fromCurrentRequest().path("/{beritaId}")
-                                .buildAndExpand(berita.getId()).toUri();
+                        URI location = ServletUriComponentsBuilder
+                                        .fromCurrentRequest().path("/{beritaId}")
+                                        .buildAndExpand(berita.getId()).toUri();
 
-                return ResponseEntity.created(location)
-                                .body(new ApiResponse(true, "Berita Created Successfully"));
+                        return ResponseEntity.created(location)
+                                        .body(new ApiResponse(true, "Berita Created Successfully"));
+                } catch (Exception e) {
+                        System.out.println("Error processing request: " + e.getMessage());
+                        return new ResponseEntity<>(new ApiResponse(false, "Failed to create berita"),
+                                        HttpStatus.INTERNAL_SERVER_ERROR);
+                }
         }
 
         @PutMapping("/{beritaId}")

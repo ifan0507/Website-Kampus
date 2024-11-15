@@ -83,13 +83,16 @@ class Berita extends Component {
     });
   };
 
-  handleAddBeritaOk = (_) => {
+  handleAddBeritaOk = () => {
     const { form } = this.addBeritaFormRef.props;
     form.validateFields((err, values) => {
       if (err) {
         return;
       }
+      console.log("Data dikirim ke API:", values);
+
       this.setState({ addBeritaModalLoading: true });
+
       addBerita(values)
         .then((response) => {
           form.resetFields();
@@ -101,10 +104,13 @@ class Berita extends Component {
           this.getBeritas();
         })
         .catch((e) => {
-          message.success("Gagal menambahkan, silakan coba lagi!");
+          this.setState({ addBeritaModalLoading: false });
+          message.error("Gagal menambahkan, silakan coba lagi!");
+          console.error("Error saat menambahkan berita:", e);
         });
     });
   };
+
   componentDidMount() {
     this.getBeritas();
   }

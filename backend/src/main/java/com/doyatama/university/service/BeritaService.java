@@ -107,17 +107,32 @@ public class BeritaService {
                 beritas.getSize(), beritas.getTotalElements(), beritas.getTotalPages(), beritas.isLast(), 200);
     }
 
-    public Berita createBerita(UserPrincipal currentUser, @Valid BeritaRequest beritaRequest)
-            throws IOException {
+    public Berita createBerita(UserPrincipal currentUser, @Valid BeritaRequest beritaRequest) throws IOException {
+        // Log untuk melihat data beritaRequest yang diterima
+        System.out.println("Processing Berita with request: " + beritaRequest);
 
-        // Ambil category dan galery berdasarkan ID dari request
+        // Ambil category berdasarkan ID dari request
         CategoryBerita category = categoryRepository.findById(beritaRequest.getCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Category not found with id ", "id", beritaRequest.getCategoryId()));
 
-        GaleryBaru galeryBaru = galeryBaruReposytory.findById(beritaRequest.getGaleryId())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Galery not found with id ", "id", beritaRequest.getGaleryId()));
+        // Log kategori yang ditemukan
+        System.out.println("Found Category: " + category);
+
+        // Ambil galeri berdasarkan ID dari request, cek null terlebih dahulu
+        GaleryBaru galeryBaru = null;
+        if (beritaRequest.getGaleryId() != null) {
+            galeryBaru = galeryBaruReposytory.findById(beritaRequest.getGaleryId())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Galery not found with id ", "id", beritaRequest.getGaleryId()));
+        }
+
+        // Log galeri yang ditemukan (jika ada)
+        if (galeryBaru != null) {
+            System.out.println("Found Galery: " + galeryBaru);
+        } else {
+            System.out.println("No Galery found, skipping galery assignment.");
+        }
 
         // Proses berita
         Berita berita = new Berita();
@@ -125,9 +140,9 @@ public class BeritaService {
         berita.setCategoryBerita(category);
         berita.setDescription(beritaRequest.getDescription());
         berita.setSelengkapnya(beritaRequest.getSelengkapnya());
-        berita.setGallery(galeryBaru);
+        berita.setGallery(galeryBaru); // Galeri bisa null jika tidak ada
 
-        // Simpan berita
+        // Simpan berita ke database
         return beritaRepository.save(berita);
     }
 
