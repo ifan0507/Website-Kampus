@@ -13,23 +13,13 @@ export function addBerita(data) {
       name: data.name,
       description: data.description,
       selengkapnya: data.selengkapnya, // Pastikan sesuai dengan nama field di backend
-      categoryId: categoryId || null, // Pastikan hanya mengirimkan satu ID kategori atau null
+      categoryId: categoryId, // Pastikan hanya mengirimkan satu ID kategori atau null
       galeryId: galeryId || null, // Pastikan hanya mengirimkan satu ID galeri atau null
     },
     headers: {
       "Content-Type": "application/json", // Pastikan menggunakan JSON
     },
-  })
-  .then((response) => {
-    if (response.status === 200 || response.status === 201) {
-      message.success("Berita berhasil ditambahkan!"); // Menampilkan pesan sukses
-    }
-    return response.data; // Mengembalikan data yang diterima dari backend
-  })
-  .catch((error) => {
-    message.error("Gagal menambahkan berita, coba lagi!"); // Menampilkan pesan error
-    console.error(error); // Log kesalahan untuk debugging
-  });
+  }) 
 }
 
 export function getBeritas() {

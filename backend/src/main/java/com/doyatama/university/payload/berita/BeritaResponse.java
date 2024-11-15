@@ -16,20 +16,23 @@ public class BeritaResponse {
     private Instant updatedAt;
     private Instant createdAt;
     private Long galeryId;
+    private String categoryName; // Nama kategori
+    private String galleryName; // Nama galeri
+
     @Lob
     private byte[] data;
 
     public BeritaResponse() {
     }
 
-    public BeritaResponse(Long id, String name, Long categoryId, String description, String selengkapnya,
-            Instant updatedAt, Instant createdAt, Long galeryId, byte[] data) {
+    public BeritaResponse(Long id, String name, String categoryName, String galleryName, String description,
+            String selengkapnya, Instant updatedAt, Instant createdAt, Long galeryId, byte[] data) {
         this.id = id;
         this.name = name;
-        this.categoryId = categoryId;
+        this.categoryName = categoryName;
+        this.galleryName = galleryName;
         this.description = description;
         this.selengkapnya = selengkapnya;
-
         this.updatedAt = updatedAt;
         this.createdAt = createdAt;
         this.galeryId = galeryId;
@@ -106,5 +109,21 @@ public class BeritaResponse {
 
     public Long getCategoryId() {
         return categoryId;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setGalleryName(String galleryName) {
+        this.galleryName = galleryName;
+    }
+
+    public String getGalleryName() {
+        return galleryName;
     }
 }

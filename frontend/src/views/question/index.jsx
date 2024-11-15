@@ -1,11 +1,6 @@
 import React, { Component } from "react";
 import { Card, Button, Table, message, Divider } from "antd";
-import {
-  getBeritas,
-  deleteBerita,
-  editBerita,
-  addBerita,
-} from "@/api/berita";
+import { getBeritas, deleteBerita, editBerita, addBerita } from "@/api/berita";
 import TypingCard from "@/components/TypingCard";
 import EditBeritaForm from "./forms/edit-question-form";
 import AddBeritaForm from "./forms/add-question-form";
@@ -112,7 +107,7 @@ class Berita extends Component {
         });
     });
   };
-  
+
   componentDidMount() {
     this.getBeritas();
   }
@@ -139,8 +134,20 @@ class Berita extends Component {
           >
             {/* <Column title="ID Selayang" dataIndex="id" key="id" align="center" /> */}
             <Column title="Judul" dataIndex="name" key="name" align="center" />
-            <Column title="Kategori Berita" dataIndex="category_id" key="categoryId" align="center" />
-            <Column title="Galeri Berita" dataIndex="galery_id" key="galeryId" align="center" />
+         
+
+            <Column
+              title="Categori Berita"
+              dataIndex="categoryName"
+              key="categoryName"
+              align="center"
+            />
+            <Column
+              title="Galeri Berita"
+              dataIndex="galleryName"
+              key="galleryName"
+              align="center"
+            />
             <Column
               title="Deskripsi"
               dataIndex="description"
@@ -153,7 +160,6 @@ class Berita extends Component {
               key="selengkapnya"
               align="center"
             />
-          
             <Column
               title="Operasi"
               key="action"
@@ -183,18 +189,14 @@ class Berita extends Component {
         </Card>
         <EditBeritaForm
           currentRowData={this.state.currentRowData}
-          wrappedComponentRef={(formRef) =>
-            (this.editBeritaFormRef = formRef)
-          }
+          wrappedComponentRef={(formRef) => (this.editBeritaFormRef = formRef)}
           visible={this.state.editBeritaModalVisible}
           confirmLoading={this.state.editBeritaModalLoading}
           onCancel={this.handleCancel}
           onOk={this.handleEditBeritaOk}
         />
         <AddBeritaForm
-          wrappedComponentRef={(formRef) =>
-            (this.addBeritaFormRef = formRef)
-          }
+          wrappedComponentRef={(formRef) => (this.addBeritaFormRef = formRef)}
           visible={this.state.addBeritaModalVisible}
           confirmLoading={this.state.addBeritaModalLoading}
           onCancel={this.handleCancel}

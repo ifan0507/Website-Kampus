@@ -78,30 +78,23 @@ class AddQuestionForm extends Component {
             })(<TextArea rows={4} placeholder="Judul" />)}
           </Form.Item>
 
-          <Form.Item label="Category Berita:">
-            {getFieldDecorator("category_berita", {
+          <Form.Item label="Category Berita:" required>
+            {getFieldDecorator("categoryId", {
               rules: [
                 { required: true, message: "Silahkan pilih kategori berita" },
               ],
             })(
-              <Select placeholder="Pilih Kategori Berita" loading={loading}>
-                {categories.length > 0 ? (
-                  categories.map((category) => (
-                    <Option key={category.id} value={category.id}>
-                      {category.name}
-                    </Option>
-                  ))
-                ) : (
-                  <Option disabled value="">
-                    Tidak ada kategori
+              <Select placeholder="Pilih Kategori Berita">
+                {categories.map((category) => (
+                  <Option key={category.id} value={category.id}>
+                    {category.name}
                   </Option>
-                )}
+                ))}
               </Select>
             )}
           </Form.Item>
-
           <Form.Item label="Galeri Berita:">
-            {getFieldDecorator("galeri_berita", {
+            {getFieldDecorator("galeriId", {
               rules: [
                 { required: true, message: "Silahkan pilih galeri berita" },
               ],
