@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import { Modal, Form, Upload, Icon, Input, Select} from 'antd';
+import React, { Component } from "react";
+import axios from "axios";
+import { Modal, Form, Input, Select } from "antd";
 const { TextArea } = Input;
 const { Option } = Select;
-
 
 class AddQuestionForm extends Component {
   state = {
     selectedFile: null,
     categories: [],
+    gallerys: [], // gunakan ini untuk galeri
     loading: false,
   };
 
-  BASE_URL = 'http://localhost:8080';
+  BASE_URL = "http://localhost:8080";
 
   fetchCategories = () => {
     this.setState({ loading: true });
@@ -23,40 +23,34 @@ class AddQuestionForm extends Component {
         this.setState({ categories: response.data.content, loading: false });
       })
       .catch((error) => {
-        console.error('Error fetching categories:', error);
+        console.error("Error fetching categories:", error);
+        this.setState({ loading: false });
+      });
+  };
+
+  fetchAvailableNews = () => {
+    this.setState({ loading: true });
+    axios
+      .get(`${this.BASE_URL}/api/galeri-berita`)
+      .then((response) => {
+        console.log("Galeri Berita Diterima", response.data.content);
+        this.setState({ gallerys: response.data.content, loading: false });
+      })
+      .catch((error) => {
+        console.error("Error fetching available news:", error);
         this.setState({ loading: false });
       });
   };
 
   componentDidMount() {
     this.fetchCategories();
+    this.fetchAvailableNews();
   }
-
-
-  fileSelectedHandler = (event) => {
-    this.setState({
-      selectedFile: event.target.files[0],
-    });
-  };
-
-  fileUploadHandler = () => {
-    const formData = new FormData();
-    const options = {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      data: formData,
-      method: 'POST',
-    };
-  
-    return axios('api/berita', options);
-
-  };
 
   render() {
     const { visible, onCancel, onOk, form, confirmLoading } = this.props;
     const { getFieldDecorator } = form;
-    const { categories, loading} = this.state;
+    const { categories, gallerys, loading } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -68,9 +62,7 @@ class AddQuestionForm extends Component {
         sm: { span: 16 },
       },
     };
- 
-  
-   
+
     return (
       <Modal
         title="Tambah Berita"
@@ -80,64 +72,56 @@ class AddQuestionForm extends Component {
         confirmLoading={confirmLoading}
       >
         <Form {...formItemLayout}>
-          {/* <Form.Item label="File">
-            <Upload
-              name="file"
-              beforeUpload={() => false}
-              maxCount={1}
-              customRequest={({ file }) => {
-                this.setState({
-                  selectedFile: file,
-                });
-              }}
-            >
-              <p className="ant-upload-drag-icon">
-                <Icon type="inbox" />
-              </p>
-              <p className="ant-upload-text">Klik atau Seret file ke sini</p>
-              <p className="ant-upload-hint">support semua file</p>
-            </Upload>
-          </Form.Item> */}
           <Form.Item label="Judul:">
             {getFieldDecorator("name", {
-              rules: [
-                { required: true, message: "Silahkan isikan judul" },
-              ],
+              rules: [{ required: true, message: "Silahkan isikan judul" }],
             })(<TextArea rows={4} placeholder="Judul" />)}
           </Form.Item>
 
           <Form.Item label="Category Berita:">
-           {getFieldDecorator('category-berita', {
-            rules: [{ required: true, message: 'Silahkan pilih kategori berita' }],
+            {getFieldDecorator("category_berita", {
+              rules: [
+                { required: true, message: "Silahkan pilih kategori berita" },
+              ],
             })(
-            <Select placeholder="Pilih Kategori Berita" loading={loading}>
-            {categories.length > 0 ? (
-            categories.map((category) => (
-            <Option key={category.id} value={category.id}>
-            {category.name}
-          </Option>
-        ))
-      ) : (
-        <Option disabled value="">
-          Tidak ada kategori
-        </Option>
-      )}
-    </Select>
-  )}
-</Form.Item>
-          
-          <Form.Item label="Galeri Berita:">
-            {getFieldDecorator("galeri-baru", {
-              rules: [{ required: true, message: "Silahkan pilih galeri berita" }],
-            })(
-              <Select placeholder="Pilih Kategori Galeri Berita">
-                <Option value="nasional">Nasional</Option>
-                <Option value="internasional">Internasional</Option>
-                <Option value="politik">Politik</Option>
+              <Select placeholder="Pilih Kategori Berita" loading={loading}>
+                {categories.length > 0 ? (
+                  categories.map((category) => (
+                    <Option key={category.id} value={category.id}>
+                      {category.name}
+                    </Option>
+                  ))
+                ) : (
+                  <Option disabled value="">
+                    Tidak ada kategori
+                  </Option>
+                )}
               </Select>
             )}
           </Form.Item>
-          
+
+          <Form.Item label="Galeri Berita:">
+            {getFieldDecorator("galeri_berita", {
+              rules: [
+                { required: true, message: "Silahkan pilih galeri berita" },
+              ],
+            })(
+              <Select placeholder="Pilih Galeri Berita" loading={loading}>
+                {gallerys.length > 0 ? (
+                  gallerys.map((gallery) => (
+                    <Option key={gallery.id} value={gallery.id}>
+                      {gallery.name}
+                    </Option>
+                  ))
+                ) : (
+                  <Option disabled value="">
+                    Tidak ada galeri berita
+                  </Option>
+                )}
+              </Select>
+            )}
+          </Form.Item>
+
           <Form.Item label="Deskripsi:">
             {getFieldDecorator("description", {
               rules: [
@@ -158,24 +142,6 @@ class AddQuestionForm extends Component {
                 },
               ],
             })(<TextArea rows={4} placeholder="Selengkapnya" />)}
-          </Form.Item>
-          <Form.Item label="File" name="file">
-            {getFieldDecorator("file")(
-              <Upload.Dragger
-              beforeUpload={() => false}
-              listType="picture"
-            >
-              <p className="ant-upload-drag-icon">
-                <Icon type="inbox" />
-              </p>
-              <p className="ant-upload-text">
-                Click or drag file to this area to upload
-              </p>
-              <p className="ant-upload-hint">
-                Support for a single or bulk upload.
-              </p>
-            </Upload.Dragger>
-            )}
           </Form.Item>
         </Form>
       </Modal>

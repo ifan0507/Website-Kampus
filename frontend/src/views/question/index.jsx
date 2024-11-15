@@ -94,22 +94,25 @@ class Berita extends Component {
       if (err) {
         return;
       }
-      this.setState({ addBeritaModalLoading: true });
+      this.setState({ addBeritaModalLoading: true }); // Tampilkan loading saat proses menambah berita
       addBerita(values)
         .then((response) => {
-          form.resetFields();
+          form.resetFields(); // Reset form setelah berhasil
           this.setState({
-            addBeritaModalVisible: false,
-            addBeritaModalLoading: false,
+            addBeritaModalVisible: false, // Menutup modal setelah berhasil
+            addBeritaModalLoading: false, // Menghentikan loading
           });
-          message.success("Berhasil ditambahkan!");
-          this.getBeritas();
+          message.success("Berita berhasil ditambahkan!"); // Menampilkan pesan sukses
+          this.getBeritas(); // Memanggil API untuk mendapatkan berita terbaru
         })
         .catch((e) => {
-          message.success("Gagal menambahkan, silakan coba lagi!");
+          this.setState({ addBeritaModalLoading: false }); // Menghentikan loading jika gagal
+          message.error("Gagal menambahkan berita, coba lagi!"); // Pesan error
+          console.error(e); // Debugging error
         });
     });
   };
+  
   componentDidMount() {
     this.getBeritas();
   }
@@ -136,6 +139,8 @@ class Berita extends Component {
           >
             {/* <Column title="ID Selayang" dataIndex="id" key="id" align="center" /> */}
             <Column title="Judul" dataIndex="name" key="name" align="center" />
+            <Column title="Kategori Berita" dataIndex="category_id" key="categoryId" align="center" />
+            <Column title="Galeri Berita" dataIndex="galery_id" key="galeryId" align="center" />
             <Column
               title="Deskripsi"
               dataIndex="description"
@@ -148,17 +153,7 @@ class Berita extends Component {
               key="selengkapnya"
               align="center"
             />
-            <Column
-              title="Images"
-              dataIndex="image"
-              key="image"
-              align="center"
-              render={(text, row) => {
-                // console.log(row.data)
-                return row.data != null ? 
-                <BlobImageDisplay blob={row.data} /> : <></> 
-            }}
-            />
+          
             <Column
               title="Operasi"
               key="action"

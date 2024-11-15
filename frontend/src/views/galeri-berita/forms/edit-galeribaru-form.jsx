@@ -28,7 +28,7 @@ class EditGaleriBaruForm extends Component {
   render() {
     const { visible, onCancel, onOk, form, confirmLoading, currentRowData } = this.props;
     const { getFieldDecorator } = form;
-    const { id, name, description, data } = currentRowData;
+    const { id, name, description} = currentRowData;  
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },

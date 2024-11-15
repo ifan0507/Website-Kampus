@@ -31,7 +31,7 @@ public class GaleryBaru {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "gallery")
     private Berita berita;
 
-    @OneToMany(mappedBy = "gallery", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "gallery", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GaleryFileName> fileNames = new ArrayList<GaleryFileName>();
 
     public GaleryBaru() {

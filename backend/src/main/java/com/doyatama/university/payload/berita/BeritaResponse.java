@@ -13,11 +13,8 @@ public class BeritaResponse {
     private Long categoryId;
     private String description;
     private String selengkapnya;
-
     private Instant updatedAt;
     private Instant createdAt;
-    // private String fileName;
-    // private String fileType;
     private Long galeryId;
     @Lob
     private byte[] data;
@@ -35,8 +32,6 @@ public class BeritaResponse {
 
         this.updatedAt = updatedAt;
         this.createdAt = createdAt;
-        // this.fileName = fileName;
-        // this.fileType = fileType;
         this.galeryId = galeryId;
         this.data = data;
     }
@@ -89,21 +84,6 @@ public class BeritaResponse {
         this.createdAt = createdAt;
     }
 
-    // public String getFileName() {
-    // return fileName;
-    // }
-
-    // public void setFileName(String fileName) {
-    // this.fileName = fileName;
-    // }
-
-    // public String getFileType() {
-    // return fileType;
-    // }
-
-    // public void setFileType(String fileType) {
-    // this.fileType = fileType;
-    // }
     public void setGaleryId(Long galeryId) {
         this.galeryId = galeryId;
     }

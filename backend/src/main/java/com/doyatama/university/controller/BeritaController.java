@@ -9,6 +9,7 @@ import com.doyatama.university.repository.BeritaRepository;
 import com.doyatama.university.repository.UserRepository;
 import com.doyatama.university.security.CurrentUser;
 import com.doyatama.university.security.UserPrincipal;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.doyatama.university.service.BeritaService;
 import com.doyatama.university.util.AppConstants;
 import org.slf4j.Logger;
@@ -17,8 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -48,16 +51,12 @@ public class BeritaController {
         }
 
         @PostMapping
-        // @Secured("ROLE_ADMINISTRATOR")
-        public ResponseEntity<?> createBerita(@CurrentUser UserPrincipal currentUser,
-                        @Valid @ModelAttribute BeritaRequest beritaRequest)
-                        throws IOException {
-                // MultipartFile file = departmentRequest.getFile();
+        public ResponseEntity<?> createBerita(@AuthenticationPrincipal UserPrincipal currentUser,
+                        @Valid @RequestBody BeritaRequest beritaRequest) throws IOException {
+                System.out.println("Received request: " + beritaRequest);
+                // Proses Berita
                 Berita berita = beritaService.createBerita(currentUser, beritaRequest);
-                // String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                // .path("/downloadFile/")
-                // .path(berita.getId().toString())
-                // .toUriString();
+
                 URI location = ServletUriComponentsBuilder
                                 .fromCurrentRequest().path("/{beritaId}")
                                 .buildAndExpand(berita.getId()).toUri();
@@ -68,8 +67,9 @@ public class BeritaController {
 
         @PutMapping("/{beritaId}")
         // @Secured("ROLE_ADMINISTRATOR")
-        public ResponseEntity<?> updateBeritaById(@CurrentUser UserPrincipal currentUser,
-                        @PathVariable(value = "beritaId") Long beritaId, @Valid BeritaRequest beritaRequest)
+        public ResponseEntity<?> updateBeritaById(@AuthenticationPrincipal UserPrincipal currentUser,
+                        @PathVariable(value = "beritaId") Long beritaId,
+                        @Valid @RequestBody BeritaRequest beritaRequest)
                         throws IOException {
                 Berita berita = beritaService.updateBerita(beritaRequest, beritaId, currentUser);
                 URI location = ServletUriComponentsBuilder

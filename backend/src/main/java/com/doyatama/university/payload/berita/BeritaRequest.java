@@ -1,17 +1,26 @@
 package com.doyatama.university.payload.berita;
 
-import com.doyatama.university.model.CategoryBerita;
-import org.springframework.web.multipart.MultipartFile;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.lang.Nullable;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class BeritaRequest {
 
-    private String name;
+    @JsonProperty("category_id")
+    @NotNull(message = "CategoryId must not be null")
     private Long categoryId;
-    private Long galeryId;
-    private String description;
-    private String selengkapnya;
 
-    // private MultipartFile file;
+    @JsonProperty("galery_id")
+    @Nullable
+    private Long galeryId;
+
+    private String name;
+
+    private String description;
+
+    private String selengkapnya;
 
     public String getName() {
         return name;
@@ -37,14 +46,6 @@ public class BeritaRequest {
         this.selengkapnya = selengkapnya;
     }
 
-    // public MultipartFile getFile() {
-    // return file;
-    // }
-
-    // public void setFile(MultipartFile file) {
-    // this.file = file;
-    // }
-
     public void setGaleryId(Long galeryId) {
         this.galeryId = galeryId;
     }
@@ -61,11 +62,4 @@ public class BeritaRequest {
         return categoryId;
     }
 
-    // public CategoryBerita getCategoryBerita() {
-    // return categoryBerita;
-    // }
-
-    // public void setCategoryBerita(CategoryBerita categoryBerita) {
-    // this.categoryBerita = categoryBerita;
-    // }
 }
