@@ -99,6 +99,8 @@ public class BeritaService {
             beritaResponse.setDescription(asResponse.getDescription());
             beritaResponse.setSelengkapnya(asResponse.getSelengkapnya());
 
+            beritaResponse.setCategoryId(
+                    asResponse.getCategoryBerita() != null ? asResponse.getCategoryBerita().getId() : null);
             beritaResponse.setGaleryId(asResponse.getGallery() != null ? asResponse.getGallery().getId() : null);
 
             return beritaResponse;
