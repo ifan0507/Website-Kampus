@@ -29,10 +29,11 @@ class Berita extends Component {
   };
   handleEditBerita = (row) => {
     this.setState({
-      currentRowData: Object.assign({}, row),
-      editBeritaModalVisible: true,
+        currentRowData: Object.assign({}, row), // Menyimpan data berita yang akan diedit
+        editBeritaModalVisible: true, // Menampilkan modal edit
     });
-  };
+};
+
 
   handleDeleteBerita = (row) => {
     const { id } = row;
@@ -48,27 +49,30 @@ class Berita extends Component {
   };
 
   handleEditBeritaOk = (_) => {
-    const { form } = this.editBeritaFormRef.props;
+    const { form } = this.editBeritaFormRef.props; // Akses form dari ref
     form.validateFields((err, values) => {
-      if (err) {
-        return;
-      }
-      this.setState({ editModalLoading: true });
-      editBerita(values, values.id)
-        .then((response) => {
-          form.resetFields();
-          this.setState({
-            editBeritaModalVisible: false,
-            editBeritaModalLoading: false,
-          });
-          message.success("Berhasil diedit!");
-          this.getBeritas();
-        })
-        .catch((e) => {
-          message.success("Pengeditan gagal, coba lagi!");
-        });
+        if (err) {
+            return; // Hentikan jika ada error
+        }
+        this.setState({ editBeritaModalLoading: true });
+        editBerita(values, values.id) // Mengirim data ke API
+            .then((response) => {
+                form.resetFields(); // Reset form
+                this.setState({
+                    editBeritaModalVisible: false,
+                    editBeritaModalLoading: false,
+                });
+                message.success("Berhasil diedit!");
+                this.getBeritas(); // Perbarui daftar berita
+            })
+            .catch((e) => {
+                const errorMessage = e.response?.data?.message || "Pengeditan gagal, coba lagi!";
+                this.setState({ editBeritaModalLoading: false });
+                message.error(errorMessage);
+            });
     });
-  };
+};
+
 
   handleCancel = (_) => {
     this.setState({
@@ -83,13 +87,18 @@ class Berita extends Component {
     });
   };
 
-  handleAddBeritaOk = (_) => {
+  handleAddBeritaOk = () => {
     const { form } = this.addBeritaFormRef.props;
     form.validateFields((err, values) => {
       if (err) {
         return;
       }
+
       this.setState({ addBeritaModalLoading: true }); // Tampilkan loading saat proses menambah berita
+
+      console.log("Data dikirim ke API:", values);
+
+      this.setState({ addBeritaModalLoading: true });
       addBerita(values)
         .then((response) => {
           form.resetFields(); // Reset form setelah berhasil
@@ -101,9 +110,15 @@ class Berita extends Component {
           this.getBeritas(); // Memanggil API untuk mendapatkan berita terbaru
         })
         .catch((e) => {
+
           this.setState({ addBeritaModalLoading: false }); // Menghentikan loading jika gagal
           message.error("Gagal menambahkan berita, coba lagi!"); // Pesan error
           console.error(e); // Debugging error
+
+          this.setState({ addBeritaModalLoading: false });
+          message.error("Gagal menambahkan, silakan coba lagi!");
+          console.error("Error saat menambahkan berita:", e);
+
         });
     });
   };
@@ -188,13 +203,14 @@ class Berita extends Component {
           </Table>
         </Card>
         <EditBeritaForm
-          currentRowData={this.state.currentRowData}
-          wrappedComponentRef={(formRef) => (this.editBeritaFormRef = formRef)}
-          visible={this.state.editBeritaModalVisible}
-          confirmLoading={this.state.editBeritaModalLoading}
-          onCancel={this.handleCancel}
-          onOk={this.handleEditBeritaOk}
-        />
+  currentRowData={this.state.currentRowData} // Data yang diedit
+  wrappedComponentRef={(formRef) => (this.editBeritaFormRef = formRef)}
+  visible={this.state.editBeritaModalVisible}
+  confirmLoading={this.state.editBeritaModalLoading}
+  onCancel={this.handleCancel}
+  onOk={this.handleEditBeritaOk}
+/>
+
         <AddBeritaForm
           wrappedComponentRef={(formRef) => (this.addBeritaFormRef = formRef)}
           visible={this.state.addBeritaModalVisible}

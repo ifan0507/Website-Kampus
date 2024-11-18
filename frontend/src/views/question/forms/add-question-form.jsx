@@ -12,33 +12,41 @@ class AddQuestionForm extends Component {
     loading: false,
   };
 
+  fileUploadHandler = (values) => {
+    const options = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      data: JSON.stringify(values), // Ubah data ke format JSON
+    };
+
+    return axios(`${this.BASE_URL}/api/berita`, options);
+  };
+
   BASE_URL = "http://localhost:8080";
 
   fetchCategories = () => {
-    this.setState({ loading: true });
     axios
-      .get(`${this.BASE_URL}/api/category-berita`)
+      .get("http://localhost:8080/api/category-berita")
       .then((response) => {
-        console.log("Kategori Berita Diterima", response.data.content);
-        this.setState({ categories: response.data.content, loading: false });
+        console.log("Categories fetched:", response.data.content);
+        this.setState({ categories: response.data.content });
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
-        this.setState({ loading: false });
       });
   };
 
   fetchAvailableNews = () => {
-    this.setState({ loading: true });
     axios
-      .get(`${this.BASE_URL}/api/galeri-berita`)
+      .get("http://localhost:8080/api/galeri-berita")
       .then((response) => {
-        console.log("Galeri Berita Diterima", response.data.content);
-        this.setState({ gallerys: response.data.content, loading: false });
+        console.log("Gallery fetched:", response.data.content);
+        this.setState({ gallerys: response.data.content });
       })
       .catch((error) => {
-        console.error("Error fetching available news:", error);
-        this.setState({ loading: false });
+        console.error("Error fetching gallery:", error);
       });
   };
 

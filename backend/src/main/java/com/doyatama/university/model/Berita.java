@@ -37,7 +37,7 @@ public class Berita {
     private byte[] data;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "galery_id", nullable = false)
+    @JoinColumn(name = "galery_id", nullable = true)
     private GaleryBaru gallery;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
