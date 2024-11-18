@@ -34,6 +34,13 @@ const menuList = [
   },
 
   {
+    title: "Pengumuman",
+    path: "/pengumuman",
+    icon: "team", 
+    roles: ["ROLE_ADMINISTRATOR", "ROLE_LECTURE"], 
+  },
+
+  {
     title: "Manajemen Berita",
     path: "/berita",
     icon: "book",

@@ -25,13 +25,10 @@ export function getBeritas() {
     method: "get",
   });
 }
-
-
-
 export function editBerita(data, id) {
   return request({
-    url: `/berita/${id}`, // Endpoint untuk menambah berita
-    method: "PUT",
+    url: `/berita/${id}`,
+    method: "put",
     headers: {
       "Content-Type": "application/json", // Pastikan JSON
     },
@@ -40,7 +37,7 @@ export function editBerita(data, id) {
       description: data.description,
       selengkapnya: data.selengkapnya,
       category_id: data.categoryId,
-      galery_id: data.galeriId,
+      galery_id: data.galleryId,
     }),
   });
 

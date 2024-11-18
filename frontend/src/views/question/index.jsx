@@ -1,33 +1,63 @@
 import React, { Component } from "react";
+import axios from "axios";
 import { Card, Button, Table, message, Divider } from "antd";
 import { getBeritas, deleteBerita, editBerita, addBerita } from "@/api/berita";
 import TypingCard from "@/components/TypingCard";
 import EditBeritaForm from "./forms/edit-question-form";
 import AddBeritaForm from "./forms/add-question-form";
-import { BlobImageDisplay } from "../../components/BlobImageDisplay";
 
 const { Column } = Table;
+
 class Berita extends Component {
   state = {
     beritas: [],
+    categories: [],
+    gallerys: [],
     editBeritaModalVisible: false,
     editBeritaModalLoading: false,
     currentRowData: {},
     addBeritaModalVisible: false,
     addBeritaModalLoading: false,
+    loadingCategories: true,
+    loadingGallerys: true,
   };
+
+  BASE_URL = "http://localhost:8080";
+
+  componentDidMount() {
+    this.getBeritas();
+    this.fetchCategories();
+    this.fetchGallerys();
+  }
+
   getBeritas = async () => {
     const result = await getBeritas();
-    console.log(result);
     const { content, statusCode } = result.data;
-
     if (statusCode === 200) {
-      this.setState({
-        beritas: content,
-      });
+      this.setState({ beritas: content });
     }
   };
+
+  fetchCategories = () => {
+    axios.get(`${this.BASE_URL}/api/category-berita`).then((response) => {
+      this.setState({
+        categories: response.data.content,
+        loadingCategories: false,
+      });
+    });
+  };
+
+  fetchGallerys = () => {
+    axios.get(`${this.BASE_URL}/api/galeri-berita`).then((response) => {
+      this.setState({
+        gallerys: response.data.content,
+        loadingGallerys: false,
+      });
+    });
+  };
+
   handleEditBerita = (row) => {
+    console.log("Selected row for edit:", row); // Debugging
     this.setState({
         currentRowData: Object.assign({}, row), // Menyimpan data berita yang akan diedit
         editBeritaModalVisible: true, // Menampilkan modal edit
@@ -41,47 +71,42 @@ class Berita extends Component {
       message.error("Tidak dapat menghapus pengguna admin！");
       return;
     }
-    console.log(id);
-    deleteBerita({ id }).then((res) => {
-      message.success("berhasil dihapus");
+    deleteBerita({ id }).then(() => {
+      message.success("Berita berhasil dihapus");
       this.getBeritas();
     });
   };
-
-  handleEditBeritaOk = (_) => {
-    const { form } = this.editBeritaFormRef.props; // Akses form dari ref
+  handleEditBeritaOk = () => {
+    const { form } = this.editBeritaFormRef.props;
     form.validateFields((err, values) => {
-        if (err) {
-            return; // Hentikan jika ada error
-        }
-        this.setState({ editBeritaModalLoading: true });
-        editBerita(values, values.id) // Mengirim data ke API
-            .then((response) => {
-                form.resetFields(); // Reset form
-                this.setState({
-                    editBeritaModalVisible: false,
-                    editBeritaModalLoading: false,
-                });
-                message.success("Berhasil diedit!");
-                this.getBeritas(); // Perbarui daftar berita
-            })
-            .catch((e) => {
-                const errorMessage = e.response?.data?.message || "Pengeditan gagal, coba lagi!";
-                this.setState({ editBeritaModalLoading: false });
-                message.error(errorMessage);
-            });
+      if (err) return;
+      this.setState({ editBeritaModalLoading: true });
+      editBerita(values, values.id)
+        .then(() => {
+          form.resetFields();
+          this.setState({
+            editBeritaModalVisible: false,
+            editBeritaModalLoading: false,
+          });
+          message.success("Berhasil diedit!");
+          this.getBeritas();
+        })
+        .catch(() => {
+          message.error("Gagal mengedit berita");
+          this.setState({ editBeritaModalLoading: false });
+        });
     });
 };
 
 
-  handleCancel = (_) => {
+  handleCancel = () => {
     this.setState({
       editBeritaModalVisible: false,
       addBeritaModalVisible: false,
     });
   };
 
-  handleAddBerita = (row) => {
+  handleAddBerita = () => {
     this.setState({
       addBeritaModalVisible: true,
     });
@@ -90,44 +115,27 @@ class Berita extends Component {
   handleAddBeritaOk = () => {
     const { form } = this.addBeritaFormRef.props;
     form.validateFields((err, values) => {
-      if (err) {
-        return;
-      }
-
-      this.setState({ addBeritaModalLoading: true }); // Tampilkan loading saat proses menambah berita
-
-      console.log("Data dikirim ke API:", values);
-
+      if (err) return;
       this.setState({ addBeritaModalLoading: true });
       addBerita(values)
-        .then((response) => {
-          form.resetFields(); // Reset form setelah berhasil
+        .then(() => {
+          form.resetFields();
           this.setState({
             addBeritaModalVisible: false, // Menutup modal setelah berhasil
             addBeritaModalLoading: false, // Menghentikan loading
           });
-          message.success("Berita berhasil ditambahkan!"); // Menampilkan pesan sukses
-          this.getBeritas(); // Memanggil API untuk mendapatkan berita terbaru
+          message.success("Berita berhasil ditambahkan");
+          this.getBeritas();
         })
-        .catch((e) => {
-
-          this.setState({ addBeritaModalLoading: false }); // Menghentikan loading jika gagal
-          message.error("Gagal menambahkan berita, coba lagi!"); // Pesan error
-          console.error(e); // Debugging error
-
+        .catch(() => {
           this.setState({ addBeritaModalLoading: false });
-          message.error("Gagal menambahkan, silakan coba lagi!");
-          console.error("Error saat menambahkan berita:", e);
-
+          message.error("Gagal menambahkan berita");
         });
     });
   };
 
-  componentDidMount() {
-    this.getBeritas();
-  }
   render() {
-    const { beritas } = this.state;
+    const { beritas, categories, gallerys, loadingCategories, loadingGallerys } = this.state;
     const title = (
       <span>
         <Button type="primary" onClick={this.handleAddBerita}>
@@ -135,46 +143,17 @@ class Berita extends Component {
         </Button>
       </span>
     );
-    const cardContent = `Di sini, Anda dapat mengelola informasi berita di sistem, seperti menambahkan berita baru, atau mengubah berita yang sudah ada di sistem.`;
+
     return (
       <div className="app-container">
-        <TypingCard title="Manajemen Berita" source={cardContent} />
-        <br />
+        <TypingCard title="Manajemen Berita" source="Di sini, Anda dapat mengelola berita." />
         <Card title={title}>
-          <Table
-            bordered
-            rowKey="id"
-            dataSource={beritas}
-            pagination={{ pageSize: 5 }}
-          >
-            {/* <Column title="ID Selayang" dataIndex="id" key="id" align="center" /> */}
+          <Table bordered rowKey="id" dataSource={beritas} pagination={{ pageSize: 5 }}>
             <Column title="Judul" dataIndex="name" key="name" align="center" />
-         
-
-            <Column
-              title="Categori Berita"
-              dataIndex="categoryName"
-              key="categoryName"
-              align="center"
-            />
-            <Column
-              title="Galeri Berita"
-              dataIndex="galleryName"
-              key="galleryName"
-              align="center"
-            />
-            <Column
-              title="Deskripsi"
-              dataIndex="description"
-              key="description"
-              align="center"
-            />
-            <Column
-              title="Selengkapnya"
-              dataIndex="selengkapnya"
-              key="selengkapnya"
-              align="center"
-            />
+            <Column title="Kategori Berita" dataIndex="categoryName" key="categoryName" align="center" />
+            <Column title="Galeri Berita" dataIndex="galleryName" key="galleryName" align="center" />
+            <Column title="Deskripsi" dataIndex="description" key="description" align="center" />
+            <Column title="Selengkapnya" dataIndex="selengkapnya" key="selengkapnya" align="center" />
             <Column
               title="Operasi"
               key="action"
@@ -182,35 +161,27 @@ class Berita extends Component {
               align="center"
               render={(text, row) => (
                 <span>
-                  <Button
-                    type="primary"
-                    shape="circle"
-                    icon="edit"
-                    title="edit"
-                    onClick={this.handleEditBerita.bind(null, row)}
-                  />
+                  <Button type="primary" shape="circle" icon="edit" onClick={() => this.handleEditBerita(row)} />
                   <Divider type="vertical" />
-                  <Button
-                    type="primary"
-                    shape="circle"
-                    icon="delete"
-                    title="delete"
-                    onClick={this.handleDeleteBerita.bind(null, row)}
-                  />
+                  <Button type="primary" shape="circle" icon="delete" onClick={() => this.handleDeleteBerita(row)} />
                 </span>
               )}
             />
           </Table>
         </Card>
-        <EditBeritaForm
-  currentRowData={this.state.currentRowData} // Data yang diedit
-  wrappedComponentRef={(formRef) => (this.editBeritaFormRef = formRef)}
-  visible={this.state.editBeritaModalVisible}
-  confirmLoading={this.state.editBeritaModalLoading}
-  onCancel={this.handleCancel}
-  onOk={this.handleEditBeritaOk}
-/>
 
+        <EditBeritaForm
+          currentRowData={this.state.currentRowData} // Pastikan data yang dikirim sudah benar
+          categories={this.state.categories} // Pastikan kategori sudah terisi
+          gallerys={this.state.gallerys} // Pastikan galeri sudah terisi
+          loadingCategories={this.state.loadingCategories}
+          loadingGallerys={this.state.loadingGallerys}
+          wrappedComponentRef={(formRef) => (this.editBeritaFormRef = formRef)}
+          visible={this.state.editBeritaModalVisible}
+          confirmLoading={this.state.editBeritaModalLoading}
+          onCancel={this.handleCancel}
+          onOk={this.handleEditBeritaOk}
+        />
         <AddBeritaForm
           wrappedComponentRef={(formRef) => (this.addBeritaFormRef = formRef)}
           visible={this.state.addBeritaModalVisible}

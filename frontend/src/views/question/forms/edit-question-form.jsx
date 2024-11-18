@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Input, Modal, Select, message } from "antd";
+import { Form, Input, Modal, Select, Spin } from "antd";
 import axios from "axios";
 
 const { TextArea } = Input;
@@ -9,136 +9,121 @@ class EditBeritaForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      categories: [], // Data kategori berita
-      gallerys: [], // Data galeri berita
-      loadingCategories: false, // Status loading kategori
-      loadingGallerys: false, // Status loading galeri
+      categories: [], // Menyimpan data kategori
+      gallerys: [], // Menyimpan data galeri
+      loadingCategories: true, // Indikator loading untuk kategori
+      loadingGallerys: true, // Indikator loading untuk galeri
     };
   }
 
-  // Fetch Kategori Berita dari API
+  // URL backend
+  BASE_URL = "http://localhost:8080";
+
+  // Mengambil data kategori
   fetchCategories = () => {
-    this.setState({ loadingCategories: true });
     axios
-      .get("http://localhost:8080/api/category-berita")
+      .get(`${this.BASE_URL}/api/category-berita`)
       .then((response) => {
-        console.log("Categories fetched:", response.data.content); // Cek data kategori
-        this.setState({ categories: response.data.content, loadingCategories: false });
+        console.log("Categories fetched:", response.data.content);
+        this.setState({
+          categories: response.data.content,
+          loadingCategories: false,
+        });
       })
       .catch((error) => {
-        message.error("Gagal mengambil kategori berita");
+        console.error("Error fetching categories:", error);
         this.setState({ loadingCategories: false });
       });
   };
-
-  // Fetch Galeri Berita dari API
+  // Mengambil data galeri
   fetchGallerys = () => {
-    this.setState({ loadingGallerys: true });
     axios
-      .get("http://localhost:8080/api/galeri-berita")
+      .get(`${this.BASE_URL}/api/galeri-berita`)
       .then((response) => {
-        console.log("Gallerys fetched:", response.data.content); // Cek data galeri
-        this.setState({ gallerys: response.data.content, loadingGallerys: false });
+        console.log("Gallery fetched:", response.data.content);
+        this.setState({
+          gallerys: response.data.content,
+          loadingGallerys: false,
+        });
       })
       .catch((error) => {
-        message.error("Gagal mengambil galeri berita");
+        console.error("Error fetching gallery:", error);
         this.setState({ loadingGallerys: false });
       });
   };
-
-  // Lifecycle saat komponen dimuat
+  // Memanggil data saat komponen dimount
   componentDidMount() {
     this.fetchCategories();
     this.fetchGallerys();
   }
-
-  // Lifecycle saat props berubah
-  componentDidUpdate(prevProps) {
-    const { currentRowData, form } = this.props;
-    if (prevProps.currentRowData !== currentRowData && currentRowData) {
-      console.log("Current Row Data:", currentRowData); // Cek data yang diterima
-      form.setFieldsValue({
-        id: currentRowData.id,
-        name: currentRowData.name,
-        description: currentRowData.description,
-        categoryId: currentRowData.categoryId, // Set nilai default kategori
-        galeriId: currentRowData.galeriId, // Set nilai default galeri
-        selengkapnya: currentRowData.selengkapnya,
-      });
-    }
-  }
-
   render() {
-    const { visible, onCancel, onOk, form, confirmLoading } = this.props;
+    const { visible, onCancel, onOk, form, confirmLoading, currentRowData, categories, gallerys } = this.props; // Terima categories dan gallerys
     const { getFieldDecorator } = form;
-    const { categories, gallerys, loadingCategories, loadingGallerys } = this.state;
 
+    const { id, name, description, selengkapnya, categoryBerita, galeryBerita } = currentRowData;
     const formItemLayout = {
       labelCol: { xs: { span: 24 }, sm: { span: 8 } },
       wrapperCol: { xs: { span: 24 }, sm: { span: 16 } },
     };
 
     return (
-      <Modal
-        title="Edit Berita"
-        visible={visible}
-        onCancel={onCancel}
-        onOk={onOk}
-        confirmLoading={confirmLoading}
-      >
+      <Modal visible={visible} title="Edit Berita" onCancel={onCancel} onOk={onOk} okText="Simpan" cancelText="Batal">
         <Form {...formItemLayout}>
-          {/* ID Berita */}
+          {/* ID */}
           <Form.Item label="ID Berita:">
-            {getFieldDecorator("id")(<Input disabled />)}
+            {getFieldDecorator("id",{
+              initialValue : id,
+            })(<Input disabled />)}
           </Form.Item>
-
-          {/* Judul Berita */}
+          {/* Judul */}
           <Form.Item label="Judul:">
             {getFieldDecorator("name", {
+              initialValue: name,
               rules: [{ required: true, message: "Silahkan isikan judul" }],
-            })(<TextArea rows={4} placeholder="Judul" />)}
+            })(<TextArea rows={2} placeholder="Judul" />)}
           </Form.Item>
 
-          {/* Dropdown Kategori Berita */}
-          <Form.Item label="Category Berita:">
+          {/* Kategori */}
+          <Form.Item label="Kategori Berita">
             {getFieldDecorator("categoryId", {
-              rules: [{ required: true, message: "Silahkan pilih kategori berita" }],
+              initialValue: currentRowData.categoryId || undefined, // Pastikan nilai default jika null
+              rules: [{ required: true, message: "Pilih kategori!" }],
             })(
-              <Select placeholder="Pilih Kategori Berita" loading={loadingCategories}>
+              <Select placeholder="Pilih kategori berita" allowClear>
                 {categories.map((category) => (
                   <Option key={category.id} value={category.id}>
-                    {category.name} {/* Menampilkan nama kategori */}
+                    {category.name}
                   </Option>
                 ))}
               </Select>
             )}
           </Form.Item>
-
-          {/* Dropdown Galeri Berita */}
-          <Form.Item label="Galeri Berita:">
-            {getFieldDecorator("galeriId", {
-              rules: [{ required: true, message: "Silahkan pilih galeri berita" }],
+          {/* Galeri */}
+          <Form.Item label="Galeri">
+            {getFieldDecorator("galleryId", {
+              initialValue: currentRowData.galeryId || undefined, // Pastikan initialValue ada
+              rules: [{ required: true, message: "Pilih galeri!" }],
             })(
-              <Select placeholder="Pilih Galeri Berita" loading={loadingGallerys}>
+              <Select placeholder="Pilih galeri berita" allowClear>
                 {gallerys.map((gallery) => (
                   <Option key={gallery.id} value={gallery.id}>
-                    {gallery.name} {/* Menampilkan nama galeri */}
+                    {gallery.name}
                   </Option>
                 ))}
               </Select>
             )}
           </Form.Item>
-
-          {/* Deskripsi Berita */}
+          {/* Deskripsi */}
           <Form.Item label="Deskripsi:">
             {getFieldDecorator("description", {
+              initialValue: description,
               rules: [{ required: true, message: "Silahkan isikan deskripsi" }],
             })(<TextArea rows={4} placeholder="Deskripsi" />)}
           </Form.Item>
-
-          {/* Catatan / Selengkapnya */}
+          {/* Selengkapnya */}
           <Form.Item label="Selengkapnya:">
             {getFieldDecorator("selengkapnya", {
+              initialValue: selengkapnya,
               rules: [{ required: true, message: "Silahkan isikan catatan/tambahan" }],
             })(<TextArea rows={4} placeholder="Selengkapnya" />)}
           </Form.Item>
@@ -147,5 +132,5 @@ class EditBeritaForm extends Component {
     );
   }
 }
+export default Form.create({ name: "EditBeritaForm" })(EditBeritaForm);
 
-export default Form.create()(EditBeritaForm);
