@@ -1,8 +1,9 @@
 import request from "@/utils/request";
+import { message } from "antd"; // Import message dari antd
 
 export function addBerita(data) {
   return request({
-    url: "/berita",
+    url: "/berita", // Endpoint untuk menambah berita
     method: "post",
     headers: {
       "Content-Type": "application/json", // Pastikan JSON
@@ -15,6 +16,7 @@ export function addBerita(data) {
       galery_id: data.galeriId,
     }),
   });
+
 }
 
 export function getBeritas() {
@@ -23,7 +25,6 @@ export function getBeritas() {
     method: "get",
   });
 }
-
 export function editBerita(data, id) {
   return request({
     url: `/berita/${id}`,
@@ -39,7 +40,9 @@ export function editBerita(data, id) {
       galery_id: data.galleryId,
     }),
   });
+
 }
+
 
 export function deleteBerita(data) {
   return request({

@@ -5,6 +5,7 @@ import { getBeritas, deleteBerita, editBerita, addBerita } from "@/api/berita";
 import TypingCard from "@/components/TypingCard";
 import EditBeritaForm from "./forms/edit-question-form";
 import AddBeritaForm from "./forms/add-question-form";
+import { BlobImageDisplay } from "../../components/BlobImageDisplay";
 
 const { Column } = Table;
 
@@ -59,10 +60,11 @@ class Berita extends Component {
   handleEditBerita = (row) => {
     console.log("Selected row for edit:", row); // Debugging
     this.setState({
-      currentRowData: Object.assign({}, row),
-      editBeritaModalVisible: true,
+        currentRowData: Object.assign({}, row), // Menyimpan data berita yang akan diedit
+        editBeritaModalVisible: true, // Menampilkan modal edit
     });
-  };
+};
+
 
   handleDeleteBerita = (row) => {
     const { id } = row;
@@ -75,7 +77,6 @@ class Berita extends Component {
       this.getBeritas();
     });
   };
-
   handleEditBeritaOk = () => {
     const { form } = this.editBeritaFormRef.props;
     form.validateFields((err, values) => {
@@ -96,7 +97,8 @@ class Berita extends Component {
           this.setState({ editBeritaModalLoading: false });
         });
     });
-  };
+};
+
 
   handleCancel = () => {
     this.setState({
@@ -120,8 +122,8 @@ class Berita extends Component {
         .then(() => {
           form.resetFields();
           this.setState({
-            addBeritaModalVisible: false,
-            addBeritaModalLoading: false,
+            addBeritaModalVisible: false, // Menutup modal setelah berhasil
+            addBeritaModalLoading: false, // Menghentikan loading
           });
           message.success("Berita berhasil ditambahkan");
           this.getBeritas();
@@ -145,7 +147,7 @@ class Berita extends Component {
 
     return (
       <div className="app-container">
-        <TypingCard title="Manajemen Berita" source="Di sini, Anda dapat mengelola berita." />
+        <TypingCard title="Manajemen Berita" source="Di sini, Anda dapat mengelola informasi berita di sistem, seperti menambahkan berita baru, atau mengubah berita yang sudah ada di sistem." />
         <Card title={title}>
           <Table bordered rowKey="id" dataSource={beritas} pagination={{ pageSize: 5 }}>
             <Column title="Judul" dataIndex="name" key="name" align="center" />
@@ -181,7 +183,6 @@ class Berita extends Component {
           onCancel={this.handleCancel}
           onOk={this.handleEditBeritaOk}
         />
-
         <AddBeritaForm
           wrappedComponentRef={(formRef) => (this.addBeritaFormRef = formRef)}
           visible={this.state.addBeritaModalVisible}

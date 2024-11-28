@@ -33,7 +33,14 @@ import {
 import {
   getCampusLifes,
 } from "@/api/campus-life";
+import {
+  getPengumuman,
+} from "@/api/pengumuman";
+import {
+  getOrganisasi,
+} from "@/api/organisasi";
 
+ 
 const lineChartDefaultData = {
   "Manajemen Profil": {
     expectedData: [1000, 120, 161, 134, 105, 160, 165],
@@ -71,6 +78,14 @@ const lineChartDefaultData = {
     expectedData: [130, 140, 141, 142, 145, 150, 160],
     actualData: [120, 82, 91, 154, 162, 140, 130],
   },
+  "Pengumuman": {
+    expectedData: [130, 140, 141, 142, 145, 150, 160],
+    actualData: [120, 82, 91, 154, 162, 140, 130],
+  },
+  "Organisasi": {
+    expectedData: [130, 140, 141, 142, 145, 150, 160],
+    actualData: [120, 82, 91, 154, 162, 140, 130],
+  },
 };
 
 const Dashboard = () => {
@@ -86,6 +101,9 @@ const Dashboard = () => {
   const [pendaftaran, setPendaftaran] = useState([]);
   const [kalender, setKalender] = useState([]);
   const [campusLife, setCampusLife] = useState([]);
+  const [pengumuman, setPengumuman] = useState([]);
+  const [organisasi, setOrganisasi] = useState([]);
+ 
 
   const handleProfil = async () => {
     try {
@@ -182,7 +200,32 @@ const Dashboard = () => {
     } catch (error) {
       console.error("Error fetching data:", error.message);
     }
+  }; 
+  const handlePengumuman = async () => {
+    try {
+      const result = await getPengumuman();
+      const { content, statusCode } = result.data;
+
+      if (statusCode === 200) {
+        setPengumuman(content);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error.message);
+    }
   };
+  const handleOrganisasi = async () => {
+    try {
+      const result = await getOrganisasi();
+      const { content, statusCode } = result.data;
+
+      if (statusCode === 200) {
+        setOrganisasi(content);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error.message);
+    }
+  };
+
   useEffect(() => {
     handleProfil();
     handleJurusan();
@@ -192,6 +235,8 @@ const Dashboard = () => {
     handlePendaftaran();
     handleKalender();
     handleCampusLife();
+    handlePengumuman();
+    handleOrganisasi();
   }, []);
 
   const handleSetLineChartData = (type) => setLineChartData(lineChartDefaultData[type]);
@@ -254,6 +299,8 @@ const Dashboard = () => {
         totalPendaftaran={pendaftaran.length}
         totalKalender={kalender.length}
         totalCampusLife={campusLife.length}
+        totalOrganisasi={organisasi.length}
+        totalPengumuman={pengumuman.length}
       />
 
       <LineChart
@@ -280,6 +327,8 @@ const Dashboard = () => {
               totalPendaftaran={pendaftaran.length}
               totalKalender={kalender.length}
               totalCampusLife={campusLife.length}
+              totalPengumuman={pengumuman.length}
+              totalOrganisasi={organisasi.length}
             />
           </div>
         </Col>
@@ -294,6 +343,8 @@ const Dashboard = () => {
               totalPendaftaran={pendaftaran.length}
               totalKalender={kalender.length}
               totalCampusLife={campusLife.length}
+              totalPengumuman={pengumuman.length}
+              totalOrganisasi={organisasi.length}
             />
           </div>
         </Col>

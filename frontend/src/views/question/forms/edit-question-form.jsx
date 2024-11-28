@@ -35,7 +35,6 @@ class EditBeritaForm extends Component {
         this.setState({ loadingCategories: false });
       });
   };
-
   // Mengambil data galeri
   fetchGallerys = () => {
     axios
@@ -52,19 +51,16 @@ class EditBeritaForm extends Component {
         this.setState({ loadingGallerys: false });
       });
   };
-
   // Memanggil data saat komponen dimount
   componentDidMount() {
     this.fetchCategories();
     this.fetchGallerys();
   }
-
   render() {
     const { visible, onCancel, onOk, form, confirmLoading, currentRowData, categories, gallerys } = this.props; // Terima categories dan gallerys
     const { getFieldDecorator } = form;
 
     const { id, name, description, selengkapnya, categoryBerita, galeryBerita } = currentRowData;
-
     const formItemLayout = {
       labelCol: { xs: { span: 24 }, sm: { span: 8 } },
       wrapperCol: { xs: { span: 24 }, sm: { span: 16 } },
@@ -75,11 +71,10 @@ class EditBeritaForm extends Component {
         <Form {...formItemLayout}>
           {/* ID */}
           <Form.Item label="ID Berita:">
-            {getFieldDecorator("id", {
-              initialValue: id,
+            {getFieldDecorator("id",{
+              initialValue : id,
             })(<Input disabled />)}
           </Form.Item>
-
           {/* Judul */}
           <Form.Item label="Judul:">
             {getFieldDecorator("name", {
@@ -103,7 +98,6 @@ class EditBeritaForm extends Component {
               </Select>
             )}
           </Form.Item>
-
           {/* Galeri */}
           <Form.Item label="Galeri">
             {getFieldDecorator("galleryId", {
@@ -119,7 +113,6 @@ class EditBeritaForm extends Component {
               </Select>
             )}
           </Form.Item>
-
           {/* Deskripsi */}
           <Form.Item label="Deskripsi:">
             {getFieldDecorator("description", {
@@ -127,7 +120,6 @@ class EditBeritaForm extends Component {
               rules: [{ required: true, message: "Silahkan isikan deskripsi" }],
             })(<TextArea rows={4} placeholder="Deskripsi" />)}
           </Form.Item>
-
           {/* Selengkapnya */}
           <Form.Item label="Selengkapnya:">
             {getFieldDecorator("selengkapnya", {
@@ -140,5 +132,5 @@ class EditBeritaForm extends Component {
     );
   }
 }
-
 export default Form.create({ name: "EditBeritaForm" })(EditBeritaForm);
+

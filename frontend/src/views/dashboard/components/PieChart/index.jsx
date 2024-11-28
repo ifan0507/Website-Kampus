@@ -64,6 +64,8 @@ class PieChart extends Component {
       totalPendaftaran,
       totalKalender,
       totalCampusLife,
+      totalPengumuman,
+      totalOrganisasi,
     } = this.props;
 
     const animationDuration = 3000;
@@ -75,7 +77,7 @@ class PieChart extends Component {
       legend: {
         left: "center",
         bottom: "10",
-        data: ["Profil", "Jurusan", "Berita", "Kegiatan", "Selayang Pandang", "Pendaftaran", "Kalender", "Campus Life"],
+        data: ["Profil", "Jurusan", "Berita", "Kegiatan", "Selayang Pandang", "Pendaftaran", "Kalender", "Campus Life","Pengumuman","Organisasi",],
       },
       calculable: true,
       series: [
@@ -94,6 +96,8 @@ class PieChart extends Component {
             { value: totalPendaftaran, name: "Pendaftaran" },
             { value: totalKalender, name: "Kalender" },
             { value: totalCampusLife, name: "Campus Life" },
+            { value: totalPengumuman, name: "Pengumuman" },
+            { value: totalOrganisasi, name: "Organisasi" },
           ],
           animationEasing: "cubicInOut",
           animationDuration

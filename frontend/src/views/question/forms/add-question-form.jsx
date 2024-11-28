@@ -72,7 +72,13 @@ class AddQuestionForm extends Component {
     };
 
     return (
-      <Modal title="Tambah Berita" visible={visible} onCancel={onCancel} onOk={onOk} confirmLoading={confirmLoading}>
+      <Modal
+        title="Tambah Berita"
+        visible={visible}
+        onCancel={onCancel}
+        onOk={onOk}
+        confirmLoading={confirmLoading}
+      >
         <Form {...formItemLayout}>
           <Form.Item label="Judul:">
             {getFieldDecorator("name", {
@@ -82,7 +88,9 @@ class AddQuestionForm extends Component {
 
           <Form.Item label="Category Berita:" required>
             {getFieldDecorator("categoryId", {
-              rules: [{ required: true, message: "Silahkan pilih kategori berita" }],
+              rules: [
+                { required: true, message: "Silahkan pilih kategori berita" },
+              ],
             })(
               <Select placeholder="Pilih Kategori Berita">
                 {categories.map((category) => (
@@ -95,7 +103,9 @@ class AddQuestionForm extends Component {
           </Form.Item>
           <Form.Item label="Galeri Berita:">
             {getFieldDecorator("galeriId", {
-              rules: [{ required: true, message: "Silahkan pilih galeri berita" }],
+              rules: [
+                { required: true, message: "Silahkan pilih galeri berita" },
+              ],
             })(
               <Select placeholder="Pilih Galeri Berita" loading={loading}>
                 {gallerys.length > 0 ? (
