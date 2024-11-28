@@ -1,26 +1,17 @@
-package com.doyatama.university.payload.selayang;
+package com.doyatama.university.payload.Pengumuman;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class SelayangRequest {
+public class PengumumanRequest {
     private String name;
-    private String description;
     private MultipartFile file;
-
-    public String getName() {
-        return name;
-    }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public String getName() {
+        return name;
     }
 
     public MultipartFile getFile() {
@@ -30,4 +21,5 @@ public class SelayangRequest {
     public void setFile(MultipartFile file) {
         this.file = file;
     }
+
 }

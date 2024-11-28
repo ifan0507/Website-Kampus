@@ -14,6 +14,12 @@ let chartList = [
     color: "#40c9c6",
   },
   {
+    type: "Selayang Pandang",
+    icon: "gift",
+    num: 0,
+    color: "#f6ab40",
+  },
+  {
     type: "Jurusan",
     icon: "contacts",
     num: 0,
@@ -21,27 +27,33 @@ let chartList = [
   },
   {
     type: "Berita",
-    icon: "book",
+    icon: "read",
     num: 0,
     color: "#36a3f7",
   },
   {
-    type: "Kegiatan",
-    icon: "team",
-    num: 0,
-    color: "#f6ab40",
-  },
-  {
-    type: "Selayang Pandang",
-    icon: "gift",
+    type: "Pengumuman",
+    icon: "notification",
     num: 0,
     color: "#40c9c6",
+  },
+  {
+    type: "Kegiatan",
+    icon: "usergroup-add",
+    num: 0,
+    color: "#f6ab40",
   },
   {
     type: "Pendaftaran",
     icon: "audit",
     num: 0,
     color: "#f4516c",
+  },
+  {
+    type: "Organisasi",
+    icon: "apartment",
+    num: 0,
+    color: "#36a3f7",
   },
   {
     type: "Kalender",
@@ -56,7 +68,6 @@ let chartList = [
     color: "#f6ab40",
   },
 ];
-
 const PanelGroup = (props) => {
   const {
     handleSetLineChartData,
@@ -68,6 +79,9 @@ const PanelGroup = (props) => {
     totalPendaftaran,
     totalKalender,
     totalCampusLife,
+    totalPengumuman,
+    totalOrganisasi,
+    
   } = props;
   for (let i = 0; i < chartList.length; i++) {
     const item = chartList[i];
@@ -94,6 +108,12 @@ const PanelGroup = (props) => {
     }
     if (item.type == 'Campus Life') {
       chartList[i].num = totalCampusLife
+    }
+    if (item.type == 'Pengumuman') {
+      chartList[i].num = totalPengumuman
+    }
+    if (item.type == 'Organisasi') {
+      chartList[i].num = totalOrganisasi
     }
   }
 

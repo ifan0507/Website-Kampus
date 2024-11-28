@@ -1,142 +1,198 @@
 import React, { Component } from "react";
 import { Card, Button, Table, message, Divider } from "antd";
-import { getCategorys, deleteCategory, editCategory, addCategory } from "@/api/category-berita";
+import {
+  getPengumuman,
+  deletePengumuman,
+  editPengumuman,
+  addPengumuman,
+  getPengumumanById,
+} from "@/api/pengumuman";
 import TypingCard from "@/components/TypingCard";
-import EditCategoryForm from "./forms/edit-category-form";
-import AddCategoryForm from "./forms/add-category-form";
-import { BlobImageDisplay } from "../../components/BlobImageDisplay";
+import AddPengumumanForm from "./forms/add-pengumuman-form";
+import EditPengumumanForm from "./forms/edit-pengumuman-form";
+import DetailPengumumanForm from "./forms/detail-pengumuman-form";
 
 const { Column } = Table;
+
 class Pengumuman extends Component {
   state = {
-    categorys: [],
-    editCategoryModalVisible: false,
-    editCategoryModalLoading: false,
+    pengumumans: [],
+    totalPages: 0,
+    page: 0,
+    size: 5,
+    editPengumumanModalVisible: false,
+    editPengumumanModalLoading: false,
     currentRowData: {},
-    addCategoryModalVisible: false,
-    addCategoryModalLoading: false,
+    addPengumumanModalVisible: false,
+    addPengumumanModalLoading: false,
+    detailPengumumanModalVisible: false,
+    detailPengumumanModalLoading: false,
+    currentDetailRowData: {},
   };
-  getCategorys = async () => {
-    const result = await getCategorys();
-    console.log(result);
-    const { content, statusCode } = result.data;
 
-    if (statusCode === 200) {
-      this.setState({
-        categorys: content,
-      });
+
+  getPengumuman = async () => {
+    try {
+      const result = await getPengumuman(this.state.page, this.state.size); // Ambil halaman pertama dan 5 pengumuman
+      const { content, totalPages, statusCode } = result.data;
+
+      if (statusCode === 200) {
+        this.setState({ pengumumans: content, totalPages });
+      } else {
+        message.error("Gagal mengambil data pengumuman.");
+      }
+    } catch (error) {
+      console.error("Error fetching pengumuman:", error);
+      message.error(error.message);
     }
   };
-  handleEditCategory = (row) => {
+
+
+  handleDetailPengumuman = async (row) => {
+    try {
+      const result = await getPengumumanById(row.id);
+      if (result.status === 200) {
+        this.setState({
+          currentDetailRowData: result.data,
+          detailPengumumanModalVisible: true,
+        });
+      }
+    } catch (error) {
+      message.error("Gagal mengambil pengumuman.");
+      console.error(error);
+    }
+  };
+
+  handleEditPengumuman = (row) => {
+    console.log(row);
     this.setState({
-      currentRowData: Object.assign({}, row),
-      editCategoryModalVisible: true,
+      currentRowData: row,
+      editPengumumanModalVisible: true,
     });
   };
 
-  handleDeleteCategory = (row) => {
+
+  handleDeletePengumuman = async (row) => {
     const { id } = row;
+
     if (id === "admin") {
-      message.error("Tidak dapat menghapus category berita！");
+      message.error("Tidak dapat menghapus pengumuman ini!");
       return;
     }
-    console.log(id);
-    deleteCategory({ id }).then((res) => {
-      message.success("Berhasil dihapus!");
-      this.getCategorys();
-    });
+    try {
+      await deletePengumuman(id); 
+      message.success("Pengumuman berhasil dihapus");
+      this.getPengumuman(); 
+    } catch (error) {
+      message.error("Gagal menghapus pengumuman.");
+      console.error("Error deleting pengumuman:", error);
+    }
   };
 
-  handleEditCategoryOk = (_) => {
-    const { form } = this.editCategoryFormRef.props;
+
+  handleEditPengumumanOk = async () => {
+    const { form } = this.editPengumumanFormRef.props;
+    const { fileList } = this.editPengumumanFormRef.state;
+
+    const { currentRowData } = this.state;
+    if (currentRowData.id) {
+      console.log(currentRowData);
+    }
+
     form.validateFields((err, values) => {
       if (err) {
         return;
       }
-      this.setState({ editModalLoading: true });
-      editCategory(values, values.id)
+
+      const data = { ...values, files: fileList };
+
+      editPengumuman(data, currentRowData.id)
         .then((response) => {
           form.resetFields();
           this.setState({
-            editCategoryModalVisible: false,
-            editCategoryModalLoading: false,
+            editPengumumanModalVisible: false,
+            editPengumumanModalLoading: false,
           });
-          message.success("Berhasil diedit!");
-          this.getCategorys();
+          message.success("Berhasil Mengedit!");
+          this.getPengumuman();
         })
         .catch((e) => {
-          message.success("Pengeditan gagal, coba lagi!");
+          message.error("Pengeditan Gagal, coba lagi!");
+          this.setState({ editPengumumanModalLoading: false });
         });
     });
   };
 
-  handleCancel = (_) => {
-    this.setState({
-      editCategoryModalVisible: false,
-      addCategoryModalVisible: false,
-    });
-  };
 
-  handleAddCategory = (row) => {
-    this.setState({
-      addCategoryModalVisible: true,
-    });
-  };
+  handleAddPengumumanOk = async () => {
+    const { form } = this.addPengumumanFormRef.props;
+    const { fileList } = this.addPengumumanFormRef.state;
 
-  handleAddCategoryOk = (_) => {
-    const { form } = this.addCategoryFormRef.props;
     form.validateFields((err, values) => {
       if (err) {
         return;
       }
-      this.setState({ addCategoryModalLoading: true });
-      addCategory(values)
+
+      addPengumuman({ ...values, files: fileList })
         .then((response) => {
           form.resetFields();
+          this.addPengumumanFormRef.setState({ fileList: [] });
           this.setState({
-            addCategoryModalVisible: false,
-            addCategoryModalLoading: false,
+            addPengumumanModalVisible: false,
+            addPengumumanModalLoading: false,
           });
           message.success("Berhasil ditambahkan!");
-          this.getCategorys();
+          this.getPengumuman();
         })
         .catch((e) => {
-          message.success("Gagal menambahkan, silakan coba lagi!");
+          message.error("Gagal menambahkan, silakan coba lagi!");
         });
     });
   };
+
+
+  handleCancel = () => {
+    this.setState({
+      editPengumumanModalVisible: false,
+      addPengumumanModalVisible: false,
+      detailPengumumanModalVisible: false,
+      currentRowData: {},
+      currentDetailRowData: {},
+    });
+  };
+
+
+  handleAddPengumuman = () => {
+    this.setState({ addPengumumanModalVisible: true });
+  };
+
   componentDidMount() {
-    this.getCategorys();
+    this.getPengumuman();
   }
+
   render() {
-    const { categorys } = this.state;
+    const { pengumumans, totalPages, page } = this.state;
     const title = (
       <span>
-        <Button type="primary" onClick={this.handleAddCategory}>
+        <Button type="primary" onClick={this.handleAddPengumuman}>
           Tambahkan Pengumuman
         </Button>
       </span>
     );
-    const cardContent = `Di sini, Anda dapat mengelola informasi pengumuman di sistem, seperti menambahkan pengumuman, atau mengubah pengumuman yang sudah ada di sistem.`;
+    const cardContent = `Di sini, Anda dapat mengelola informasi pengumuman di sistem, seperti menambahkan pengumuman baru, atau mengubah pengumuman yang sudah ada di sistem.`;
+
     return (
       <div className="app-container">
         <TypingCard title="Manajemen Pengumuman" source={cardContent} />
         <br />
         <Card title={title}>
-          <Table bordered rowKey="id" dataSource={categorys} pagination={{ pageSize: 5 }}>
-            {/* <Column title="ID Selayang" dataIndex="id" key="id" align="center" /> */}
+          <Table
+            bordered
+            rowKey="id"
+            dataSource={pengumumans}
+            pagination={{ pageSize: 5 }}
+          >
             <Column title="Judul" dataIndex="name" key="name" align="center" />
-            {/* <Column
-              title="Images"
-              dataIndex="image"
-              key="image"
-              align="center"
-              render={(text, row) => {
-                // console.log(row.data)
-                return row.data != null ? 
-                <BlobImageDisplay blob={row.data} /> : <></> 
-            }}
-            /> */}
             <Column
               title="Operasi"
               key="action"
@@ -144,28 +200,57 @@ class Pengumuman extends Component {
               align="center"
               render={(text, row) => (
                 <span>
-                  <Button type="primary" shape="circle" icon="edit" title="edit" onClick={this.handleEditCategory.bind(null, row)} />
+                  <Button
+                    type="primary"
+                    shape="circle"
+                    icon="edit"
+                    title="edit"
+                    onClick={() => this.handleEditPengumuman(row)}
+                  />
                   <Divider type="vertical" />
-                  <Button type="primary" shape="circle" icon="delete" title="delete" onClick={this.handleDeleteCategory.bind(null, row)} />
+                  <Button
+                    type="primary"
+                    shape="circle"
+                    icon="delete"
+                    title="delete"
+                    onClick={() => this.handleDeletePengumuman(row)}
+                  />
+                  <Divider type="vertical" />
+                  <Button
+                    type="primary"
+                    shape="circle"
+                    icon="info"
+                    title="detail"
+                    onClick={() => this.handleDetailPengumuman(row)}
+                  />
                 </span>
               )}
             />
           </Table>
         </Card>
-        <EditCategoryForm
+        <EditPengumumanForm
           currentRowData={this.state.currentRowData}
-          wrappedComponentRef={(formRef) => (this.editCategoryFormRef = formRef)}
-          visible={this.state.editCategoryModalVisible}
-          confirmLoading={this.state.editCategoryModalLoading}
+          wrappedComponentRef={(formRef) =>
+            (this.editPengumumanFormRef = formRef)
+          }
+          visible={this.state.editPengumumanModalVisible}
+          confirmLoading={this.state.editPengumumanModalLoading}
           onCancel={this.handleCancel}
-          onOk={this.handleEditCategoryOk}
+          onOk={this.handleEditPengumumanOk}
         />
-        <AddCategoryForm
-          wrappedComponentRef={(formRef) => (this.addCategoryFormRef = formRef)}
-          visible={this.state.addCategoryModalVisible}
-          confirmLoading={this.state.addCategoryModalLoading}
+        <AddPengumumanForm
+          wrappedComponentRef={(formRef) =>
+            (this.addPengumumanFormRef = formRef)
+          }
+          visible={this.state.addPengumumanModalVisible}
+          confirmLoading={this.state.addPengumumanModalLoading}
           onCancel={this.handleCancel}
-          onOk={this.handleAddCategoryOk}
+          onOk={this.handleAddPengumumanOk}
+        />
+        <DetailPengumumanForm
+          currentDetailRowData={this.state.currentDetailRowData}
+          visible={this.state.detailPengumumanModalVisible}
+          onCancel={this.handleCancel}
         />
       </div>
     );

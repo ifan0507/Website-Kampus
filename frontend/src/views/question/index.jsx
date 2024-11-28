@@ -5,6 +5,7 @@ import { getBeritas, deleteBerita, editBerita, addBerita } from "@/api/berita";
 import TypingCard from "@/components/TypingCard";
 import EditBeritaForm from "./forms/edit-question-form";
 import AddBeritaForm from "./forms/add-question-form";
+import { BlobImageDisplay } from "../../components/BlobImageDisplay";
 
 const { Column } = Table;
 
@@ -146,7 +147,7 @@ class Berita extends Component {
 
     return (
       <div className="app-container">
-        <TypingCard title="Manajemen Berita" source="Di sini, Anda dapat mengelola berita." />
+        <TypingCard title="Manajemen Berita" source="Di sini, Anda dapat mengelola informasi berita di sistem, seperti menambahkan berita baru, atau mengubah berita yang sudah ada di sistem." />
         <Card title={title}>
           <Table bordered rowKey="id" dataSource={beritas} pagination={{ pageSize: 5 }}>
             <Column title="Judul" dataIndex="name" key="name" align="center" />
