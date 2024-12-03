@@ -149,7 +149,7 @@ class Kegiatan extends Component {
               align="center"
             />
             <Column
-              title="Images"
+              title="Gambar"
               dataIndex="image"
               key="image"
               align="center"
