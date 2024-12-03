@@ -2,9 +2,7 @@ import React, { Component } from "react";
 import { Row, Col, Icon } from "antd";
 import CountUp from "react-countup";
 import "./index.less";
-import {
-  getPendaftarans,
-} from "@/api/pendaftaran";
+import { getPendaftarans } from "@/api/pendaftaran";
 
 let chartList = [
   {
@@ -14,7 +12,7 @@ let chartList = [
     color: "#40c9c6",
   },
   {
-    type: "Selayang Pandang",
+    type: "Pandangan Umum",
     icon: "gift",
     num: 0,
     color: "#f6ab40",
@@ -32,7 +30,7 @@ let chartList = [
     color: "#36a3f7",
   },
   {
-    type: "Pengumuman",
+    type: "p",
     icon: "notification",
     num: 0,
     color: "#40c9c6",
@@ -69,51 +67,38 @@ let chartList = [
   },
 ];
 const PanelGroup = (props) => {
-  const {
-    handleSetLineChartData,
-    totalProfil,
-    totalJurusan,
-    totalBerita,
-    totalKegiatan,
-    totalSelayangPandang,
-    totalPendaftaran,
-    totalKalender,
-    totalCampusLife,
-    totalPengumuman,
-    totalOrganisasi,
-    
-  } = props;
+  const { handleSetLineChartData, totalProfil, totalJurusan, totalBerita, totalKegiatan, totalSelayangPandang, totalPendaftaran, totalKalender, totalCampusLife, totalPengumuman, totalOrganisasi } = props;
   for (let i = 0; i < chartList.length; i++) {
     const item = chartList[i];
-    if (item.type == 'Profil') {
-      chartList[i].num = totalProfil
+    if (item.type == "Profil") {
+      chartList[i].num = totalProfil;
     }
-    if (item.type == 'Jurusan') {
-      chartList[i].num = totalJurusan
+    if (item.type == "Jurusan") {
+      chartList[i].num = totalJurusan;
     }
-    if (item.type == 'Berita') {
-      chartList[i].num = totalBerita
+    if (item.type == "Berita") {
+      chartList[i].num = totalBerita;
     }
-    if (item.type == 'Kegiatan') {
-      chartList[i].num = totalKegiatan
+    if (item.type == "Kegiatan") {
+      chartList[i].num = totalKegiatan;
     }
-    if (item.type == 'Selayang Pandang') {
-      chartList[i].num = totalSelayangPandang
+    if (item.type == "Pandangan Umum") {
+      chartList[i].num = totalSelayangPandang;
     }
-    if (item.type == 'Pendaftaran') {
-      chartList[i].num = totalPendaftaran
+    if (item.type == "Pendaftaran") {
+      chartList[i].num = totalPendaftaran;
     }
-    if (item.type == 'Kalender') {
-      chartList[i].num = totalKalender
+    if (item.type == "Kalender") {
+      chartList[i].num = totalKalender;
     }
-    if (item.type == 'Campus Life') {
-      chartList[i].num = totalCampusLife
+    if (item.type == "Campus Life") {
+      chartList[i].num = totalCampusLife;
     }
-    if (item.type == 'Pengumuman') {
-      chartList[i].num = totalPengumuman
+    if (item.type == "Pengumuman") {
+      chartList[i].num = totalPengumuman;
     }
-    if (item.type == 'Organisasi') {
-      chartList[i].num = totalOrganisasi
+    if (item.type == "Organisasi") {
+      chartList[i].num = totalOrganisasi;
     }
   }
 
@@ -131,11 +116,7 @@ const PanelGroup = (props) => {
           >
             <div className="card-panel">
               <div className="card-panel-icon-wrapper">
-                <Icon
-                  className={chart.type}
-                  style={{ fontSize: 55, color: chart.color }}
-                  type={chart.icon}
-                />
+                <Icon className={chart.type} style={{ fontSize: 55, color: chart.color }} type={chart.icon} />
               </div>
               <div className="card-panel-description">
                 <p className="card-panel-text">{chart.type}</p>

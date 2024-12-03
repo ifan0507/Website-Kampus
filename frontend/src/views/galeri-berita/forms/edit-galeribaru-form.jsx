@@ -13,7 +13,6 @@ class EditGaleriBaruForm extends Component {
   // Fungsi ini akan dipanggil saat file diunggah atau dihapus
   handleChange = (info) => {
     let fileList = [...info.fileList];
-    console.log("setelah perubahan ", fileList);
 
     // Limit to a maximum of 5 files
     if (fileList.length > 5) {

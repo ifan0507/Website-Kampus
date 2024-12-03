@@ -17,11 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -51,14 +48,9 @@ public class BeritaController {
         }
 
         @PostMapping
-        public ResponseEntity<?> createBerita(@AuthenticationPrincipal UserPrincipal currentUser,
-                        @Valid @RequestBody BeritaRequest beritaRequest) throws IOException {
-                System.out.println("Received request: " + beritaRequest);
-                System.out.println("CategoryId: " + beritaRequest.getCategoryId());
-                System.out.println("GaleryId: " + beritaRequest.getGaleryId());
-                System.out.println("Name: " + beritaRequest.getName());
-                System.out.println("Description: " + beritaRequest.getDescription());
-                System.out.println("Selengkapnya: " + beritaRequest.getSelengkapnya());
+        public ResponseEntity<?> createBerita(@CurrentUser UserPrincipal currentUser,
+                        @Valid @ModelAttribute BeritaRequest beritaRequest, @RequestParam("file") MultipartFile file)
+                        throws IOException {
 
                 if (currentUser == null) {
                         System.out.println("currentUser is null!");
@@ -68,7 +60,7 @@ public class BeritaController {
 
                 // Proses Berita
                 try {
-                        Berita berita = beritaService.createBerita(currentUser, beritaRequest);
+                        Berita berita = beritaService.createBerita(currentUser, beritaRequest, file);
 
                         URI location = ServletUriComponentsBuilder
                                         .fromCurrentRequest().path("/{beritaId}")
@@ -85,11 +77,11 @@ public class BeritaController {
 
         @PutMapping("/{beritaId}")
         // @Secured("ROLE_ADMINISTRATOR")
-        public ResponseEntity<?> updateBeritaById(@AuthenticationPrincipal UserPrincipal currentUser,
+        public ResponseEntity<?> updateBeritaById(@CurrentUser UserPrincipal currentUser,
                         @PathVariable(value = "beritaId") Long beritaId,
-                        @Valid @RequestBody BeritaRequest beritaRequest)
+                        @Valid BeritaRequest beritaRequest, @RequestParam("file") MultipartFile file)
                         throws IOException {
-                Berita berita = beritaService.updateBerita(beritaRequest, beritaId, currentUser);
+                Berita berita = beritaService.updateBerita(beritaRequest, beritaId, currentUser, file);
                 URI location = ServletUriComponentsBuilder
                                 .fromCurrentRequest().path("/{beritaId}")
                                 .buildAndExpand(berita.getId()).toUri();

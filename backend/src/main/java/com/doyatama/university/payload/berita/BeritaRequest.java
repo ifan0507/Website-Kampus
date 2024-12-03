@@ -1,12 +1,16 @@
 package com.doyatama.university.payload.berita;
 
+import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.lang.Nullable;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class BeritaRequest {
+
+    private MultipartFile file;
 
     @JsonProperty("category_id")
     @NotNull(message = "CategoryId must not be null")
@@ -18,8 +22,10 @@ public class BeritaRequest {
 
     private String name;
 
+    @Lob
     private String description;
 
+    @Lob
     private String selengkapnya;
 
     public String getName() {
@@ -60,6 +66,14 @@ public class BeritaRequest {
 
     public Long getCategoryId() {
         return categoryId;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+
+    public MultipartFile getFile() {
+        return file;
     }
 
 }

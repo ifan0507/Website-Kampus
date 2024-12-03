@@ -3,44 +3,18 @@ import { Row, Col } from "antd";
 import "./index.less";
 import PanelGroup from "./components/PanelGroup";
 import LineChart from "./components/LineChart";
-import BarChart from "./components/BarChart";
-import RaddarChart from "./components/RaddarChart";
 import PieChart from "./components/PieChart";
-import TransactionTable from "./components/TransactionTable";
-import TransactionTable2 from "./components/TransactionTable2";
-import BoxCard from "./components/BoxCard";
-import {
-  getProfil,
-} from "@/api/profil";
-import {
-  getDepartments,
-} from "@/api/department";
-import {
-  getBeritas,
-} from "@/api/berita";
-import {
-  getKegiatans,
-} from "@/api/kegiatan";
-import {
-  getSelayangs,
-} from "@/api/selayang";
-import {
-  getPendaftarans,
-} from "@/api/pendaftaran";
-import {
-  getKalender,
-} from "@/api/kalender";
-import {
-  getCampusLifes,
-} from "@/api/campus-life";
-import {
-  getPengumuman,
-} from "@/api/pengumuman";
-import {
-  getOrganisasi,
-} from "@/api/organisasi";
+import { getProfil } from "@/api/profil";
+import { getDepartments } from "@/api/department";
+import { getBeritas } from "@/api/berita";
+import { getKegiatans } from "@/api/kegiatan";
+import { getSelayangs } from "@/api/selayang";
+import { getPendaftarans } from "@/api/pendaftaran";
+import { getKalender } from "@/api/kalender";
+import { getCampusLifes } from "@/api/campus-life";
+import { getPengumuman } from "@/api/pengumuman";
+import { getOrganisasi } from "@/api/organisasi";
 
- 
 const lineChartDefaultData = {
   "Manajemen Profil": {
     expectedData: [1000, 120, 161, 134, 105, 160, 165],
@@ -74,20 +48,18 @@ const lineChartDefaultData = {
     expectedData: [130, 140, 141, 142, 145, 150, 160],
     actualData: [120, 82, 91, 154, 162, 140, 130],
   },
-  "Pengumuman": {
+  "Management Pengumuman": {
     expectedData: [130, 140, 141, 142, 145, 150, 160],
     actualData: [120, 82, 91, 154, 162, 140, 130],
   },
-  "Organisasi": {
+  "Struktur Organisasi": {
     expectedData: [130, 140, 141, 142, 145, 150, 160],
     actualData: [120, 82, 91, 154, 162, 140, 130],
   },
 };
 
 const Dashboard = () => {
-  const [lineChartData, setLineChartData] = useState(
-    lineChartDefaultData["Manajemen Profil"]
-  );
+  const [lineChartData, setLineChartData] = useState(lineChartDefaultData["Manajemen Profil"]);
 
   const [profil, setProfil] = useState([]);
   const [jurusan, setJurusan] = useState([]);
@@ -99,7 +71,6 @@ const Dashboard = () => {
   const [campusLife, setCampusLife] = useState([]);
   const [pengumuman, setPengumuman] = useState([]);
   const [organisasi, setOrganisasi] = useState([]);
- 
 
   const handleProfil = async () => {
     try {
@@ -196,7 +167,7 @@ const Dashboard = () => {
     } catch (error) {
       console.error("Error fetching data:", error.message);
     }
-  }; 
+  };
   const handlePengumuman = async () => {
     try {
       const result = await getPengumuman();
@@ -350,7 +321,7 @@ const Dashboard = () => {
           </div>
         </Col> */}
       </Row>
-{/* 
+      {/* 
       <Row gutter={32}>
         <Col xs={24} sm={24} lg={12}>
           <TransactionTable />
