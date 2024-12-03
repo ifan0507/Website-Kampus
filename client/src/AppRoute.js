@@ -24,7 +24,7 @@ const AppRoute = () => {
     return (
         <Switch>
             <Route exact path='/' component={HomePage} />
-            <Route exact path='/profile' component={ProfilePage} />
+            {/* <Route exact path='/profile' component={ProfilePage} />
             <Route exact path='/selayang_pandang' component={selayang_pandang} />
             <Route exact path='/visi_misi' component={visi_misi} />
             <Route exact path='/struktur_organisasi' component={struktur_organisasi} />
@@ -73,14 +73,14 @@ const AppRoute = () => {
 
             <Route exact path='/perpustakaan_polinema' component={perpustakaan_polinema} />
             {/* <Route exact path='/fasilitas_bangunan' component={fasilitas_bangunan} /> */}
-            <Route exact path='/fasilitas_parkir' component={fasilitas_parkir} />
+            {/* <Route exact path='/fasilitas_parkir' component={fasilitas_parkir} />
             <Route exact path='/kantin' component={kantin} />
             <Route exact path='/keamanan' component={keamanan} />
             <Route exact path='/galeri' component={galeri} />
-            <Route exact path='/mapping' component={mapping} />
+            <Route exact path='/mapping' component={mapping} /> */} 
 
         </Switch>
     )
 }
 
-export default AppRoute
+export default AppRoute;

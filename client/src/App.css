@@ -36,3 +36,26 @@
     transform: rotate(360deg);
   }
 }
+
+.card {
+    border: none; /* Hilangkan border pada card */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Tambahkan bayangan */
+    border-radius: 10px; /* Buat sudut card melengkung */
+}
+
+.card-header {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.card-body ul {
+    font-size: 1rem;
+    line-height: 1.8; /* Memberikan ruang antar baris */
+}
+
+.card-body ul li {
+    margin-bottom: 10px;
+}
+
+

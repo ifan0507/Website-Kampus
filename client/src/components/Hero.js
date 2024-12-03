@@ -35,12 +35,14 @@ const styles = theme => ({
 })
 
 class Hero extends Component {
-  render () {
+  render() {
     const {
       classes,
       titleText,
       subtitleText,
       backgroundImg,
+      beritaText,
+      pengumumanText,
       primaryBtnText,
       primaryBtnLink,
       secondaryBtnText,
@@ -48,13 +50,13 @@ class Hero extends Component {
       tertiaryBtnText,
       tertiaryBtnLink,
       minimumHeight
-    } = this.props
+    } = this.props;
 
     const Title = (
       <Typography variant="display2" className={classes.white} gutterBottom>
         {titleText}
       </Typography>
-    )
+    );
 
     const Subtitle = (
       <Typography
@@ -65,7 +67,24 @@ class Hero extends Component {
       >
         {subtitleText}
       </Typography>
-    )
+    );
+
+    const Berita = (
+      <div style={{ position: 'absolute', top: '10%', right: '10%', color: '#fff' }}>
+        <Typography variant='body1' className={classes.white}>
+          {beritaText}
+        </Typography>
+      </div>
+    );
+
+    const Pengumuman = (
+      <div style={{ position: 'absolute', bottom: '10%', right: '10%', color: '#fff' }}>
+        <Typography variant="body1" className={classes.white}>
+          {pengumumanText}
+        </Typography>
+      </div>
+    );
+
 
     const PrimaryBtn = (
       <Grid item className={classes.heroBtnContainer} xs={12}>
@@ -121,6 +140,7 @@ class Hero extends Component {
         </Button>
       </Grid>
     )
+
     return (
       <div
         className={classes.parallax}
@@ -131,6 +151,8 @@ class Hero extends Component {
       >
         {titleText && Title}
         {subtitleText && Subtitle}
+        {beritaText && Berita}
+        {pengumumanText && Pengumuman}
 
         {primaryBtnText || secondaryBtnText || tertiaryBtnText ? (
           <Grid container style={{ width: '100%' }} spacing={16}>
@@ -140,7 +162,7 @@ class Hero extends Component {
           </Grid>
         ) : null}
       </div>
-    )
+    );
   }
 }
 
