@@ -85,7 +85,9 @@ public class BeritaService {
             BeritaResponse beritaResponse = new BeritaResponse();
             beritaResponse.setId(asResponse.getId());
             beritaResponse.setName(asResponse.getName());
-
+            beritaResponse.setFileNameJudul(asResponse.getFileNameJudul());
+            beritaResponse.setFileType(asResponse.getFileType());
+            beritaResponse.setData(asResponse.getData());
             // Mengambil nama kategori jika ada, jika tidak maka null
             beritaResponse.setCategoryName(asResponse.getCategoryBerita() != null
                     ? asResponse.getCategoryBerita().getName()
@@ -109,9 +111,8 @@ public class BeritaService {
                 beritas.getSize(), beritas.getTotalElements(), beritas.getTotalPages(), beritas.isLast(), 200);
     }
 
-    public Berita createBerita(UserPrincipal currentUser, @Valid BeritaRequest beritaRequest) throws IOException {
-        // Log untuk melihat data beritaRequest yang diterima
-        System.out.println("Processing Berita with request: " + beritaRequest);
+    public Berita createBerita(UserPrincipal currentUser, @Valid BeritaRequest beritaRequest, MultipartFile file)
+            throws IOException {
 
         // Ambil category berdasarkan ID dari request
         CategoryBerita category = categoryRepository.findById(beritaRequest.getCategoryId())
@@ -136,14 +137,18 @@ public class BeritaService {
             System.out.println("No Galery found, skipping galery assignment.");
         }
 
+        String fileNameJudul = StringUtils.cleanPath(file.getOriginalFilename());
+
         // Proses berita
         Berita berita = new Berita();
         berita.setName(beritaRequest.getName());
+        berita.setFileNameJudul(fileNameJudul);
+        berita.setFileType(file.getContentType());
         berita.setCategoryBerita(category);
         berita.setDescription(beritaRequest.getDescription());
         berita.setSelengkapnya(beritaRequest.getSelengkapnya());
         berita.setGallery(galeryBaru); // Galeri bisa null jika tidak ada
-
+        berita.setData(file.getBytes());
         // Simpan berita ke database
         return beritaRepository.save(berita);
     }
@@ -154,6 +159,9 @@ public class BeritaService {
         BeritaResponse beritaResponse = new BeritaResponse();
         beritaResponse.setId(berita.getId());
         beritaResponse.setName(berita.getName());
+        beritaResponse.setFileNameJudul(berita.getFileNameJudul());
+        beritaResponse.setFileType(berita.getFileType());
+        beritaResponse.setData(berita.getData());
         beritaResponse.setDescription(berita.getDescription());
         beritaResponse.setSelengkapnya(berita.getSelengkapnya());
         beritaResponse.setCategoryId(
@@ -171,7 +179,8 @@ public class BeritaService {
         }
     }
 
-    public Berita updateBerita(@Valid BeritaRequest beritaRequest, Long id, UserPrincipal currentUser)
+    public Berita updateBerita(@Valid BeritaRequest beritaRequest, Long id, UserPrincipal currentUser,
+            MultipartFile file)
             throws IOException {
         return beritaRepository.findById(id).map(berita -> {
             // organisasi.setUpdatedBy(currentUser.getId());
@@ -186,21 +195,21 @@ public class BeritaService {
             // Organisasi organisasi = new Organisasi();
             // organisasi.setCreatedBy(currentUser.getId());
             // organisasi.setUpdatedBy(currentUser.getId());
+            String fileNameJudul = StringUtils.cleanPath(file.getOriginalFilename());
+
             berita.setName(beritaRequest.getName());
             berita.setDescription(beritaRequest.getDescription());
             berita.setSelengkapnya(beritaRequest.getSelengkapnya());
             berita.setCategoryBerita(category);
-            // berita.setFileName(fileName);
-            // berita.setFileType(file.getContentType());
+            berita.setFileNameJudul(fileNameJudul);
+            berita.setFileType(file.getContentType());
             berita.setGallery(galeryBaru);
-            // try {
-            // berita.setData(file.getBytes());
-            // } catch (IOException e) {
-            // // Handle the IOException here or rethrow it as an unchecked exception if
-            // // needed.
-            // throw new RuntimeException("Error reading file content: " + e.getMessage(),
-            // e);
-            // }
+            try {
+                berita.setData(file.getBytes());
+            } catch (IOException e) {
+                throw new RuntimeException("Error reading file content: " + e.getMessage(),
+                        e);
+            }
             return beritaRepository.save(berita);
         }).orElseThrow(() -> new ResourceNotFoundException("Berita", "id", id));
     }

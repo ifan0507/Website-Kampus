@@ -9,9 +9,15 @@ public class BeritaResponse {
 
     private Long id;
     private String name;
+    private String fileType;
+    private String fileNameJudul;
 
     private Long categoryId;
+
+    @Lob
     private String description;
+
+    @Lob
     private String selengkapnya;
     private Instant updatedAt;
     private Instant createdAt;
@@ -25,10 +31,13 @@ public class BeritaResponse {
     public BeritaResponse() {
     }
 
-    public BeritaResponse(Long id, String name, String categoryName, String galleryName, String description,
+    public BeritaResponse(Long id, String name, String fileType, String fileNameJudul, String categoryName,
+            String galleryName, String description,
             String selengkapnya, Instant updatedAt, Instant createdAt, Long galeryId, byte[] data) {
         this.id = id;
         this.name = name;
+        this.fileType = fileType;
+        this.fileNameJudul = fileNameJudul;
         this.categoryName = categoryName;
         this.galleryName = galleryName;
         this.description = description;
@@ -53,6 +62,14 @@ public class BeritaResponse {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setFileNameJudul(String fileNameJudul) {
+        this.fileNameJudul = fileNameJudul;
+    }
+
+    public String getFileNameJudul() {
+        return fileNameJudul;
     }
 
     public String getDescription() {
@@ -125,5 +142,13 @@ public class BeritaResponse {
 
     public String getGalleryName() {
         return galleryName;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
+    public String getFileType() {
+        return fileType;
     }
 }
