@@ -7,16 +7,17 @@ const MarqueeText = (props) => {
     const { classes} = props
     const { t } = useTranslation();
     useEffect(() => {
-        fetch('http://localhost:8080/api/berita') // Pastikan URL endpoint sesuai
-        .then(response => response.json())
-        .then(data => {
-            setData([data.content]);
-            console.log(data.content);
-        })
-        .catch(error => {
+        fetch("http://localhost:8080/api/berita?page=0&size=3") // Parameter sesuai kebutuhan
+          .then((response) => response.json())
+          .then((res) => {
+            setData(res.content); // Akses ke properti "content"
+            console.log(res.content); // Pastikan data sesuai
+          })
+          .catch((error) => {
             console.error(error);
-        });
-    }, []);
+          });
+      }, []);
+    
     
     return (
     <marquee direction = "left" behavior = "scroll" scrollamount="20" style={{backgroundColor: '#051d47', color: "#ffff",  display: "block" }}>

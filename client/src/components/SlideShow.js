@@ -5,9 +5,42 @@ import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
+import { isMobile } from "react-device-detect";
 import '../App.css';
 
-const SlideShow = () => {
+const SlideShow = (props) => {
+  const [data, setData] = useState([]);
+  const { classes } = props;
+  const { t } = useTranslation();
+  const [beritaData, setBeritaData] = useState([]);
+  const [departmentData, setDepartmentData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    fetch("http://localhost:8080/api/berita?page=0&size=3") // Parameter sesuai kebutuhan
+      .then((response) => response.json())
+      .then((res) => {
+        setData(res.content); // Akses ke properti "content"
+        console.log(res.content); // Pastikan data sesuai
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const [showPopup, setShowPopup] = useState(false);
+
+  useEffect(() => {
+    if (isMobile) {
+      setShowPopup(true);
+    }
+  }, []);
+
+  const hidePopup = () => {
+    setShowPopup(false);
+  };
+
     return (
         <div style={{ margin: 0, padding: 0 }}>
             <Row className="g-0" style={{ margin: 0 }}>
@@ -63,9 +96,17 @@ const SlideShow = () => {
         </Card.Header>
         <Card.Body style={{ overflowY: 'auto' }}>
           <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-            <li> POLINEMA Gelar Wisuda ke-68 Tahap IV 2024</li>
-            <li> POLINEMA Hibahkan Peralatan PEF – Fermentasi</li>
-            <li> Polinema Gelar Expo Pendidikan</li>
+          {data.map((item, index) => (
+              <li
+                key={index}
+                Img={item.data} // URL atau base64 dari backend
+                profileName={item.name} // Judul berita
+                content={item.description} // Deskripsi atau link berita
+                profileLink={`/item_pengumuman${index + 1}`} // Link dinamis
+                link={t("selengkapnya →")}
+                bgContain
+              />
+            ))}
           </ul>
         </Card.Body>
       </Card>
