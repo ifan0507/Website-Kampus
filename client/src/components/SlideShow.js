@@ -46,71 +46,56 @@ const SlideShow = () => {
                 </Col>
 
                 {/* News and Announcements Section */}
-                <Col sm={3} style={{ padding: 0 }}>
-                    <Container fluid style={{ padding: 0, backgroundColor: '#FFf' }}>
-                        <Row>
-                            <Col>
-                                <Card
-                                    className="mb-4"
-                                    style={{
-                                        backgroundColor: '#003366',
-                                        color: 'white',
-                                        borderRadius: 0,
-                                    }}
-                                >
-                                    <Card.Header
-                                        style={{
-                                            backgroundColor: '#FFA500',
-                                            fontWeight: 'bold',
-                                            textAlign: 'center',
-                                            borderRadius: 0,
-                                        }}
-                                    >
-                                        BERITA
-                                    </Card.Header>
-                                    <Card.Body>
-                                        <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-                                            <li>- POLINEMA Gelar Wisuda ke-68 Tahap IV 2024</li>
-                                            <li>
-                                                - POLINEMA Hibahkan Peralatan PEF – Fermentasi
-                                            </li>
-                                            <li>- Polinema Gelar Expo Pendidikan</li>
-                                        </ul>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Card
-                                    className="mb-4"
-                                    style={{
-                                        backgroundColor: '#003366',
-                                        color: 'white',
-                                        borderRadius: 0,
-                                    }}
-                                >
-                                    <Card.Header
-                                        style={{
-                                            backgroundColor: '#FFA500',
-                                            fontWeight: 'bold',
-                                            textAlign: 'center',
-                                            borderRadius: 0,
-                                        }}
-                                    >
-                                        PENGUMUMAN
-                                    </Card.Header>
-                                    <Card.Body>
-                                        <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
-                                            <li>- Jadwal Lelang Gedung AK POLINEMA</li>
-                                            <li>- Informasi Sarpras</li>
-                                        </ul>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        </Row>
-                    </Container>
-                </Col>
+                <Col sm={3} style={{ padding: 0, backgroundColor: '#003366' }}>
+  <Container fluid style={{display: 'flex', flexDirection: 'column', padding: 0 }}>
+    
+    {/* Berita */}
+    <div style={{ flex: '0 1 auto', display: 'flex', flexDirection: 'column' }}>
+      <Card style={{ backgroundColor: 'transparent', color: 'white', border: 'none', height: '253px' }}>
+        <Card.Header
+          style={{
+            backgroundColor: '#FFA500',
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}
+        >
+          BERITA
+        </Card.Header>
+        <Card.Body style={{ overflowY: 'auto' }}>
+          <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
+            <li> POLINEMA Gelar Wisuda ke-68 Tahap IV 2024</li>
+            <li> POLINEMA Hibahkan Peralatan PEF – Fermentasi</li>
+            <li> Polinema Gelar Expo Pendidikan</li>
+          </ul>
+        </Card.Body>
+      </Card>
+    </div>
+
+    {/* Pengumuman */}
+    <div style={{ flex: '0 1 auto', display: 'flex', flexDirection: 'column' }}>
+    <Card style={{ backgroundColor: 'transparent', color: 'white', border: 'none', height: '252px' }}>
+        <Card.Header
+          style={{
+            backgroundColor: '#FFA500',
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}
+        >
+          PENGUMUMAN
+        </Card.Header>
+        <Card.Body style={{ overflowY: 'auto' }}>
+          <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
+            <li> Jadwal Lelang Gedung AK POLINEMA</li>
+            <li> Informasi Sarpras</li>
+            <li> Lomba Ngoding</li>
+          </ul>
+        </Card.Body>
+      </Card>
+    </div>
+    
+  </Container>
+</Col>
+
             </Row>
         </div>
     );

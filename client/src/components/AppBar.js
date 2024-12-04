@@ -253,9 +253,9 @@ color: "#053070",
     // }
   },
   headerImage: {
-    maxHeight: '3rem',
+    maxHeight: '5rem',
     [theme.breakpoints.up('lg')]: {
-      maxHeight: '80px'
+      maxHeight: '55px'
     }
   },
   mobileGridContainer: {
