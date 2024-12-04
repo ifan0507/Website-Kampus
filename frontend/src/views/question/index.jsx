@@ -83,7 +83,7 @@ class Berita extends Component {
       if (err) return;
       this.setState({ editBeritaModalLoading: true });
       editBerita(values, values.id)
-        .then(() => {
+        .then((response) => {
           form.resetFields();
           this.setState({
             editBeritaModalVisible: false,
@@ -119,7 +119,7 @@ class Berita extends Component {
       if (err) return;
       this.setState({ addBeritaModalLoading: true });
       addBerita(values)
-        .then(() => {
+        .then((response) => {
           form.resetFields();
           this.setState({
             addBeritaModalVisible: false, // Menutup modal setelah berhasil

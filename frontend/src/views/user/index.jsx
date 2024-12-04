@@ -33,11 +33,11 @@ class User extends Component {
   handleDeleteUser = (row) => {
     const { id } = row
     if (id === "admin") {
-      message.error("不能删除管理员用户！")
+      message.error("Tidak dapat menghapus pengguna")
       return
     }
     deleteUser({id}).then(res => {
-      message.success("删除成功")
+      message.success("Berhasil dihapus")
       this.getUsers();
     })
   }
@@ -52,10 +52,10 @@ class User extends Component {
       editUser(values).then((response) => {
         form.resetFields();
         this.setState({ editUserModalVisible: false, editUserModalLoading: false });
-        message.success("编辑成功!")
+        message.success("Berhasil diedit!")
         this.getUsers()
       }).catch(e => {
-        message.success("编辑失败,请重试!")
+        message.success("Pengeditan gagal, coba lagi!")
       })
       
     });
@@ -84,10 +84,10 @@ class User extends Component {
       addUser(values).then((response) => {
         form.resetFields();
         this.setState({ addUserModalVisible: false, addUserModalLoading: false });
-        message.success("添加成功!")
+        message.success("Berhasil ditambahkan!")
         this.getUsers()
       }).catch(e => {
-        message.success("添加失败,请重试!")
+        message.success("Gagal menambahkan, silakan coba lagi!")
       })
     });
   };
@@ -110,7 +110,7 @@ class User extends Component {
           <Table bordered rowKey="id" dataSource={users} pagination={false}>
             <Column title="ID Pengguna" dataIndex="id" key="id" align="center"/>
             <Column title="Nama" dataIndex="name" key="name" align="center"/>
-            <Column title="Peran" dataIndex="role" key="role" align="center"/>
+            <Column title="Role" dataIndex="role" key="role" align="center"/>
             <Column title="Deskripsi Pengguna" dataIndex="description" key="description" align="center" />
             <Column title="Operasi" key="action" width={195} align="center"render={(text, row) => (
               <span>

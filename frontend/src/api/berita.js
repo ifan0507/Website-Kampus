@@ -1,22 +1,20 @@
 import request from "@/utils/request";
-import { message } from "antd"; // Import message dari antd
 
 export function addBerita(data) {
-  return request({
-    url: "/berita", // Endpoint untuk menambah berita
-    method: "post",
-    headers: {
-      "Content-Type": "application/json", // Pastikan JSON
-    },
-    data: JSON.stringify({
-      name: data.name,
-      description: data.description,
-      selengkapnya: data.selengkapnya,
-      category_id: data.categoryId,
-      galery_id: data.galeriId,
-    }),
-  });
+  // Buat objek FormData untuk mengirim data dan file
+  const formData = new FormData();
+  formData.append('name', data.name); // 'name' sesuai dengan field di backend
+  formData.append('description', data.description); // 'description' sesuai dengan field di backend
+  formData.append('selengkapnya', data.selengkapnya); // 'selengkapnya' sesuai dengan field di backend
+  formData.append('file', data.file.file); // Menambahkan file ke FormData jika ada
+  formData.append('categoryId', data.categoryId); // 'category_id' sesuai dengan field di backend
+  formData.append('galeryId', data.galeriId); // 'galery_id' sesuai dengan field di backend
 
+  return request({
+    url: "/berita",
+    method: "post", // Menggunakan POST untuk menambah data
+    data: formData, // Mengirim FormData
+  });
 }
 
 export function getBeritas() {
@@ -25,24 +23,23 @@ export function getBeritas() {
     method: "get",
   });
 }
+
 export function editBerita(data, id) {
+  // Buat objek FormData untuk mengirim data dan file
+  const formData = new FormData();
+  formData.append('name', data.name); // 'name' sesuai dengan field di backend
+  formData.append('description', data.description); // 'description' sesuai dengan field di backend
+  formData.append('selengkapnya', data.selengkapnya); // 'selengkapnya' sesuai dengan field di backend
+  formData.append('file', data.file.file); // Menambahkan file ke FormData jika ada
+  formData.append('categoryId', data.categoryId); // 'category_id' sesuai dengan field di backend
+  formData.append('galeryId', data.galleryId); // 'galery_id' sesuai dengan field di backend
+
   return request({
     url: `/berita/${id}`,
-    method: "put",
-    headers: {
-      "Content-Type": "application/json", // Pastikan JSON
-    },
-    data: JSON.stringify({
-      name: data.name,
-      description: data.description,
-      selengkapnya: data.selengkapnya,
-      category_id: data.categoryId,
-      galery_id: data.galleryId,
-    }),
+    method: "put", // Gunakan PUT untuk update data
+    data: formData, // Mengirim FormData
   });
-
 }
-
 
 export function deleteBerita(data) {
   return request({

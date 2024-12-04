@@ -13,8 +13,13 @@ class EditBeritaForm extends Component {
       gallerys: [], // Menyimpan data galeri
       loadingCategories: true, // Indikator loading untuk kategori
       loadingGallerys: true, // Indikator loading untuk galeri
+      fileList: [],
     };
   }
+
+  handleChange = ({ fileList }) => {
+    this.setState({ fileList});
+  };
 
   // URL backend
   BASE_URL = "http://localhost:8080";

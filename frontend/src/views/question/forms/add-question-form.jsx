@@ -12,16 +12,25 @@ class AddQuestionForm extends Component {
     loading: false,
   };
 
-  fileUploadHandler = (values) => {
+  fileSelectedHandler = (event) => {
+    this.setState({
+      selectedFile: event.target.files[0],
+    });
+  };
+
+
+  fileUploadHandler = () => {
+    const formData = new FormData();
     const options = {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'multipart/form-data',
       },
-      method: "POST",
-      data: JSON.stringify(values), // Ubah data ke format JSON
+      data: formData,
+      method: 'POST',
     };
+  
+    return axios('api/berita', options);
 
-    return axios(`${this.BASE_URL}/api/berita`, options);
   };
 
   BASE_URL = "http://localhost:8080";
