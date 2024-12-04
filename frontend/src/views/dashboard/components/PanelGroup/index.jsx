@@ -24,16 +24,16 @@ let chartList = [
     color: "#f4516c",
   },
   {
+    type: "Pengumuman",
+    icon: "notification",
+    num: 0,
+    color: "#40c9c6",
+  },
+  {
     type: "Berita",
     icon: "read",
     num: 0,
     color: "#36a3f7",
-  },
-  {
-    type: "p",
-    icon: "notification",
-    num: 0,
-    color: "#40c9c6",
   },
   {
     type: "Kegiatan",

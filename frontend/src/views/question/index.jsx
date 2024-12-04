@@ -83,7 +83,7 @@ class Berita extends Component {
       if (err) return;
       this.setState({ editBeritaModalLoading: true });
       editBerita(values, values.id)
-        .then(() => {
+        .then((response) => {
           form.resetFields();
           this.setState({
             editBeritaModalVisible: false,
@@ -119,7 +119,7 @@ class Berita extends Component {
       if (err) return;
       this.setState({ addBeritaModalLoading: true });
       addBerita(values)
-        .then(() => {
+        .then((response) => {
           form.resetFields();
           this.setState({
             addBeritaModalVisible: false, // Menutup modal setelah berhasil
@@ -151,6 +151,17 @@ class Berita extends Component {
         <Card title={title}>
           <Table bordered rowKey="id" dataSource={beritas} pagination={{ pageSize: 5 }}>
             <Column title="Judul" dataIndex="name" key="name" align="center" />
+            <Column
+              title="Gambar Judul Berita"
+              dataIndex="image"
+              key="image"
+              align="center"
+              render={(text, row) => {
+                // console.log(row.data)
+                return row.data != null ? 
+                <BlobImageDisplay blob={row.data} /> : <></> 
+            }}
+            />
             <Column title="Kategori Berita" dataIndex="categoryName" key="categoryName" align="center" />
             <Column title="Galeri Berita" dataIndex="galleryName" key="galleryName" align="center" />
             <Column title="Deskripsi" dataIndex="description" key="description" align="center" />

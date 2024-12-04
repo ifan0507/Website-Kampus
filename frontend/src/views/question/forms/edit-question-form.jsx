@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Input, Modal, Select, Spin } from "antd";
+import { Form, Input, Modal, Select, Spin, Upload, Icon } from "antd";
 import axios from "axios";
 
 const { TextArea } = Input;
@@ -13,8 +13,13 @@ class EditBeritaForm extends Component {
       gallerys: [], // Menyimpan data galeri
       loadingCategories: true, // Indikator loading untuk kategori
       loadingGallerys: true, // Indikator loading untuk galeri
+      fileList: [],
     };
   }
+
+  handleChange = ({ fileList }) => {
+    this.setState({ fileList});
+  };
 
   // URL backend
   BASE_URL = "http://localhost:8080";
@@ -81,6 +86,25 @@ class EditBeritaForm extends Component {
               initialValue: name,
               rules: [{ required: true, message: "Silahkan isikan judul" }],
             })(<TextArea rows={2} placeholder="Judul" />)}
+          </Form.Item>
+
+          <Form.Item label="Gambar Judul Berita" name="file">
+            {getFieldDecorator("file")(
+              <Upload.Dragger
+              beforeUpload={() => false}
+              listType="picture"
+            >
+              <p className="ant-upload-drag-icon">
+                <Icon type="inbox" />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to this area to upload
+              </p>
+              <p className="ant-upload-hint">
+                Support for a single or bulk upload.
+              </p>
+            </Upload.Dragger>
+            )}
           </Form.Item>
 
           {/* Kategori */}

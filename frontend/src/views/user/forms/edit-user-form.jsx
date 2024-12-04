@@ -15,15 +15,17 @@ class EditUserForm extends Component {
     const { id, name, role, description } = currentRowData;
     const formItemLayout = {
       labelCol: {
-        sm: { span: 4 },
+        xs: { span: 24 },
+        sm: { span: 8 },
       },
       wrapperCol: {
+        xs: { span: 24 },
         sm: { span: 16 },
       },
     };
     return (
       <Modal
-        title="编辑"
+        title="Edit Manajemen User"
         visible={visible}
         onCancel={onCancel}
         onOk={onOk}
@@ -37,11 +39,11 @@ class EditUserForm extends Component {
           </Form.Item>
           <Form.Item label="Nama:">
             {getFieldDecorator("name", {
-              rules: [{ required: true, message: "请输入Nama!" }],
+              rules: [{ required: true, message: "Silakan isikan nama pengguna"}],
               initialValue: name,
-            })(<Input placeholder="请输入Nama" />)}
+            })(<Input placeholder="Nama Pengguna" />)}
           </Form.Item>
-          <Form.Item label="Peran:">
+          <Form.Item label="Role:">
             {getFieldDecorator("role", {
               initialValue: role,
             })(
@@ -55,7 +57,7 @@ class EditUserForm extends Component {
           <Form.Item label="Deskripsi Pengguna:">
             {getFieldDecorator("description", {
               initialValue: description,
-            })(<TextArea rows={4} placeholder="请输入Deskripsi Pengguna" />)}
+            })(<TextArea rows={4} placeholder="Silakan isikan deskripsi pengguna" />)}
           </Form.Item>
         </Form>
       </Modal>

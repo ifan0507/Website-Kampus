@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Modal, Form, Input, Select } from "antd";
+import { Modal, Form, Input, Upload, Select, Icon } from "antd";
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -12,16 +12,25 @@ class AddQuestionForm extends Component {
     loading: false,
   };
 
-  fileUploadHandler = (values) => {
+  fileSelectedHandler = (event) => {
+    this.setState({
+      selectedFile: event.target.files[0],
+    });
+  };
+
+
+  fileUploadHandler = () => {
+    const formData = new FormData();
     const options = {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'multipart/form-data',
       },
-      method: "POST",
-      data: JSON.stringify(values), // Ubah data ke format JSON
+      data: formData,
+      method: 'POST',
     };
+  
+    return axios('api/berita', options);
 
-    return axios(`${this.BASE_URL}/api/berita`, options);
   };
 
   BASE_URL = "http://localhost:8080";
@@ -84,6 +93,25 @@ class AddQuestionForm extends Component {
             {getFieldDecorator("name", {
               rules: [{ required: true, message: "Silahkan isikan judul" }],
             })(<TextArea rows={4} placeholder="Judul" />)}
+          </Form.Item>
+
+          <Form.Item label="Gambar Judul Berita" name="file">
+            {getFieldDecorator("file")(
+              <Upload.Dragger
+              beforeUpload={() => false}
+              listType="picture"
+            >
+              <p className="ant-upload-drag-icon">
+                <Icon type="inbox" />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to this area to upload
+              </p>
+              <p className="ant-upload-hint">
+                Support for a single or bulk upload.
+              </p>
+            </Upload.Dragger>
+            )}
           </Form.Item>
 
           <Form.Item label="Category Berita:" required>

@@ -11,10 +11,10 @@ class AddUserForm extends Component {
       let res = await reqValidatUserID(value);
       const { status } = res.data;
       if (status) {
-        callback("该ID Pengguna已存在");
+        callback("ID Pengguna");
       }
     } else {
-      callback("请输入ID Pengguna");
+      callback("Masukkan ID Pengguna");
     }
     callback();
   };
@@ -23,15 +23,17 @@ class AddUserForm extends Component {
     const { getFieldDecorator } = form;
     const formItemLayout = {
       labelCol: {
-        sm: { span: 4 },
+        xs: { span: 24 },
+        sm: { span: 8 },
       },
       wrapperCol: {
+        xs: { span: 24 },
         sm: { span: 16 },
       },
     };
     return (
       <Modal
-        title="编辑"
+        title="Tambah Manajemen User"
         visible={visible}
         onCancel={onCancel}
         onOk={onOk}
@@ -41,14 +43,14 @@ class AddUserForm extends Component {
           <Form.Item label="ID Pengguna:">
             {getFieldDecorator("id", {
               rules: [{ required: true, validator: this.validatUserID }],
-            })(<Input placeholder="请输入ID Pengguna" />)}
+            })(<Input placeholder="ID Pengguna" />)}
           </Form.Item>
           <Form.Item label="Nama:">
             {getFieldDecorator("name", {
-              rules: [{ required: true, message: "请输入Nama!" }],
-            })(<Input placeholder="请输入Nama" />)}
+              rules: [{ required: true, message: "Silakan isikan nama pengguna" }],
+            })(<Input placeholder="Nama Pengguna" />)}
           </Form.Item>
-          <Form.Item label="Peran:">
+          <Form.Item label="Role:">
             {getFieldDecorator("role", {
               initialValue: "admin",
             })(
@@ -60,7 +62,7 @@ class AddUserForm extends Component {
           </Form.Item>
           <Form.Item label="Deskripsi Pengguna:">
             {getFieldDecorator("description", {
-            })(<TextArea rows={4} placeholder="请输入Deskripsi Pengguna" />)}
+            })(<TextArea rows={4} placeholder="Silakan isikan deskripsi pengguna" />)}
           </Form.Item>
         </Form>
       </Modal>
