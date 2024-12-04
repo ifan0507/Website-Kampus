@@ -9,34 +9,41 @@ public class BeritaResponse {
 
     private Long id;
     private String name;
+    private String fileType;
+    private String fileNameJudul;
 
     private Long categoryId;
-    private String description;
-    private String selengkapnya;
 
+    @Lob
+    private String description;
+
+    @Lob
+    private String selengkapnya;
     private Instant updatedAt;
     private Instant createdAt;
-    // private String fileName;
-    // private String fileType;
     private Long galeryId;
+    private String categoryName; // Nama kategori
+    private String galleryName; // Nama galeri
+
     @Lob
     private byte[] data;
 
     public BeritaResponse() {
     }
 
-    public BeritaResponse(Long id, String name, Long categoryId, String description, String selengkapnya,
-            Instant updatedAt, Instant createdAt, Long galeryId, byte[] data) {
+    public BeritaResponse(Long id, String name, String fileType, String fileNameJudul, String categoryName,
+            String galleryName, String description,
+            String selengkapnya, Instant updatedAt, Instant createdAt, Long galeryId, byte[] data) {
         this.id = id;
         this.name = name;
-        this.categoryId = categoryId;
+        this.fileType = fileType;
+        this.fileNameJudul = fileNameJudul;
+        this.categoryName = categoryName;
+        this.galleryName = galleryName;
         this.description = description;
         this.selengkapnya = selengkapnya;
-
         this.updatedAt = updatedAt;
         this.createdAt = createdAt;
-        // this.fileName = fileName;
-        // this.fileType = fileType;
         this.galeryId = galeryId;
         this.data = data;
     }
@@ -55,6 +62,14 @@ public class BeritaResponse {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setFileNameJudul(String fileNameJudul) {
+        this.fileNameJudul = fileNameJudul;
+    }
+
+    public String getFileNameJudul() {
+        return fileNameJudul;
     }
 
     public String getDescription() {
@@ -89,21 +104,6 @@ public class BeritaResponse {
         this.createdAt = createdAt;
     }
 
-    // public String getFileName() {
-    // return fileName;
-    // }
-
-    // public void setFileName(String fileName) {
-    // this.fileName = fileName;
-    // }
-
-    // public String getFileType() {
-    // return fileType;
-    // }
-
-    // public void setFileType(String fileType) {
-    // this.fileType = fileType;
-    // }
     public void setGaleryId(Long galeryId) {
         this.galeryId = galeryId;
     }
@@ -126,5 +126,29 @@ public class BeritaResponse {
 
     public Long getCategoryId() {
         return categoryId;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setGalleryName(String galleryName) {
+        this.galleryName = galleryName;
+    }
+
+    public String getGalleryName() {
+        return galleryName;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
+    public String getFileType() {
+        return fileType;
     }
 }

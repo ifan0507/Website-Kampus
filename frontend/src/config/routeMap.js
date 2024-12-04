@@ -100,6 +100,10 @@ const Berita = Loadable({
   loader: () => import(/*webpackChunkName:'Question'*/ "@/views/question"),
   loading: Loading,
 });
+const Pengumuman = Loadable({
+  loader: () => import(/*webpackChunkName:'Pengumuman'*/ "@/views/pengumuman"),
+  loading: Loading,
+});
 const Categori = Loadable({
   loader: () => import(/*webpackChunkName:'Category'*/ "@/views/category-berita"),
   loading: Loading,
@@ -125,7 +129,7 @@ const GaleriKampus = Loadable({
   loading: Loading,
 });
 const GaleriBaru = Loadable({
-  loader: () => import(/*webpackChunkName:'GaleriKampus'*/ "@/views/galeri-baru"),
+  loader: () => import(/*webpackChunkName:'GaleriKampus'*/ "@/views/galeri-berita"),
   loading: Loading,
 });
 const CampusLife = Loadable({
@@ -279,6 +283,7 @@ export default [
   // { path: "/question", component: Question, roles: ["ROLE_ADMINISTRATOR"] },
   { path: "/profil", component: Profil, roles: ["ROLE_ADMINISTRATOR"] },
   { path: "/department", component: Department, roles: ["ROLE_ADMINISTRATOR"] },
+  { path: "/pengumuman", component: Pengumuman, roles: ["ROLE_ADMINISTRATOR"]},
   { path: "/category-berita", component: Categori, roles: ["ROLE_ADMINISTRATOR"] },
   { path: "/berita", component: Berita, roles: ["ROLE_ADMINISTRATOR"] },
   { path: "/kegiatan", component: Kegiatan, roles: ["ROLE_ADMINISTRATOR"] },
@@ -288,7 +293,7 @@ export default [
   { path: "/kalender", component: Kalender, roles: ["ROLE_ADMINISTRATOR"] },
   { path: "/campus_life", component: CampusLife, roles: ["ROLE_ADMINISTRATOR"] },
   { path: "/galeri-kampus", component: GaleriKampus, roles: ["ROLE_ADMINISTRATOR"] },
-  { path: "/galeri-baru", component: GaleriBaru, roles: ["ROLE_ADMINISTRATOR"] },
+  { path: "/galeri-berita", component: GaleriBaru, roles: ["ROLE_ADMINISTRATOR"] },
 
   {
     path: "/study-program",

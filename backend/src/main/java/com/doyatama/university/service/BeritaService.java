@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
@@ -71,28 +72,38 @@ public class BeritaService {
     public PagedResponse<BeritaResponse> getAllBerita(int page, int size) {
         validatePageNumberAndSize(page, size);
 
-        // Retrieve Polls
+        // Retrieve Berita
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id");
         Page<Berita> beritas = beritaRepository.findAll(pageable);
+
         if (beritas.getNumberOfElements() == 0) {
             return new PagedResponse<>(Collections.emptyList(), beritas.getNumber(),
                     beritas.getSize(), beritas.getTotalElements(), beritas.getTotalPages(), beritas.isLast(), 200);
         }
-        // Map Polls to PollResponses containing vote counts and poll creator details
+
         List<BeritaResponse> beritaResponses = beritas.map(asResponse -> {
             BeritaResponse beritaResponse = new BeritaResponse();
             beritaResponse.setId(asResponse.getId());
-            // organisasiResponse.setCreatedAt(asResponse.getCreatedAt());
-            // organisasiResponse.setUpdatedAt(asResponse.getUpdatedAt());
             beritaResponse.setName(asResponse.getName());
-            beritaResponse.setCategoryId(
-                    asResponse.getCategoryBerita() != null ? asResponse.getCategoryBerita().getId() : null);
+            beritaResponse.setFileNameJudul(asResponse.getFileNameJudul());
+            beritaResponse.setFileType(asResponse.getFileType());
+            beritaResponse.setData(asResponse.getData());
+            // Mengambil nama kategori jika ada, jika tidak maka null
+            beritaResponse.setCategoryName(asResponse.getCategoryBerita() != null
+                    ? asResponse.getCategoryBerita().getName()
+                    : "Kategori Tidak Ditemukan"); // default value jika category null
+
+            // Mengambil nama galeri jika ada
+            beritaResponse.setGalleryName(asResponse.getGallery() != null
+                    ? asResponse.getGallery().getName()
+                    : "Galeri Tidak Ditemukan"); // default value jika gallery null
+
             beritaResponse.setDescription(asResponse.getDescription());
             beritaResponse.setSelengkapnya(asResponse.getSelengkapnya());
+
+            beritaResponse.setCategoryId(
+                    asResponse.getCategoryBerita() != null ? asResponse.getCategoryBerita().getId() : null);
             beritaResponse.setGaleryId(asResponse.getGallery() != null ? asResponse.getGallery().getId() : null);
-            // beritaResponse.setFileName(asResponse.getFileName());
-            // beritaResponse.setFileType(asResponse.getFileType());
-            beritaResponse.setData(asResponse.getData());
 
             return beritaResponse;
         }).getContent();
@@ -100,38 +111,46 @@ public class BeritaService {
                 beritas.getSize(), beritas.getTotalElements(), beritas.getTotalPages(), beritas.isLast(), 200);
     }
 
-    public Berita createBerita(UserPrincipal currentUser, @Valid BeritaRequest beritaRequest)
+    public Berita createBerita(UserPrincipal currentUser, @Valid BeritaRequest beritaRequest, MultipartFile file)
             throws IOException {
-        // String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        Berita berita = new Berita();
 
-        if (beritaRequest.getCategoryId() == null) {
-            throw new IllegalArgumentException("Category ID must not be null");
-        }
+        // Ambil category berdasarkan ID dari request
         CategoryBerita category = categoryRepository.findById(beritaRequest.getCategoryId())
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Category not found with id ", "id", +beritaRequest.getCategoryId()));
+                        "Category not found with id ", "id", beritaRequest.getCategoryId()));
 
-        if (beritaRequest.getCategoryId() == null) {
-            throw new IllegalArgumentException("Category ID must not be null");
+        // Log kategori yang ditemukan
+        System.out.println("Found Category: " + category);
+
+        // Ambil galeri berdasarkan ID dari request, cek null terlebih dahulu
+        GaleryBaru galeryBaru = null;
+        if (beritaRequest.getGaleryId() != null) {
+            galeryBaru = galeryBaruReposytory.findById(beritaRequest.getGaleryId())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Galery not found with id ", "id", beritaRequest.getGaleryId()));
         }
-        GaleryBaru galeryBaru = galeryBaruReposytory.findById(beritaRequest.getGaleryId())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Galery not found with id ", "id", +beritaRequest.getGaleryId()));
-        // organisasi.setCreatedBy(currentUser.getId());
-        // organisasi.setUpdatedBy(currentUser.getId());
+
+        // Log galeri yang ditemukan (jika ada)
+        if (galeryBaru != null) {
+            System.out.println("Found Galery: " + galeryBaru);
+        } else {
+            System.out.println("No Galery found, skipping galery assignment.");
+        }
+
+        String fileNameJudul = StringUtils.cleanPath(file.getOriginalFilename());
+
+        // Proses berita
+        Berita berita = new Berita();
         berita.setName(beritaRequest.getName());
+        berita.setFileNameJudul(fileNameJudul);
+        berita.setFileType(file.getContentType());
         berita.setCategoryBerita(category);
         berita.setDescription(beritaRequest.getDescription());
         berita.setSelengkapnya(beritaRequest.getSelengkapnya());
-        // berita.setFileName(fileName);
-        // berita.setFileType(file.getContentType());
-        berita.setGallery(galeryBaru);
-        // ;
-        // berita.setData(file.getBytes());
-
+        berita.setGallery(galeryBaru); // Galeri bisa null jika tidak ada
+        berita.setData(file.getBytes());
+        // Simpan berita ke database
         return beritaRepository.save(berita);
-
     }
 
     public BeritaResponse getBeritaById(Long beritaId) {
@@ -139,8 +158,15 @@ public class BeritaService {
                 () -> new ResourceNotFoundException("Berita", "id", beritaId));
         BeritaResponse beritaResponse = new BeritaResponse();
         beritaResponse.setId(berita.getId());
-        // organisasiUploadResponse.setCreatedAt(organisasi.getCreatedAt());
-        // organisasiUploadResponse.setUpdatedAt(organisasi.getUpdatedAt());
+        beritaResponse.setName(berita.getName());
+        beritaResponse.setFileNameJudul(berita.getFileNameJudul());
+        beritaResponse.setFileType(berita.getFileType());
+        beritaResponse.setData(berita.getData());
+        beritaResponse.setDescription(berita.getDescription());
+        beritaResponse.setSelengkapnya(berita.getSelengkapnya());
+        beritaResponse.setCategoryId(
+                berita.getCategoryBerita() != null ? berita.getCategoryBerita().getId() : null);
+        beritaResponse.setGaleryId(berita.getGallery() != null ? berita.getGallery().getId() : null);
         return beritaResponse;
     }
 
@@ -153,7 +179,8 @@ public class BeritaService {
         }
     }
 
-    public Berita updateBerita(@Valid BeritaRequest beritaRequest, Long id, UserPrincipal currentUser)
+    public Berita updateBerita(@Valid BeritaRequest beritaRequest, Long id, UserPrincipal currentUser,
+            MultipartFile file)
             throws IOException {
         return beritaRepository.findById(id).map(berita -> {
             // organisasi.setUpdatedBy(currentUser.getId());
@@ -168,21 +195,21 @@ public class BeritaService {
             // Organisasi organisasi = new Organisasi();
             // organisasi.setCreatedBy(currentUser.getId());
             // organisasi.setUpdatedBy(currentUser.getId());
+            String fileNameJudul = StringUtils.cleanPath(file.getOriginalFilename());
+
             berita.setName(beritaRequest.getName());
             berita.setDescription(beritaRequest.getDescription());
             berita.setSelengkapnya(beritaRequest.getSelengkapnya());
             berita.setCategoryBerita(category);
-            // berita.setFileName(fileName);
-            // berita.setFileType(file.getContentType());
+            berita.setFileNameJudul(fileNameJudul);
+            berita.setFileType(file.getContentType());
             berita.setGallery(galeryBaru);
-            // try {
-            // berita.setData(file.getBytes());
-            // } catch (IOException e) {
-            // // Handle the IOException here or rethrow it as an unchecked exception if
-            // // needed.
-            // throw new RuntimeException("Error reading file content: " + e.getMessage(),
-            // e);
-            // }
+            try {
+                berita.setData(file.getBytes());
+            } catch (IOException e) {
+                throw new RuntimeException("Error reading file content: " + e.getMessage(),
+                        e);
+            }
             return beritaRepository.save(berita);
         }).orElseThrow(() -> new ResourceNotFoundException("Berita", "id", id));
     }

@@ -27,7 +27,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/galeri-baru")
+@RequestMapping("/api/galeri-berita")
 public class GaleriBaruController {
 
     @Autowired

@@ -13,7 +13,6 @@ class EditGaleriBaruForm extends Component {
   // Fungsi ini akan dipanggil saat file diunggah atau dihapus
   handleChange = (info) => {
     let fileList = [...info.fileList];
-    console.log("setelah perubahan ", fileList);
 
     // Limit to a maximum of 5 files
     if (fileList.length > 5) {
@@ -28,7 +27,7 @@ class EditGaleriBaruForm extends Component {
   render() {
     const { visible, onCancel, onOk, form, confirmLoading, currentRowData } = this.props;
     const { getFieldDecorator } = form;
-    const { id, name, description, data } = currentRowData;
+    const { id, name, description} = currentRowData;  
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },

@@ -29,8 +29,15 @@ const menuList = [
   {
     title: "Categori Berita",
     path: "/category-berita",
-    icon: "book",
-    roles: ["ROLE_ADMINISTRATOR", "ROLE_LECTURE"],
+    icon: "read",
+    roles: ["ROLE_ADMINISTRATOR", "ROLE_LECTURE"], 
+  },
+
+  {
+    title: "Pengumuman",
+    path: "/pengumuman",
+    icon: "notification", 
+    roles: ["ROLE_ADMINISTRATOR", "ROLE_LECTURE"], 
   },
 
   {
@@ -43,7 +50,7 @@ const menuList = [
   {
     title: "Manajemen Kegiatan",
     path: "/kegiatan",
-    icon: "team",
+    icon: "usergroup-add", 
     roles: ["ROLE_ADMINISTRATOR"],
   },
 
@@ -82,10 +89,11 @@ const menuList = [
     roles: ["ROLE_ADMINISTRATOR"],
   },
   {
-    title: "Galeri Baru",
-    path: "/galeri-baru",
-    icon: "picture",
+    title: "Galeri Berita",
+    path: "/galeri-berita",
+    icon: "camera",
     roles: ["ROLE_ADMINISTRATOR"],
   },
 ];
+
 export default menuList;

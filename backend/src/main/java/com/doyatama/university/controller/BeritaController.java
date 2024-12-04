@@ -9,6 +9,7 @@ import com.doyatama.university.repository.BeritaRepository;
 import com.doyatama.university.repository.UserRepository;
 import com.doyatama.university.security.CurrentUser;
 import com.doyatama.university.security.UserPrincipal;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.doyatama.university.service.BeritaService;
 import com.doyatama.university.util.AppConstants;
 import org.slf4j.Logger;
@@ -16,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -48,30 +48,40 @@ public class BeritaController {
         }
 
         @PostMapping
-        // @Secured("ROLE_ADMINISTRATOR")
         public ResponseEntity<?> createBerita(@CurrentUser UserPrincipal currentUser,
-                        @Valid @ModelAttribute BeritaRequest beritaRequest)
+                        @Valid @ModelAttribute BeritaRequest beritaRequest, @RequestParam("file") MultipartFile file)
                         throws IOException {
-                // MultipartFile file = departmentRequest.getFile();
-                Berita berita = beritaService.createBerita(currentUser, beritaRequest);
-                // String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                // .path("/downloadFile/")
-                // .path(berita.getId().toString())
-                // .toUriString();
-                URI location = ServletUriComponentsBuilder
-                                .fromCurrentRequest().path("/{beritaId}")
-                                .buildAndExpand(berita.getId()).toUri();
 
-                return ResponseEntity.created(location)
-                                .body(new ApiResponse(true, "Berita Created Successfully"));
+                if (currentUser == null) {
+                        System.out.println("currentUser is null!");
+                } else {
+                        System.out.println("Current user: " + currentUser.getId());
+                }
+
+                // Proses Berita
+                try {
+                        Berita berita = beritaService.createBerita(currentUser, beritaRequest, file);
+
+                        URI location = ServletUriComponentsBuilder
+                                        .fromCurrentRequest().path("/{beritaId}")
+                                        .buildAndExpand(berita.getId()).toUri();
+
+                        return ResponseEntity.created(location)
+                                        .body(new ApiResponse(true, "Berita Created Successfully"));
+                } catch (Exception e) {
+                        System.out.println("Error processing request: " + e.getMessage());
+                        return new ResponseEntity<>(new ApiResponse(false, "Failed to create berita"),
+                                        HttpStatus.INTERNAL_SERVER_ERROR);
+                }
         }
 
         @PutMapping("/{beritaId}")
         // @Secured("ROLE_ADMINISTRATOR")
         public ResponseEntity<?> updateBeritaById(@CurrentUser UserPrincipal currentUser,
-                        @PathVariable(value = "beritaId") Long beritaId, @Valid BeritaRequest beritaRequest)
+                        @PathVariable(value = "beritaId") Long beritaId,
+                        @Valid BeritaRequest beritaRequest, @RequestParam("file") MultipartFile file)
                         throws IOException {
-                Berita berita = beritaService.updateBerita(beritaRequest, beritaId, currentUser);
+                Berita berita = beritaService.updateBerita(beritaRequest, beritaId, currentUser, file);
                 URI location = ServletUriComponentsBuilder
                                 .fromCurrentRequest().path("/{beritaId}")
                                 .buildAndExpand(berita.getId()).toUri();

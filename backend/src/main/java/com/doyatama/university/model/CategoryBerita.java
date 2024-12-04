@@ -26,7 +26,6 @@ public class CategoryBerita {
     private String description;
 
     public CategoryBerita() {
-
     }
 
     public CategoryBerita(Long id, String name, String description) {

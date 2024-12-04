@@ -1,17 +1,32 @@
 package com.doyatama.university.payload.berita;
 
-import com.doyatama.university.model.CategoryBerita;
+import javax.persistence.Lob;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class BeritaRequest {
 
-    private String name;
-    private Long categoryId;
-    private Long galeryId;
-    private String description;
-    private String selengkapnya;
+    private MultipartFile file;
 
-    // private MultipartFile file;
+    @JsonProperty("category_id")
+    @NotNull(message = "CategoryId must not be null")
+    private Long categoryId;
+
+    @JsonProperty("galery_id")
+    @Nullable
+    private Long galeryId;
+
+    private String name;
+
+    @Lob
+    private String description;
+
+    @Lob
+    private String selengkapnya;
 
     public String getName() {
         return name;
@@ -37,14 +52,6 @@ public class BeritaRequest {
         this.selengkapnya = selengkapnya;
     }
 
-    // public MultipartFile getFile() {
-    // return file;
-    // }
-
-    // public void setFile(MultipartFile file) {
-    // this.file = file;
-    // }
-
     public void setGaleryId(Long galeryId) {
         this.galeryId = galeryId;
     }
@@ -61,11 +68,12 @@ public class BeritaRequest {
         return categoryId;
     }
 
-    // public CategoryBerita getCategoryBerita() {
-    // return categoryBerita;
-    // }
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
 
-    // public void setCategoryBerita(CategoryBerita categoryBerita) {
-    // this.categoryBerita = categoryBerita;
-    // }
+    public MultipartFile getFile() {
+        return file;
+    }
+
 }

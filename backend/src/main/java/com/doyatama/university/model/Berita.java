@@ -28,16 +28,21 @@ public class Berita {
     private Long id;
     @Size(max = 100)
     private String name;
+
+    @Lob
     private String description;
+
+    @Lob
     private String selengkapnya;
 
-    // private String fileType;
-    // private String fileName;
+    private String fileType;
+    private String fileNameJudul;
+
     @Lob
     private byte[] data;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "galery_id", nullable = false)
+    @JoinColumn(name = "galery_id", nullable = true)
     private GaleryBaru gallery;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -46,6 +51,7 @@ public class Berita {
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("category_id")
+
     private CategoryBerita categoryBerita;
 
     public Berita() {
@@ -55,7 +61,8 @@ public class Berita {
         this.id = id;
     }
 
-    public Berita(Long id, String name, CategoryBerita categoryBerita, String description, String selengkapnya,
+    public Berita(Long id, String fileType, String fileNameJudul, String name, CategoryBerita categoryBerita,
+            String description, String selengkapnya,
             GaleryBaru galeryBaru, byte[] data) {
         this.id = id;
         this.name = name;
@@ -63,8 +70,8 @@ public class Berita {
         this.description = description;
         this.selengkapnya = selengkapnya;
         this.gallery = galeryBaru;
-        // this.fileName = fileName;
-        // this.fileType = fileType;
+        this.fileNameJudul = fileNameJudul;
+        this.fileType = fileType;
         this.data = data;
     }
 
@@ -82,6 +89,14 @@ public class Berita {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setFileNameJudul(String fileNameJudul) {
+        this.fileNameJudul = fileNameJudul;
+    }
+
+    public String getFileNameJudul() {
+        return fileNameJudul;
     }
 
     public String getDescription() {
@@ -122,5 +137,13 @@ public class Berita {
 
     public void setCategoryBerita(CategoryBerita categoryBerita) {
         this.categoryBerita = categoryBerita;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
+    public String getFileType() {
+        return fileType;
     }
 }
