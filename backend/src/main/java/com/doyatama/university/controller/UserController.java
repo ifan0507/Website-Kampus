@@ -8,7 +8,7 @@ import com.doyatama.university.security.UserPrincipal;
 import com.doyatama.university.service.DepartmentService;
 import com.doyatama.university.util.AppConstants;
 import com.doyatama.university.repository.UserRepository;
-import org.slf4j.Logger;
+import org.slf4j.Logger; 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
