@@ -12,10 +12,10 @@ import java.util.Set;
 @Entity
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = {
-            "username"
+                "username"
         }),
         @UniqueConstraint(columnNames = {
-            "email"
+                "email"
         })
 })
 public class User extends DateAudit {
@@ -31,13 +31,11 @@ public class User extends DateAudit {
     @Size(max = 15)
     private String username;
 
-    @NaturalId
     @NotBlank
     @Size(max = 40)
     @Email
     private String email;
 
-    @NotBlank
     @Size(max = 100)
     private String password;
 
@@ -45,10 +43,11 @@ public class User extends DateAudit {
     @Size(max = 100)
     private String photo;
 
+    @Lob
+    private byte[] Data;
+
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
     public User() {
@@ -121,5 +120,13 @@ public class User extends DateAudit {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public void setData(byte[] data) {
+        Data = data;
+    }
+
+    public byte[] getData() {
+        return Data;
     }
 }
