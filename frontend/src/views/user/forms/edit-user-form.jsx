@@ -32,12 +32,12 @@ class EditUserForm extends Component {
         confirmLoading={confirmLoading}
       >
         <Form {...formItemLayout}>
-          <Form.Item label="ID Pengguna:">
+          <Form.Item label="Nama:">
             {getFieldDecorator("id", {
               initialValue: id,
             })(<Input disabled />)}
           </Form.Item>
-          <Form.Item label="Nama:">
+          <Form.Item label="Username:">
             {getFieldDecorator("name", {
               rules: [{ required: true, message: "Silakan isikan nama pengguna"}],
               initialValue: name,
@@ -54,7 +54,7 @@ class EditUserForm extends Component {
               </Select>
             )}
           </Form.Item>
-          <Form.Item label="Deskripsi Pengguna:">
+          <Form.Item label="Email:">
             {getFieldDecorator("description", {
               initialValue: description,
             })(<TextArea rows={4} placeholder="Silakan isikan deskripsi pengguna" />)}

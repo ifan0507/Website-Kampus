@@ -108,10 +108,10 @@ class User extends Component {
         <br/>
         <Card title={title}>
           <Table bordered rowKey="id" dataSource={users} pagination={false}>
-            <Column title="ID Pengguna" dataIndex="id" key="id" align="center"/>
-            <Column title="Nama" dataIndex="name" key="name" align="center"/>
-            <Column title="Role" dataIndex="role" key="role" align="center"/>
-            <Column title="Deskripsi Pengguna" dataIndex="description" key="description" align="center" />
+            <Column title="Nama " dataIndex="id" key="id" align="center"/>
+            <Column title="Username" dataIndex="name" key="name" align="center"/>
+            <Column title="Email" dataIndex="role" key="role" align="center"/>
+            <Column title="Role" dataIndex="description" key="description" align="center" />
             <Column title="Operasi" key="action" width={195} align="center"render={(text, row) => (
               <span>
                 <Button type="primary" shape="circle" icon="edit" title="编辑" onClick={this.handleEditUser.bind(null,row)}/>

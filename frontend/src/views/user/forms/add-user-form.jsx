@@ -40,12 +40,12 @@ class AddUserForm extends Component {
         confirmLoading={confirmLoading}
       >
         <Form {...formItemLayout}>
-          <Form.Item label="ID Pengguna:">
+          <Form.Item label="Nama:">
             {getFieldDecorator("id", {
               rules: [{ required: true, validator: this.validatUserID }],
             })(<Input placeholder="ID Pengguna" />)}
           </Form.Item>
-          <Form.Item label="Nama:">
+          <Form.Item label="Useraname:">
             {getFieldDecorator("name", {
               rules: [{ required: true, message: "Silakan isikan nama pengguna" }],
             })(<Input placeholder="Nama Pengguna" />)}
@@ -60,7 +60,7 @@ class AddUserForm extends Component {
               </Select>
             )}
           </Form.Item>
-          <Form.Item label="Deskripsi Pengguna:">
+          <Form.Item label="Email:">
             {getFieldDecorator("description", {
             })(<TextArea rows={4} placeholder="Silakan isikan deskripsi pengguna" />)}
           </Form.Item>
