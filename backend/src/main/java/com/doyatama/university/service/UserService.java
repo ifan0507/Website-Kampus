@@ -114,7 +114,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRoles(roleSet); // Menyimpan roles yang sudah diproses
         user.setPhoto(photo);
-        user.setPhotoType(file.getOriginalFilename());
+        user.setPhotoType(file.getContentType());
         user.setData(photo.getBytes()); // Menyimpan data foto dalam bentuk byte array
 
         return userRepository.save(user);

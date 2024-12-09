@@ -17,7 +17,7 @@ class User extends Component {
     addUserModalLoading: false,
   };
 
-  // BASE_URL = "http://localhost:8080/";
+  BASE_URL = "http://localhost:8080/";
 
   getUsers = async () => {
     const result = await getUsers();
@@ -134,30 +134,22 @@ class User extends Component {
               key="username"
               align="center"
             />
+
             <Column
-              title="Image Data"
-              dataIndex=""
-              key="photo"
+              title="Foto User"
+              dataIndex="image"
+              key="image"
               align="center"
-              render={(data) => {
-                if (!data) return "No Data";
-                const mimeType = data.startsWith("/9j/")
-                  ? "image/jpeg"
-                  : "image/png"; // Deteksi jenis file
-                return (
-                  <img
-                    src={`data:${mimeType};base64,${data}`}
-                    alt="User Data"
-                    style={{
-                      width: "50px",
-                      height: "50px",
-                      borderRadius: "50%",
-                    }}
-                  />
+              render={(text, row) => {
+                console.log(row.data)
+                return row.data != null ? (
+                  <BlobImageDisplay blob={row.data} />
+                ) : (
+                  <></>
                 );
               }}
             />
-
+            
             <Column
               title="Email"
               dataIndex="email"
