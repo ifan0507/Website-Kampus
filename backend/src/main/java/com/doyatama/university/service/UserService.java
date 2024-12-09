@@ -90,7 +90,7 @@ public class UserService {
     }
 
     public User createUser(UserPrincipal currentUser, @Valid UserRequest request, MultipartFile file,
-            String roles) {
+            String roles) throws IOException {
         // Validasi username dan email unik
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new IllegalArgumentException("Username is already taken!");
@@ -115,7 +115,7 @@ public class UserService {
         user.setRoles(roleSet); // Menyimpan roles yang sudah diproses
         user.setPhoto(photo);
         user.setPhotoType(file.getContentType());
-        user.setData(photo.getBytes()); // Menyimpan data foto dalam bentuk byte array
+        user.setData(file.getBytes());
 
         return userRepository.save(user);
     }
