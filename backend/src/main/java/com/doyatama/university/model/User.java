@@ -40,8 +40,9 @@ public class User extends DateAudit {
     private String password;
 
     @NotBlank
-    @Size(max = 100)
     private String photo;
+
+    private String photoType;
 
     @Lob
     private byte[] Data;
@@ -128,5 +129,13 @@ public class User extends DateAudit {
 
     public byte[] getData() {
         return Data;
+    }
+
+    public void setPhotoType(String photoType) {
+        this.photoType = photoType;
+    }
+
+    public String getPhotoType() {
+        return photoType;
     }
 }

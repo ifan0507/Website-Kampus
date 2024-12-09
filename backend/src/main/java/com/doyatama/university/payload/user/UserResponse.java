@@ -13,6 +13,7 @@ public class UserResponse {
     private String username;
     private String email;
     private String photo;
+    private String photoType;
     private Set<Role> roles;
     @Lob
     private byte[] data;
@@ -20,7 +21,8 @@ public class UserResponse {
     public UserResponse() {
     }
 
-    public UserResponse(Long id, String name, String username, String email, String photo, Set<Role> roles,
+    public UserResponse(Long id, String name, String username, String email, String photo, String photoType,
+            Set<Role> roles,
             byte[] data) {
         this.id = id;
         this.name = name;
@@ -29,6 +31,7 @@ public class UserResponse {
         this.photo = photo;
         this.roles = roles;
         this.data = data;
+        this.photoType = photoType;
     }
 
     // Getter dan Setter
@@ -86,5 +89,13 @@ public class UserResponse {
 
     public byte[] getData() {
         return data;
+    }
+
+    public void setPhotoType(String photoType) {
+        this.photoType = photoType;
+    }
+
+    public String getPhotoType() {
+        return photoType;
     }
 }
