@@ -79,6 +79,7 @@ public class UserService {
             userResponse.setEmail(asResponse.getEmail());
             userResponse.setUsername(asResponse.getUsername());
             userResponse.setPhoto(asResponse.getPhoto());
+            userResponse.setPhotoType(asResponse.getPhotoType());
             userResponse.setRoles(asResponse.getRoles());
             userResponse.setData(asResponse.getData());
             return userResponse;
@@ -113,6 +114,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRoles(roleSet); // Menyimpan roles yang sudah diproses
         user.setPhoto(photo);
+        user.setPhotoType(file.getOriginalFilename());
         user.setData(photo.getBytes()); // Menyimpan data foto dalam bentuk byte array
 
         return userRepository.save(user);
@@ -144,6 +146,8 @@ public class UserService {
                 if (file != null && !file.isEmpty()) {
                     try {
                         user.setData(file.getBytes());
+                        user.setPhoto(StringUtils.cleanPath(file.getOriginalFilename()));
+                        user.setPhotoType(file.getContentType());
                     } catch (IOException e) {
                         throw new RuntimeException("Failed to store photo", e);
                     }
