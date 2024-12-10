@@ -41,7 +41,7 @@ export function editUser(data, id) {
 
   return request({
     url: `/users/${id}`,
-    method: "post",
+    method: "put",
     data: formData,
   });
 }
