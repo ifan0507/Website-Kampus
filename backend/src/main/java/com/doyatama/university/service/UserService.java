@@ -121,7 +121,7 @@ public class UserService {
     }
 
     public User updateUser(@Valid UserRequest userRequest, Long id, UserPrincipal currentUser, MultipartFile file,
-            String oldPassword, String role) throws IOException {
+            String oldPassword, String roles) throws IOException {
         return userRepository.findById(id).map(user -> {
             if (userRequest.getPassword() != null && !userRequest.getPassword().isEmpty()) {
                 if (oldPassword == null || oldPassword.isEmpty()) {
@@ -132,30 +132,31 @@ public class UserService {
                     throw new IllegalArgumentException("Old password is incorrect.");
                 }
 
-                userRequest.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-
-                if (userRequest.getRoles() != null && !userRequest.getRoles().isEmpty()) {
-                    Set<Role> roles = userRequest.getRoles().stream()
-                            .map(roleName -> roleRepository.findByName(RoleName.valueOf(roleName))
-                                    .orElseThrow(() -> new EntityNotFoundException("Role not found: " +
-                                            roleName)))
-                            .collect(Collectors.toSet());
-                    user.setRoles(roles);
-                }
-
-                if (file != null && !file.isEmpty()) {
-                    try {
-                        user.setData(file.getBytes());
-                        user.setPhoto(StringUtils.cleanPath(file.getOriginalFilename()));
-                        user.setPhotoType(file.getContentType());
-                    } catch (IOException e) {
-                        throw new RuntimeException("Failed to store photo", e);
-                    }
-                }
-                user.setName(userRequest.getName());
-                user.setUsername(userRequest.getUsername());
-                user.setEmail(userRequest.getEmail());
+                user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
             }
+
+            if (roles != null && !roles.isEmpty()) {
+                Set<Role> roleSet = Arrays.stream(roles.split(","))
+                        .map(roleName -> roleRepository.findByName(RoleName.valueOf(roleName))
+                                .orElseThrow(() -> new EntityNotFoundException("Role not found: " + roleName)))
+                        .collect(Collectors.toSet());
+                user.setRoles(roleSet);
+            }
+
+            if (file != null && !file.isEmpty()) {
+                try {
+                    user.setData(file.getBytes());
+                    user.setPhoto(StringUtils.cleanPath(file.getOriginalFilename()));
+                    user.setPhotoType(file.getContentType());
+                } catch (IOException e) {
+                    throw new RuntimeException("Failed to store photo", e);
+                }
+            }
+
+            user.setName(userRequest.getName());
+            user.setUsername(userRequest.getUsername());
+            user.setEmail(userRequest.getEmail());
+
             return userRepository.save(user);
         }).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
     }

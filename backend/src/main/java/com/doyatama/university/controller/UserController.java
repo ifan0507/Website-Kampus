@@ -112,7 +112,8 @@ public class UserController {
     }
 
     @PutMapping("/users/{userId}")
-    public ResponseEntity<?> updateUser(@CurrentUser UserPrincipal currentUser,
+    public ResponseEntity<?> updateUser(
+            @CurrentUser UserPrincipal currentUser,
             @PathVariable(value = "userId") Long userId,
             @Valid UserRequest request,
             @RequestParam(required = false) String oldPassword,
@@ -123,8 +124,7 @@ public class UserController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{userId}")
                 .buildAndExpand(user.getId()).toUri();
-        return ResponseEntity.created(location)
-                .body(new ApiResponse(true, "User Updated Successfully"));
+        return ResponseEntity.ok(new ApiResponse(true, "User Updated Successfully"));
     }
 
     @DeleteMapping("/users/{userId}")
