@@ -51,6 +51,20 @@ const HomePage = (props) => {
   const hidePopup = () => {
     setShowPopup(false);
   };
+
+  function truncateDescription(description, wordLimit = 50) {
+    // Memecah deskripsi menjadi array kata-kata
+    const words = description.split(" ");
+
+    // Jika jumlah kata lebih banyak dari wordLimit, potong dan tambahkan '...'
+    if (words.length > wordLimit) {
+      return words.slice(0, wordLimit).join(" ") + " ...";
+    }
+
+    // Jika jumlah kata kurang dari atau sama dengan wordLimit, kembalikan seluruh teks
+    return description;
+  }
+
   return (
     <Layout title="Home">
       {showPopup && (
@@ -70,39 +84,14 @@ const HomePage = (props) => {
 
       <MarqueeText />
       <SlideShow />
-      {/* <TextSection
-        text={t("home.label")}
-        bgColor="#051d47"
-        textColor="#fff"
-        borderColor="#998643"
-        padding="12px 0"
-        darkBg={true}
-      /> */}
 
-      {/* <NewsCardCounter profileName={t('Pengunjung')}  /> */}
       <div
         style={{
           backgroundImage: 'url("/assets/images/bg_polinema2.png")',
           backgroundRepeat: "repeat",
           backgroundSize: 500,
         }}
-      >
-        <Grid container className={classes.contentContainer}>
-          <Grid item className={classes.gridItemFix} xs={12} sm={4} lg={4}>
-            {data.map((item, index) => (
-              <NewsCard
-                key={index}
-                Img={item.data} // URL atau base64 dari backend
-                profileName={item.name} // Judul berita
-                content={item.description} // Deskripsi atau link berita
-                profileLink={`/item_pengumuman${index + 1}`} // Link dinamis
-                link={t("selengkapnya →")}
-                bgContain
-              />
-            ))}
-          </Grid>
-        </Grid>
-      </div>
+      ></div>
 
       <div
         className={classes.containerSection}
@@ -123,48 +112,37 @@ const HomePage = (props) => {
             </Typography>
           </div>
         </div>
-        <Grid container className={classes.contentContainer}>
-        <Grid item className={classes.gridItemFix} xs={12} sm={4} lg={4}>
-            {data.map((item, index) => (
+        <Grid
+          container
+          className={classes.contentContainer}
+          spacing={3} // Memberikan jarak antar item
+          // direction="row" // Menyusun item secara horizontal
+          justifyContent="center" // Menyesuaikan distribusi antar item
+        >
+          {data.slice(0, 3).map((item, index) => (
+            <Grid
+              item
+              
+              xs={12}
+              sm={6}
+              lg={4} // Mengatur lebar setiap berita 
+              key={index}
+              className={classes.gridItemFix}
+            >
               <NewsCard
-                key={index}
-                Img={item.data} // URL atau base64 dari backend
+                cardimg={item.data} // URL atau base64 dari backend
                 profileName={item.name} // Judul berita
-                content={item.description} // Deskripsi atau link berita
+                fluid
+                content={truncateDescription(item.description, 30)} // Memotong deskripsi menjadi 50 kata
                 profileLink={`/item_pengumuman${index + 1}`} // Link dinamis
                 link={t("selengkapnya →")}
                 bgContain
+                className={classes.cardimg}
+                imgWidth="150px"
+              imgHeight="150px"
               />
-            ))}
-          </Grid>
-
-          <Grid item className={classes.gridItemFix} xs={12} sm={4} lg={4}>
-            {data.map((item, index) => (
-              <NewsCard
-                key={index}
-                Img={item.data} // URL atau base64 dari backend
-                profileName={item.name} // Judul berita
-                content={item.description} // Deskripsi atau link berita
-                profileLink={`/item_pengumuman${index + 1}`} // Link dinamis
-                link={t("selengkapnya →")}
-                bgContain
-              />
-            ))}
-          </Grid>
-
-          <Grid item className={classes.gridItemFix} xs={12} sm={4} lg={4}>
-            {data.map((item, index) => (
-              <NewsCard
-                key={index}
-                Img={item.data} // URL atau base64 dari backend
-                profileName={item.name} // Judul berita
-                content={item.description} // Deskripsi atau link berita
-                profileLink={`/item_pengumuman${index + 1}`} // Link dinamis
-                link={t("selengkapnya →")}
-                bgContain
-              />
-            ))}
-          </Grid>
+            </Grid>
+          ))}
         </Grid>
 
         <div style={{ textAlign: "center", padding: 20 }}>
@@ -200,7 +178,7 @@ const styles = (theme) => ({
     [theme.breakpoints.up("lg")]: {
       minHeight: "400px",
     },
-  },
+  },    
   gridItemFix: {
     width: "100%",
     padding: "16px",
@@ -211,6 +189,7 @@ const styles = (theme) => ({
   contentContainer: {
     width: "100%",
     margin: "0 auto",
+    display: "flex",
     [theme.breakpoints.down("md")]: {
       maxWidth: "85%",
     },

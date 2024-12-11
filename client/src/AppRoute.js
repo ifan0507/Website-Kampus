@@ -77,7 +77,7 @@ const AppRoute = () => {
             <Route exact path='/kantin' component={kantin} />
             <Route exact path='/keamanan' component={keamanan} />
             <Route exact path='/galeri' component={galeri} />
-            <Route exact path='/mapping' component={mapping} /> */}
+            <Route exact path='/mapping' component={mapping} />  */}
 
         </Switch>
     )
