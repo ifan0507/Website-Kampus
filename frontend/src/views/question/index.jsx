@@ -60,11 +60,10 @@ class Berita extends Component {
   handleEditBerita = (row) => {
     console.log("Selected row for edit:", row); // Debugging
     this.setState({
-        currentRowData: Object.assign({}, row), // Menyimpan data berita yang akan diedit
-        editBeritaModalVisible: true, // Menampilkan modal edit
+      currentRowData: Object.assign({}, row), // Menyimpan data berita yang akan diedit
+      editBeritaModalVisible: true, // Menampilkan modal edit
     });
-};
-
+  };
 
   handleDeleteBerita = (row) => {
     const { id } = row;
@@ -97,8 +96,7 @@ class Berita extends Component {
           this.setState({ editBeritaModalLoading: false });
         });
     });
-};
-
+  };
 
   handleCancel = () => {
     this.setState({
@@ -136,7 +134,13 @@ class Berita extends Component {
   };
 
   render() {
-    const { beritas, categories, gallerys, loadingCategories, loadingGallerys } = this.state;
+    const {
+      beritas,
+      categories,
+      gallerys,
+      loadingCategories,
+      loadingGallerys,
+    } = this.state;
     const title = (
       <span>
         <Button type="primary" onClick={this.handleAddBerita}>
@@ -147,9 +151,17 @@ class Berita extends Component {
 
     return (
       <div className="app-container">
-        <TypingCard title="Manajemen Berita" source="Di sini, Anda dapat mengelola informasi berita di sistem, seperti menambahkan berita baru, atau mengubah berita yang sudah ada di sistem." />
+        <TypingCard
+          title="Manajemen Berita"
+          source="Di sini, Anda dapat mengelola informasi berita di sistem, seperti menambahkan berita baru, atau mengubah berita yang sudah ada di sistem."
+        />
         <Card title={title}>
-          <Table bordered rowKey="id" dataSource={beritas} pagination={{ pageSize: 5 }}>
+          <Table
+            bordered
+            rowKey="id"
+            dataSource={beritas}
+            pagination={{ pageSize: 5 }}
+          >
             <Column title="Judul" dataIndex="name" key="name" align="center" />
             <Column
               title="Gambar Judul Berita"
@@ -158,14 +170,37 @@ class Berita extends Component {
               align="center"
               render={(text, row) => {
                 // console.log(row.data)
-                return row.data != null ? 
-                <BlobImageDisplay blob={row.data} /> : <></> 
-            }}
+                return row.data != null ? (
+                  <BlobImageDisplay blob={row.data} />
+                ) : (
+                  <></>
+                );
+              }}
             />
-            <Column title="Kategori Berita" dataIndex="categoryName" key="categoryName" align="center" />
-            <Column title="Galeri Berita" dataIndex="galleryName" key="galleryName" align="center" />
-            <Column title="Deskripsi" dataIndex="description" key="description" align="center" />
-            <Column title="Selengkapnya" dataIndex="selengkapnya" key="selengkapnya" align="center" />
+            <Column
+              title="Kategori Berita"
+              dataIndex="categoryName"
+              key="categoryName"
+              align="center"
+            />
+            <Column
+              title="Galeri Berita"
+              dataIndex="galleryName"
+              key="galleryName"
+              align="center"
+            />
+            <Column
+              title="Deskripsi"
+              dataIndex="description"
+              key="description"
+              align="center"
+            />
+            <Column
+              title="Selengkapnya"
+              dataIndex="selengkapnya"
+              key="selengkapnya"
+              align="center"
+            />
             <Column
               title="Operasi"
               key="action"
@@ -173,9 +208,19 @@ class Berita extends Component {
               align="center"
               render={(text, row) => (
                 <span>
-                  <Button type="primary" shape="circle" icon="edit" onClick={() => this.handleEditBerita(row)} />
+                  <Button
+                    type="primary"
+                    shape="circle"
+                    icon="edit"
+                    onClick={() => this.handleEditBerita(row)}
+                  />
                   <Divider type="vertical" />
-                  <Button type="primary" shape="circle" icon="delete" onClick={() => this.handleDeleteBerita(row)} />
+                  <Button
+                    type="primary"
+                    shape="circle"
+                    icon="delete"
+                    onClick={() => this.handleDeleteBerita(row)}
+                  />
                 </span>
               )}
             />

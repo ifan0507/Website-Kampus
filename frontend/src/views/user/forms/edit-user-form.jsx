@@ -1,18 +1,33 @@
 import React, { Component } from "react";
-import { Form, Input, Select, Modal } from "antd";
+import { Form, Input, Select, Modal, Upload, Icon } from "antd";
 const { TextArea } = Input;
+
 class EditUserForm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      fileList: [],
+    };
+  }
+
+  handleChange = ({ fileList }) => {
+    this.setState({ fileList });
+  };
+
   render() {
-    const {
-      visible,
-      onCancel,
-      onOk,
-      form,
-      confirmLoading,
-      currentRowData,
-    } = this.props;
+    const { visible, onCancel, onOk, form, confirmLoading, currentRowData } =
+      this.props;
     const { getFieldDecorator } = form;
-    const { id, name, role, description } = currentRowData;
+    const {
+      id = "",
+      name = "",
+      username = "",
+      email = "",
+      oldPassword = "",
+      password = "",
+      roles = "ROLE_ADMINISTRATOR",
+    } = currentRowData;
+
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -23,6 +38,7 @@ class EditUserForm extends Component {
         sm: { span: 16 },
       },
     };
+
     return (
       <Modal
         title="Edit Manajemen User"
@@ -32,32 +48,91 @@ class EditUserForm extends Component {
         confirmLoading={confirmLoading}
       >
         <Form {...formItemLayout}>
-          <Form.Item label="ID Pengguna:">
+          {/* ID User */}
+          <Form.Item label="ID User:">
             {getFieldDecorator("id", {
               initialValue: id,
             })(<Input disabled />)}
           </Form.Item>
+
+          {/* Nama */}
           <Form.Item label="Nama:">
             {getFieldDecorator("name", {
-              rules: [{ required: true, message: "Silakan isikan nama pengguna"}],
+              rules: [
+                { required: true, message: "Silakan isikan nama pengguna" },
+              ],
               initialValue: name,
-            })(<Input placeholder="Nama Pengguna" />)}
+            })(<Input placeholder="Nama User" />)}
           </Form.Item>
-          <Form.Item label="Role:">
-            {getFieldDecorator("role", {
-              initialValue: role,
-            })(
-              <Select style={{ width: 120 }} disabled={id === "admin"}>
-                <Select.Option value="admin">admin</Select.Option>
-                <Select.Option value="lecture">editor</Select.Option>
-                <Select.Option value="student">guest</Select.Option>
-              </Select>
+
+          {/* Username */}
+          <Form.Item label="Username:">
+            {getFieldDecorator("username", {
+              rules: [
+                { required: true, message: "Silakan isikan username pengguna" },
+              ],
+              initialValue: username,
+            })(<Input placeholder="Username Pengguna" />)}
+          </Form.Item>
+
+          {/* Foto User */}
+          <Form.Item label="Foto User" name="file">
+            {getFieldDecorator("file")(
+              <Upload.Dragger
+              beforeUpload={() => false}
+              listType="picture"
+            >
+              <p className="ant-upload-drag-icon">
+                <Icon type="inbox" />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to this area to upload
+              </p>
+              <p className="ant-upload-hint">
+                Support for a single or bulk upload.
+              </p>
+            </Upload.Dragger>
             )}
           </Form.Item>
-          <Form.Item label="Deskripsi Pengguna:">
-            {getFieldDecorator("description", {
-              initialValue: description,
-            })(<TextArea rows={4} placeholder="Silakan isikan deskripsi pengguna" />)}
+          {/* Email */}
+          <Form.Item label="Email:">
+            {getFieldDecorator("email", {
+              rules: [
+                { required: true, message: "Silakan isikan email pengguna" },
+                { type: "email", message: "Masukkan email yang valid" },
+              ],
+              initialValue: email,
+            })(<Input placeholder="Email Pengguna" />)}
+          </Form.Item>
+
+          {/* Password Lama */}
+          <Form.Item label="Password Lama:">
+            {getFieldDecorator("oldPassword", {
+              initialValue: oldPassword,
+            })(<Input.Password placeholder="Password Lama" />)}
+          </Form.Item>
+
+          {/* Password Baru */}
+          <Form.Item label="Password Baru:">
+            {getFieldDecorator("password", {
+              rules: [
+                { required: false, message: "Silakan isikan password baru" },
+              ],
+              initialValue: password,
+            })(<Input.Password placeholder="Password Baru" />)}
+          </Form.Item>
+
+          {/* Role */}
+        <Form.Item label="Role:">
+            {getFieldDecorator("roles", {
+              initialValue: "ADMINISTRATOR", // Nilai awal
+            })(
+              <Select style={{ width: 120 }}>
+                <Select.Option value="ROLE_ADMINISTRATOR">ADMINISTRATOR</Select.Option>
+                <Select.Option value="ROLE_LECTURE">LECTURE</Select.Option>
+                <Select.Option value="ROLE_STUDENT">STUDENT</Select.Option>
+              </Select>
+            )}
           </Form.Item>
         </Form>
       </Modal>
