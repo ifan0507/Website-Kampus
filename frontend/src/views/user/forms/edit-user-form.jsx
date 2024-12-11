@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Form, Input, Select, Modal, Upload, Icon } from "antd";
-const { TextArea } = Input;
 
 class EditUserForm extends Component {
   constructor(props) {
@@ -11,8 +10,11 @@ class EditUserForm extends Component {
   }
 
   handleChange = ({ fileList }) => {
-    this.setState({ fileList });
+    this.setState({ fileList});
   };
+
+   // URL backend
+   BASE_URL = "http://localhost:8080";
 
   render() {
     const { visible, onCancel, onOk, form, confirmLoading, currentRowData } =
@@ -75,7 +77,6 @@ class EditUserForm extends Component {
             })(<Input placeholder="Username Pengguna" />)}
           </Form.Item>
 
-          {/* Foto User */}
           <Form.Item label="Foto User" name="file">
             {getFieldDecorator("file")(
               <Upload.Dragger
@@ -94,6 +95,8 @@ class EditUserForm extends Component {
             </Upload.Dragger>
             )}
           </Form.Item>
+
+
           {/* Email */}
           <Form.Item label="Email:">
             {getFieldDecorator("email", {
@@ -109,6 +112,14 @@ class EditUserForm extends Component {
           <Form.Item label="Password Lama:">
             {getFieldDecorator("oldPassword", {
               initialValue: oldPassword,
+              rules: [
+                // Validasi password lama jika password baru diisi
+                {
+                  required: this.props.form.getFieldValue("password") !== "", // Cek jika password baru tidak kosong
+                  message:
+                    "Silakan isikan password lama jika mengganti password",
+                },
+              ],
             })(<Input.Password placeholder="Password Lama" />)}
           </Form.Item>
 
@@ -116,19 +127,28 @@ class EditUserForm extends Component {
           <Form.Item label="Password Baru:">
             {getFieldDecorator("password", {
               rules: [
-                { required: false, message: "Silakan isikan password baru" },
+                // Tidak ada kewajiban untuk mengisi password baru jika tidak ingin mengganti password
+                {
+                  required: false,
+                  message:
+                    "Silakan isikan password baru jika ingin mengganti password",
+                },
               ],
               initialValue: password,
-            })(<Input.Password placeholder="Password Baru" />)}
+            })(
+              <Input.Password placeholder="Password Baru (kosongkan jika tidak mengganti)" />
+            )}
           </Form.Item>
 
           {/* Role */}
-        <Form.Item label="Role:">
+          <Form.Item label="Role:">
             {getFieldDecorator("roles", {
               initialValue: "ADMINISTRATOR", // Nilai awal
             })(
               <Select style={{ width: 120 }}>
-                <Select.Option value="ROLE_ADMINISTRATOR">ADMINISTRATOR</Select.Option>
+                <Select.Option value="ROLE_ADMINISTRATOR">
+                  ADMINISTRATOR
+                </Select.Option>
                 <Select.Option value="ROLE_LECTURE">LECTURE</Select.Option>
                 <Select.Option value="ROLE_STUDENT">STUDENT</Select.Option>
               </Select>
