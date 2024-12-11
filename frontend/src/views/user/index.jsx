@@ -31,6 +31,7 @@ class User extends Component {
     }
   };
   handleEditUser = (row) => {
+    console.log("Selected row for edti:", row);
     this.setState({
       currentRowData: Object.assign({}, row),
       editUserModalVisible: true,
@@ -53,10 +54,8 @@ class User extends Component {
   handleEditUserOk = (_) => {
     const { form } = this.editUserFormRef.props;
     form.validateFields((err, values) => {
-      if (err) {
-        return;
-      }
-      this.setState({ editModalLoading: true });
+      if (err) return;
+      this.setState({ editUserModalLoading: true });
       editUser(values, values.id)
         .then((response) => {
           form.resetFields();
@@ -69,6 +68,7 @@ class User extends Component {
         })
         .catch((e) => {
           message.success("Pengeditan gagal, coba lagi!");
+          this.setState({ editUserModalLoading: false });
         });
     });
   };
