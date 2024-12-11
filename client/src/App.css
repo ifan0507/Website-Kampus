@@ -36,3 +36,80 @@
     transform: rotate(360deg);
   }
 }
+
+.card {
+  border: none; /* Hilangkan border pada card */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Tambahkan bayangan */
+}
+
+.card-header {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.card-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.card-body ul {
+  margin: 0;
+  padding-left: 20px;
+  /* font-size: 0.9rem; */
+  line-height: 2.2; /* Memberikan ruang antar baris */
+  /* list-style-position: inside; */
+  list-style-position: outside;
+}
+
+.card-body ul li {
+  position: relative;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  line-height: 1.8;
+}
+
+.card-body ul li::before {
+  content: "•"; /* Tambahkan bullet point */
+  color: #ffa500; /* Warna sesuai tema */
+  font-weight: bold;
+  position: absolute;
+  
+  /* margin-right: 8px; */
+}
+
+.card-pengumuman {
+  display: flex;
+  align-items: flex-start; /* Pastikan elemen sejajar di bagian atas */
+    gap: 10px; /* Jarak antara bullet point dan teks pengumuman */
+}
+
+.card-pengumuman ul {
+    margin: 0; /* Hilangkan margin default */
+    padding-left: 20px; /* Jarak antara bullet point dengan container */
+    list-style-position: outside; /* Bullet point di luar container teks */
+}
+
+.card-pengumuman ul li {
+    position: relative;
+    font-size: 0.9rem; /* Ukuran font yang sesuai */
+    margin-bottom: 10px;
+    line-height: 1.8;
+}
+
+.card-pengumuman ul li::before {
+    content: "•"; /* Bullet point */
+    color: #FFA500; /* Warna bullet point */
+    font-weight: bold;
+    position: absolute;
+    left: 0; /* Posisikan di kiri */
+    top: 0;
+}
+
+.card-pengumuman ul li span {
+    display: inline-block;
+    padding-left: 20px; /* Jarak antara bullet point dan teks */
+    text-align: justify; /* Rata kanan-kiri */
+    line-height: 1.6;
+}

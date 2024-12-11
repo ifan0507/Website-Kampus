@@ -15,13 +15,14 @@ import com.doyatama.university.service.DepartmentService;
 import com.doyatama.university.service.UserService;
 import com.doyatama.university.util.AppConstants;
 import com.doyatama.university.repository.UserRepository;
+import org.slf4j.Logger; 
+
 
 import java.io.IOException;
 import java.net.URI;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
