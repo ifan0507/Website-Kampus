@@ -120,9 +120,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User updateUser(@Valid UserRequest userRequest, Long id, UserPrincipal currentUser, MultipartFile file,
-            String oldPassword, String roles) throws IOException {
+    public User updateUser(@Valid UserRequest userRequest, Long id, UserPrincipal currentUser,
+            MultipartFile file, String oldPassword, String roles) throws IOException {
         return userRepository.findById(id).map(user -> {
+            // Update password jika diberikan
             if (userRequest.getPassword() != null && !userRequest.getPassword().isEmpty()) {
                 if (oldPassword == null || oldPassword.isEmpty()) {
                     throw new IllegalArgumentException("Old password is required.");
@@ -135,6 +136,7 @@ public class UserService {
                 user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
             }
 
+            // Update roles jika diberikan
             if (roles != null && !roles.isEmpty()) {
                 Set<Role> roleSet = Arrays.stream(roles.split(","))
                         .map(roleName -> roleRepository.findByName(RoleName.valueOf(roleName))
@@ -143,6 +145,7 @@ public class UserService {
                 user.setRoles(roleSet);
             }
 
+            // Update photo jika diberikan
             if (file != null && !file.isEmpty()) {
                 try {
                     user.setData(file.getBytes());
@@ -151,8 +154,11 @@ public class UserService {
                 } catch (IOException e) {
                     throw new RuntimeException("Failed to store photo", e);
                 }
+            } else {
+                // log.info("No new photo uploaded, keeping the existing photo.");
             }
 
+            // Update atribut lainnya
             user.setName(userRequest.getName());
             user.setUsername(userRequest.getUsername());
             user.setEmail(userRequest.getEmail());
