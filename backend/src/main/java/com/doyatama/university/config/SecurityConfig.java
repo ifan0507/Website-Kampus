@@ -86,7 +86,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/organisasi", "/api/profil", "/api/campus_life", "/api/galeri-kampus",
                         "/api/galeri-berita",
                         "/api/category-berita",
-                        "/api/pengumuman")
+                        "/api/pengumuman",
+                        "/api/dosen",
+                        "/api/alumni")
                 .permitAll()
                 .anyRequest()
                 .authenticated();
