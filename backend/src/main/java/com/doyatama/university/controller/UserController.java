@@ -15,8 +15,7 @@ import com.doyatama.university.service.DepartmentService;
 import com.doyatama.university.service.UserService;
 import com.doyatama.university.util.AppConstants;
 import com.doyatama.university.repository.UserRepository;
-import org.slf4j.Logger; 
-
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.net.URI;
@@ -117,13 +116,20 @@ public class UserController {
             @PathVariable(value = "userId") Long userId,
             @Valid UserRequest request,
             @RequestParam(required = false) String oldPassword,
-            @RequestParam(required = false) MultipartFile photoFile,
+            @RequestParam(required = false) MultipartFile file,
             @RequestParam(required = false) String roles) throws IOException {
 
-        User user = userService.updateUser(request, userId, currentUser, photoFile, oldPassword, roles);
+        // Validasi foto (opsional)
+        if (file != null && file.isEmpty()) {
+            throw new IllegalArgumentException("Photo file is empty.");
+        }
+
+        User user = userService.updateUser(request, userId, currentUser, file, oldPassword, roles);
+
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{userId}")
                 .buildAndExpand(user.getId()).toUri();
+
         return ResponseEntity.ok(new ApiResponse(true, "User Updated Successfully"));
     }
 

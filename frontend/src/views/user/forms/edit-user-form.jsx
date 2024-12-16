@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Input, Select, Modal, Upload, Icon } from "antd";
+import { Form, Input, Select, Modal, Upload, Icon, message } from "antd";
 
 class EditUserForm extends Component {
   constructor(props) {
@@ -10,14 +10,36 @@ class EditUserForm extends Component {
   }
 
   handleChange = ({ fileList }) => {
-    this.setState({ fileList});
+    this.setState({ fileList });
   };
 
-   // URL backend
-   BASE_URL = "http://localhost:8080";
+  // URL backend
+  BASE_URL = "http://localhost:8080";
+
+  // Fungsi untuk memvalidasi form sebelum submit
+  handleOk = () => {
+    const { form, onOk } = this.props;
+
+    form.validateFields((err, values) => {
+      if (err) {
+        return; // Jika ada error pada form, hentikan proses
+      }
+
+      const { oldPassword, password } = values;
+
+      // Validasi khusus untuk password
+      if ((oldPassword && !password) || (!oldPassword && password)) {
+        message.error("Silakan isi kedua password atau kosongkan keduanya.");
+        return;
+      }
+
+      // Jika validasi lolos, panggil fungsi onOk untuk submit data
+      onOk(values);
+    });
+  };
 
   render() {
-    const { visible, onCancel, onOk, form, confirmLoading, currentRowData } =
+    const { visible, onCancel, form, confirmLoading, currentRowData } =
       this.props;
     const { getFieldDecorator } = form;
     const {
@@ -46,7 +68,7 @@ class EditUserForm extends Component {
         title="Edit Manajemen User"
         visible={visible}
         onCancel={onCancel}
-        onOk={onOk}
+        onOk={this.handleOk} // Gunakan fungsi handleOk untuk validasi
         confirmLoading={confirmLoading}
       >
         <Form {...formItemLayout}>
@@ -79,23 +101,19 @@ class EditUserForm extends Component {
 
           <Form.Item label="Foto User" name="file">
             {getFieldDecorator("file")(
-              <Upload.Dragger
-              beforeUpload={() => false}
-              listType="picture"
-            >
-              <p className="ant-upload-drag-icon">
-                <Icon type="inbox" />
-              </p>
-              <p className="ant-upload-text">
-                Click or drag file to this area to upload
-              </p>
-              <p className="ant-upload-hint">
-                Support for a single or bulk upload.
-              </p>
-            </Upload.Dragger>
+              <Upload.Dragger beforeUpload={() => false} listType="picture">
+                <p className="ant-upload-drag-icon">
+                  <Icon type="inbox" />
+                </p>
+                <p className="ant-upload-text">
+                  Click or drag file to this area to upload
+                </p>
+                <p className="ant-upload-hint">
+                  Support for a single or bulk upload.
+                </p>
+              </Upload.Dragger>
             )}
           </Form.Item>
-
 
           {/* Email */}
           <Form.Item label="Email:">
@@ -112,28 +130,12 @@ class EditUserForm extends Component {
           <Form.Item label="Password Lama:">
             {getFieldDecorator("oldPassword", {
               initialValue: oldPassword,
-              rules: [
-                // Validasi password lama jika password baru diisi
-                {
-                  required: this.props.form.getFieldValue("password") !== "", // Cek jika password baru tidak kosong
-                  message:
-                    "Silakan isikan password lama jika mengganti password",
-                },
-              ],
             })(<Input.Password placeholder="Password Lama" />)}
           </Form.Item>
 
           {/* Password Baru */}
           <Form.Item label="Password Baru:">
             {getFieldDecorator("password", {
-              rules: [
-                // Tidak ada kewajiban untuk mengisi password baru jika tidak ingin mengganti password
-                {
-                  required: false,
-                  message:
-                    "Silakan isikan password baru jika ingin mengganti password",
-                },
-              ],
               initialValue: password,
             })(
               <Input.Password placeholder="Password Baru (kosongkan jika tidak mengganti)" />
