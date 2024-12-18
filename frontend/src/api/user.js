@@ -19,14 +19,12 @@ export function reqUserInfo(data) {
 
 // Fungsi untuk menghapus pengguna
 export function deleteUser(data) {
-    return request({
-      url: `/users/${data.id}`,
-      method: "delete",
-      data,
-    });
-  }
-  
-
+  return request({
+    url: `/users/${data.id}`,
+    method: "delete",
+    data,
+  });
+}
 
 // Fungsi untuk mengedit pengguna
 export function editUser(data, id) {

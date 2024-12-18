@@ -88,7 +88,7 @@ class EditDosenForm extends Component {
               ],
               initialValue: program_studi,
             })(
-              <Select style={{ width: 300 }}>
+              <Select style={{ width: 300 }}placeholder="Pilih Program Studi">
                 <Select.Option value="Jurusan Teknologi Informasi">
                   D-III Jurusan Teknologi Informasi
                 </Select.Option>

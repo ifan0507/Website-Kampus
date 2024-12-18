@@ -126,47 +126,24 @@ class User extends Component {
         <TypingCard title="Manajemen User" source={cardContent} />
         <br />
         <Card title={title}>
-          <Table bordered rowKey="id" dataSource={users} pagination={5}>
+          <Table bordered rowKey="id" dataSource={users} pagination={5} scroll={{ x: "100vw" }}>
             <Column title="Nama" dataIndex="name" key="name" align="center" />
-            <Column
-              title="Username"
-              dataIndex="username"
-              key="username"
-              align="center"
-            />
+            <Column title="Username" dataIndex="username" key="username" align="center" />
 
             <Column
               title="Foto User"
               dataIndex="image"
               key="image"
               align="center"
+              width={500}
               render={(text, row) => {
-                console.log(row.data)
-                return row.data != null ? (
-                  <BlobImageDisplay blob={row.data} />
-                ) : (
-                  <></>
-                );
+                console.log(row.data);
+                return row.data != null ? <BlobImageDisplay blob={row.data} /> : <></>;
               }}
             />
-            
-            <Column
-              title="Email"
-              dataIndex="email"
-              key="email"
-              align="center"
-            />
-            <Column
-              title="Role"
-              dataIndex="roles"
-              key="roles"
-              align="center"
-              render={(roles) =>
-                roles && roles.length > 0
-                  ? roles.map((role) => role.name).join(", ")
-                  : "No Role"
-              }
-            />
+
+            <Column title="Email" dataIndex="email" key="email" align="center" />
+            <Column title="Role" dataIndex="roles" key="roles" align="center" render={(roles) => (roles && roles.length > 0 ? roles.map((role) => role.name).join(", ") : "No Role")} />
 
             <Column
               title="Operasi"
@@ -175,21 +152,9 @@ class User extends Component {
               align="center"
               render={(text, row) => (
                 <span>
-                  <Button
-                    type="primary"
-                    shape="circle"
-                    icon="edit"
-                    title="edit"
-                    onClick={this.handleEditUser.bind(null, row)}
-                  />
+                  <Button type="primary" shape="circle" icon="edit" title="edit" onClick={this.handleEditUser.bind(null, row)} />
                   <Divider type="vertical" />
-                  <Button
-                    type="primary"
-                    shape="circle"
-                    icon="delete"
-                    title="delete"
-                    onClick={this.handleDeleteUser.bind(null, row)}
-                  />
+                  <Button type="primary" shape="circle" icon="delete" title="delete" onClick={this.handleDeleteUser.bind(null, row)} />
                 </span>
               )}
             />
@@ -203,13 +168,7 @@ class User extends Component {
           onCancel={this.handleCancel}
           onOk={this.handleEditUserOk}
         />
-        <AddUserForm
-          wrappedComponentRef={(formRef) => (this.addUserFormRef = formRef)}
-          visible={this.state.addUserModalVisible}
-          confirmLoading={this.state.addUserModalLoading}
-          onCancel={this.handleCancel}
-          onOk={this.handleAddUserOk}
-        />
+        <AddUserForm wrappedComponentRef={(formRef) => (this.addUserFormRef = formRef)} visible={this.state.addUserModalVisible} confirmLoading={this.state.addUserModalLoading} onCancel={this.handleCancel} onOk={this.handleAddUserOk} />
       </div>
     );
   }

@@ -1,15 +1,7 @@
 import React, { Component } from "react";
-import {
-  Form,
-  Input,
-  Select,
-  Upload,
-  message,
-  Icon,
-  Modal,
-} from "antd";
+import { Form, Input, Select, Upload, message, Icon, Modal, DatePicker } from "antd";
 const { TextArea } = Input;
-class EditDosenForm extends Component {
+class EditAlumniForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,7 +17,7 @@ class EditDosenForm extends Component {
     const { visible, onCancel, onOk, form, confirmLoading, currentRowData } =
       this.props;
     const { getFieldDecorator } = form;
-    const { id, nip, name, email, no_hp, program_studi, bidang_minat } =
+    const { id, nim, name, email, no_hp, program_studi, judul_ta, tgl_lulus } =
       currentRowData;
     const formItemLayout = {
       labelCol: {
@@ -39,23 +31,23 @@ class EditDosenForm extends Component {
     };
     return (
       <Modal
-        title="Edit Manajemen Dosen"
+        title="Edit Manajemen Alumni"
         visible={visible}
         onCancel={onCancel}
         onOk={onOk}
         confirmLoading={confirmLoading}
       >
         <Form {...formItemLayout}>
-          <Form.Item label="ID Jurusan:">
+          <Form.Item label="ID Alumni:">
             {getFieldDecorator("id", {
               initialValue: id,
             })(<Input disabled />)}
           </Form.Item>
-          <Form.Item label="NIP:">
-            {getFieldDecorator("nip", {
-              rules: [{ required: true, message: "Silakan isikan NIP" }],
-              initialValue: nip,
-            })(<Input placeholder="NIP Dosen" />)}
+          <Form.Item label="NIM:">
+            {getFieldDecorator("nim", {
+              rules: [{ required: true, message: "Silakan isikan NIM" }],
+              initialValue: nim,
+            })(<Input placeholder="NIM MAHASISWA" />)}
           </Form.Item>
 
           <Form.Item label="Nama:">
@@ -88,7 +80,7 @@ class EditDosenForm extends Component {
               ],
               initialValue: program_studi,
             })(
-              <Select style={{ width: 300 }}>
+              <Select style={{ width: 300 }}placeholder="Pilih Program Studi">
                 <Select.Option value="Jurusan Teknologi Informasi">
                   D-III Jurusan Teknologi Informasi
                 </Select.Option>
@@ -105,22 +97,28 @@ class EditDosenForm extends Component {
             )}
           </Form.Item>
 
-          <Form.Item label="Bidang Minat:">
-            {getFieldDecorator("bidang_minat", {
+          <Form.Item label="Judul TA:">
+            {getFieldDecorator("judul_ta", {
               rules: [
-                { required: true, message: "Silahkan pilih Bidang Minat" },
+                {
+                  required: true,
+                  message: "Silahkan isi Judul TA",
+                },
               ],
-              initialValue: bidang_minat,
-            })(
-              <Select style={{ width: 300 }}>
-                <Select.Option value="Teknologi dan Rekayasa">
-                  Teknologi dan Rekayasa
-                </Select.Option>
-                <Select.Option value="Ekonomi dan Manajemen">
-                  Ekonomi dan Manajemen
-                </Select.Option>
-              </Select>
-            )}
+              initialValue: judul_ta,
+            })(<TextArea rows={4} placeholder="Judul TA" />)}
+          </Form.Item>
+
+          <Form.Item label="Tanggal Lulus:">
+            {getFieldDecorator("tgl_lulus", {
+              rules: [
+                {
+                  required: true,
+                  message: "Silahkan isi Tanggal Lulus",
+                },
+              ],
+              // initialValue: tgl_lulus,
+            })(<DatePicker format="YYYY-MM-DD" />)}
           </Form.Item>
 
           <Form.Item label="File" name="file">
@@ -144,4 +142,4 @@ class EditDosenForm extends Component {
   }
 }
 
-export default Form.create({ name: "EditDosenForm" })(EditDosenForm);
+export default Form.create({ name: "EditAlumniForm" })(EditAlumniForm);

@@ -90,7 +90,7 @@ class AddDosenForm extends Component {
                 { required: true, message: "Silahkan pilih Program Studi" },
               ],
             })(
-              <Select style={{ width: 300 }}>
+              <Select style={{ width: 300 }}placeholder="Pilih Program Studi">
                 <Select.Option value="Jurusan Teknologi Informasi">
                   D-III Jurusan Teknologi Informasi
                 </Select.Option>
@@ -110,18 +110,12 @@ class AddDosenForm extends Component {
           <Form.Item label="Bidang Minat:">
             {getFieldDecorator("bidang_minat", {
               rules: [
-                { required: true, message: "Silahkan pilih Bidang Minat" },
+                {
+                  required: true,
+                  message: "Silahkan isi Bidang Minat",
+                },
               ],
-            })(
-              <Select style={{ width: 300 }}>
-                <Select.Option value="Teknologi dan Rekayasa">
-                  Teknologi dan Rekayasa
-                </Select.Option>
-                <Select.Option value="Ekonomi dan Manajemen">
-                  Ekonomi dan Manajemen
-                </Select.Option>
-              </Select>
-            )}
+            })(<TextArea rows={4} placeholder="Bidang Minat" />)}
           </Form.Item>
 
           <Form.Item label="File" name="file">

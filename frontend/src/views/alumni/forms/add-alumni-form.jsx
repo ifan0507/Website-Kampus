@@ -70,7 +70,7 @@ class AddAlumniForm extends Component {
                 { required: true, message: "Silahkan pilih Program Studi" },
               ],
             })(
-              <Select style={{ width: 300 }}>
+              <Select style={{ width: 300 }}placeholder="Pilih Program Studi">
                 <Select.Option value="Jurusan Teknologi Informasi">
                   D-III Jurusan Teknologi Informasi
                 </Select.Option>
@@ -97,18 +97,15 @@ class AddAlumniForm extends Component {
               ],
             })(<TextArea rows={4} placeholder="Judul TA" />)}
           </Form.Item>
-
-          <Form.Item
-            label="Tanggal Lulus"
-            name="tgl_lulus"
-            rules={[
-              {
-                required: true,
-                message: "Harap pilih tanggal lulus!",
-              },
-            ]}
-          >
-            <DatePicker format="YYYY-MM-DD" />
+          <Form.Item label="Tanggal Lulus:">
+            {getFieldDecorator("tgl_lulus", {
+              rules: [
+                {
+                  required: true,
+                  message: "Silahkan isi Tanggal Lulus",
+                },
+              ],
+            })(<DatePicker format="YYYY-MM-DD" />)}
           </Form.Item>
 
           <Form.Item label="File" name="file">

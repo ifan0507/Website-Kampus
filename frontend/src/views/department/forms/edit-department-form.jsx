@@ -52,7 +52,7 @@ class EditDepartmentForm extends Component {
             {getFieldDecorator("name", {
               // rules: [{ required: true, message: "Silahkan pilih jurusan" }],
               initialValue: name,
-            })(<Select style={{ width: 300 }}>
+            })(<Select style={{ width: 300 }}placeholder="Pilih Jurusan">
               <Select.Option value="Jurusan Teknologi Informasi">Jurusan Teknologi Informasi</Select.Option>
               <Select.Option value="Jurusan Sipil">Jurusan Teknologi Sipil</Select.Option>
               <Select.Option value="Jurusan Teknologi Rekayasa Otomotif">Jurusan Teknologi Rekayasa Otomotif</Select.Option>
