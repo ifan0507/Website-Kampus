@@ -103,6 +103,21 @@ const menuList = [
     icon: "user",
     roles: ["ROLE_ADMINISTRATOR"],
   },
+
+  {
+    title: "Manajemen Dosen",
+    path: "/dosen",
+    icon: "user-add",   
+    roles: ["ROLE_ADMINISTRATOR"],
+  },
+
+  {
+    title: "Manajemen Alumni",
+    path: "/alumni",
+    icon: "team",   
+    roles: ["ROLE_ADMINISTRATOR"],
+  }
+  
  
 ];
 

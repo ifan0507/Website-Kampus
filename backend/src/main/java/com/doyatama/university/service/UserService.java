@@ -1,34 +1,23 @@
 package com.doyatama.university.service;
 
 import com.doyatama.university.exception.BadRequestException;
-import com.doyatama.university.exception.FileStorageException;
 import com.doyatama.university.exception.ResourceNotFoundException;
-import com.doyatama.university.model.Berita;
-import com.doyatama.university.model.CategoryBerita;
-import com.doyatama.university.model.GaleryBaru;
 import com.doyatama.university.model.Role;
-import com.doyatama.university.model.Selayang;
 import com.doyatama.university.model.User;
 import com.doyatama.university.model.enumeration.RoleName;
 import com.doyatama.university.payload.PagedResponse;
-import com.doyatama.university.payload.berita.BeritaRequest;
-import com.doyatama.university.payload.selayang.SelayangResponse;
 import com.doyatama.university.payload.user.UserRequest;
 import com.doyatama.university.payload.user.UserResponse;
-import com.doyatama.university.property.FileStorageProperties;
 import com.doyatama.university.repository.RoleRepository;
 import com.doyatama.university.repository.UserRepository;
 import com.doyatama.university.security.UserPrincipal;
 import com.doyatama.university.util.AppConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -38,12 +27,8 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;

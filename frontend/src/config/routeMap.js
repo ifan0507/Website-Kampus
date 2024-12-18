@@ -140,6 +140,14 @@ const Organisasi = Loadable({
   loader: () => import(/*webpackChunkName:'Organisasi'*/ "@/views/organisasi"),
   loading: Loading,
 });
+const Alumni = Loadable({
+  loader: () => import(/*webpackChunkName:'Organisasi'*/ "@/views/alumni"),
+  loading: Loading,
+});
+const Dosen = Loadable({
+  loader: () => import(/*webpackChunkName:'Organisasi'*/ "@/views/dosen"),
+  loading: Loading,
+});
 const StudyProgram = Loadable({
   loader: () => import(/*webpackChunkName:'StudyProgram'*/ "@/views/study-program"),
   loading: Loading,
@@ -294,6 +302,8 @@ export default [
   { path: "/campus_life", component: CampusLife, roles: ["ROLE_ADMINISTRATOR"] },
   { path: "/galeri-kampus", component: GaleriKampus, roles: ["ROLE_ADMINISTRATOR"] },
   { path: "/galeri-berita", component: GaleriBaru, roles: ["ROLE_ADMINISTRATOR"] },
+  { path: "/dosen", component: Dosen, roles: ["ROLE_ADMINISTRATOR"] },
+  { path: "/alumni", component: Alumni, roles: ["ROLE_ADMINISTRATOR"] },
 
   {
     path: "/study-program",

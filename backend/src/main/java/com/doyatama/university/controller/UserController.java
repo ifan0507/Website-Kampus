@@ -1,11 +1,8 @@
 package com.doyatama.university.controller;
 
-import com.doyatama.university.exception.BadRequestException;
 import com.doyatama.university.exception.ResourceNotFoundException;
-import com.doyatama.university.model.Berita;
 import com.doyatama.university.model.User;
 import com.doyatama.university.payload.*;
-import com.doyatama.university.payload.berita.BeritaResponse;
 import com.doyatama.university.payload.user.UserRequest;
 import com.doyatama.university.payload.user.UserResponse;
 import com.doyatama.university.security.CurrentUser;
@@ -26,9 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
