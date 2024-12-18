@@ -6,6 +6,7 @@ import TypingCard from "@/components/TypingCard";
 import EditBeritaForm from "./forms/edit-question-form";
 import AddBeritaForm from "./forms/add-question-form";
 import { BlobImageDisplay } from "../../components/BlobImageDisplay";
+import { Row, Col } from "antd";
 
 const { Column } = Table;
 
@@ -134,13 +135,7 @@ class Berita extends Component {
   };
 
   render() {
-    const {
-      beritas,
-      categories,
-      gallerys,
-      loadingCategories,
-      loadingGallerys,
-    } = this.state;
+    const { beritas, categories, gallerys, loadingCategories, loadingGallerys } = this.state;
     const title = (
       <span>
         <Button type="primary" onClick={this.handleAddBerita}>
@@ -151,56 +146,25 @@ class Berita extends Component {
 
     return (
       <div className="app-container">
-        <TypingCard
-          title="Manajemen Berita"
-          source="Di sini, Anda dapat mengelola informasi berita di sistem, seperti menambahkan berita baru, atau mengubah berita yang sudah ada di sistem."
-        />
+        <TypingCard title="Manajemen Berita" source="Di sini, Anda dapat mengelola informasi berita di sistem, seperti menambahkan berita baru, atau mengubah berita yang sudah ada di sistem." />
         <Card title={title}>
-          <Table
-            bordered
-            rowKey="id"
-            dataSource={beritas}
-            pagination={{ pageSize: 5 }}
-          >
+          <Table bordered rowKey="id" dataSource={beritas} pagination={{ pageSize: 5 }} scroll={{ x: "100vw" }}>
             <Column title="Judul" dataIndex="name" key="name" align="center" />
             <Column
               title="Gambar Judul Berita"
               dataIndex="image"
               key="image"
               align="center"
+              width={450}
               render={(text, row) => {
                 // console.log(row.data)
-                return row.data != null ? (
-                  <BlobImageDisplay blob={row.data} />
-                ) : (
-                  <></>
-                );
+                return row.data != null ? <BlobImageDisplay blob={row.data} /> : <></>;
               }}
             />
-            <Column
-              title="Kategori Berita"
-              dataIndex="categoryName"
-              key="categoryName"
-              align="center"
-            />
-            <Column
-              title="Galeri Berita"
-              dataIndex="galleryName"
-              key="galleryName"
-              align="center"
-            />
-            <Column
-              title="Deskripsi"
-              dataIndex="description"
-              key="description"
-              align="center"
-            />
-            <Column
-              title="Selengkapnya"
-              dataIndex="selengkapnya"
-              key="selengkapnya"
-              align="center"
-            />
+            <Column title="Kategori Berita" dataIndex="categoryName" key="categoryName" align="center" />
+            <Column title="Galeri Berita" dataIndex="galleryName" key="galleryName" align="center" />
+            <Column title="Deskripsi" dataIndex="description" key="description" align="center" />
+            <Column title="Selengkapnya" dataIndex="selengkapnya" key="selengkapnya" align="center" />
             <Column
               title="Operasi"
               key="action"
@@ -208,19 +172,9 @@ class Berita extends Component {
               align="center"
               render={(text, row) => (
                 <span>
-                  <Button
-                    type="primary"
-                    shape="circle"
-                    icon="edit"
-                    onClick={() => this.handleEditBerita(row)}
-                  />
+                  <Button type="primary" shape="circle" icon="edit" onClick={() => this.handleEditBerita(row)} />
                   <Divider type="vertical" />
-                  <Button
-                    type="primary"
-                    shape="circle"
-                    icon="delete"
-                    onClick={() => this.handleDeleteBerita(row)}
-                  />
+                  <Button type="primary" shape="circle" icon="delete" onClick={() => this.handleDeleteBerita(row)} />
                 </span>
               )}
             />

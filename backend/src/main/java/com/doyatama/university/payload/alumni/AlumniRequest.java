@@ -2,6 +2,7 @@ package com.doyatama.university.payload.alumni;
 
 import java.sql.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 public class AlumniRequest {
@@ -11,6 +12,7 @@ public class AlumniRequest {
     private String no_hp;
     private String program_studi;
     private String judul_ta;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date tgl_lulus;
     private MultipartFile file;
 
