@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Button, Table, message, Divider } from "antd";
+import { Card, Button, Table, message, Divider, Modal } from "antd";
 import {
   getDepartments,
   deleteDepartment,
@@ -20,7 +20,7 @@ class Department extends Component {
     addDepartmentModalVisible: false,
     addDepartmentModalLoading: false,
   };
-  
+
   getDepartments = async () => {
     const result = await getDepartments();
     console.log(result);
@@ -41,14 +41,28 @@ class Department extends Component {
 
   handleDeleteDepartment = (row) => {
     const { id } = row;
+
     if (id === "admin") {
       message.error("Tidak dapat menghapus！");
       return;
     }
-    console.log(id);
-    deleteDepartment({ id }).then((res) => {
-      message.success("Berhasil menghapus!");
-      this.getDepartments();
+
+    Modal.confirm({
+      title: "Konfirmasi Hapus",
+      content: `Apakah Anda yakin ingin menghapus manajemen jurusan dengan Nama ${row.name}?`,
+      okText: "Ya, Hapus",
+      cancelText: "Batal",
+      centered: true,
+      onOk: () => {
+        deleteDepartment({ id })
+          .then((res) => {
+            message.success("Berhasil menghapus!");
+            this.getDepartments();
+          })
+          .catch(() => {
+            message.error("Gagal menghapus, coba lagi!");
+          });
+      },
     });
   };
 
@@ -113,7 +127,7 @@ class Department extends Component {
   componentDidMount() {
     this.getDepartments();
   }
-  
+
   render() {
     const { departments } = this.state;
     const title = (
@@ -124,7 +138,7 @@ class Department extends Component {
       </span>
     );
     const cardContent = `Di sini, Anda dapat mengelola informasi jurusan (program studi) di sistem, seperti menambahkan jurusan baru, atau mengubah jurusan yang sudah ada di sistem.`;
-    
+
     return (
       <div className="app-container">
         <TypingCard title="Manajemen Jurusan" source={cardContent} />
@@ -163,12 +177,14 @@ class Department extends Component {
               align="center"
               render={(text, row) => {
                 // console.log(row.data)
-                return row.data != null ? 
-                <BlobImageDisplay blob={row.data} /> : <></> 
-            }}
+                return row.data != null ? (
+                  <BlobImageDisplay blob={row.data} />
+                ) : (
+                  <></>
+                );
+              }}
             />
             <Column
-            
               title="Operasi"
               key="action"
               width={195}

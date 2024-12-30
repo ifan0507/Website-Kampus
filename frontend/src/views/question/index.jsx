@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Card, Button, Table, message, Divider } from "antd";
+import { Card, Button, Table, message, Divider, Modal } from "antd";
 import { getBeritas, deleteBerita, editBerita, addBerita } from "@/api/berita";
 import TypingCard from "@/components/TypingCard";
 import EditBeritaForm from "./forms/edit-question-form";
@@ -68,13 +68,28 @@ class Berita extends Component {
 
   handleDeleteBerita = (row) => {
     const { id } = row;
+
     if (id === "admin") {
-      message.error("Tidak dapat menghapus pengguna admin！");
+      message.error("Tidak dapat menghapus！");
       return;
     }
-    deleteBerita({ id }).then(() => {
-      message.success("Berita berhasil dihapus");
-      this.getBeritas();
+
+    Modal.confirm({
+      title: "Konfirmasi Hapus",
+      content: `Apakah Anda yakin ingin menghapus manajemen berita dengan Judul ${row.name}?`,
+      okText: "Ya, Hapus",
+      cancelText: "Batal",
+      centered: true,
+      onOk: () => {
+        deleteBerita({ id })
+          .then((res) => {
+            message.success("Berhasil menghapus!");
+            this.getBeritas();
+          })
+          .catch(() => {
+            message.error("Gagal menghapus, coba lagi!");
+          });
+      },
     });
   };
   handleEditBeritaOk = () => {
@@ -135,7 +150,13 @@ class Berita extends Component {
   };
 
   render() {
-    const { beritas, categories, gallerys, loadingCategories, loadingGallerys } = this.state;
+    const {
+      beritas,
+      categories,
+      gallerys,
+      loadingCategories,
+      loadingGallerys,
+    } = this.state;
     const title = (
       <span>
         <Button type="primary" onClick={this.handleAddBerita}>
@@ -146,9 +167,18 @@ class Berita extends Component {
 
     return (
       <div className="app-container">
-        <TypingCard title="Manajemen Berita" source="Di sini, Anda dapat mengelola informasi berita di sistem, seperti menambahkan berita baru, atau mengubah berita yang sudah ada di sistem." />
+        <TypingCard
+          title="Manajemen Berita"
+          source="Di sini, Anda dapat mengelola informasi berita di sistem, seperti menambahkan berita baru, atau mengubah berita yang sudah ada di sistem."
+        />
         <Card title={title}>
-          <Table bordered rowKey="id" dataSource={beritas} pagination={{ pageSize: 5 }} scroll={{ x: "100vw" }}>
+          <Table
+            bordered
+            rowKey="id"
+            dataSource={beritas}
+            pagination={{ pageSize: 5 }}
+            scroll={{ x: "100vw" }}
+          >
             <Column title="Judul" dataIndex="name" key="name" align="center" />
             <Column
               title="Gambar Judul Berita"
@@ -158,13 +188,37 @@ class Berita extends Component {
               width={450}
               render={(text, row) => {
                 // console.log(row.data)
-                return row.data != null ? <BlobImageDisplay blob={row.data} /> : <></>;
+                return row.data != null ? (
+                  <BlobImageDisplay blob={row.data} />
+                ) : (
+                  <></>
+                );
               }}
             />
-            <Column title="Kategori Berita" dataIndex="categoryName" key="categoryName" align="center" />
-            <Column title="Galeri Berita" dataIndex="galleryName" key="galleryName" align="center" />
-            <Column title="Deskripsi" dataIndex="description" key="description" align="center" />
-            <Column title="Selengkapnya" dataIndex="selengkapnya" key="selengkapnya" align="center" />
+            <Column
+              title="Kategori Berita"
+              dataIndex="categoryName"
+              key="categoryName"
+              align="center"
+            />
+            <Column
+              title="Galeri Berita"
+              dataIndex="galleryName"
+              key="galleryName"
+              align="center"
+            />
+            <Column
+              title="Deskripsi"
+              dataIndex="description"
+              key="description"
+              align="center"
+            />
+            <Column
+              title="Selengkapnya"
+              dataIndex="selengkapnya"
+              key="selengkapnya"
+              align="center"
+            />
             <Column
               title="Operasi"
               key="action"
@@ -172,9 +226,19 @@ class Berita extends Component {
               align="center"
               render={(text, row) => (
                 <span>
-                  <Button type="primary" shape="circle" icon="edit" onClick={() => this.handleEditBerita(row)} />
+                  <Button
+                    type="primary"
+                    shape="circle"
+                    icon="edit"
+                    onClick={() => this.handleEditBerita(row)}
+                  />
                   <Divider type="vertical" />
-                  <Button type="primary" shape="circle" icon="delete" onClick={() => this.handleDeleteBerita(row)} />
+                  <Button
+                    type="primary"
+                    shape="circle"
+                    icon="delete"
+                    onClick={() => this.handleDeleteBerita(row)}
+                  />
                 </span>
               )}
             />

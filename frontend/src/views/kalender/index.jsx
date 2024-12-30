@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Button, Table, message, Divider } from "antd";
+import { Card, Button, Table, message, Divider, Modal } from "antd";
 // import { Image } from "antd";
 import {
   getKalender,
@@ -42,14 +42,28 @@ class Kalender extends Component {
 
   handleDeleteKalender = (row) => {
     const { id } = row;
+
     if (id === "admin") {
-      message.error("Tidak Dapat Menghapus!");
+      message.error("Tidak dapat menghapus！");
       return;
     }
-    console.log(id);
-    deleteKalender({ id }).then((res) => {
-      message.success("Berhasil Menghapus");
-      this.getKalender();
+
+    Modal.confirm({
+      title: "Konfirmasi Hapus",
+      content: `Apakah Anda yakin ingin menghapus kalender akademik dengan Id ${row.id}?`,
+      okText: "Ya, Hapus",
+      cancelText: "Batal",
+      centered: true,
+      onOk: () => {
+        deleteKalender({ id })
+          .then((res) => {
+            message.success("Berhasil menghapus!");
+            this.getKalender();
+          })
+          .catch(() => {
+            message.error("Gagal menghapus, coba lagi!");
+          });
+      },
     });
   };
 
@@ -119,7 +133,7 @@ class Kalender extends Component {
     const title = (
       <span>
         <Button type="primary" onClick={this.handleAddKalender}>
-          Tambahkan Kalender 
+          Tambahkan Kalender
         </Button>
       </span>
     );
@@ -137,7 +151,7 @@ class Kalender extends Component {
           >
             {/* <Column title="ID Kalender" dataIndex="id" key="id" align="center" />
             <Column title="Judul" dataIndex="fileName" key="name" align="center" /> */}
-             {/* <Column
+            {/* <Column
               title="Gambar"
               key="data"
               align="center"
@@ -158,9 +172,12 @@ class Kalender extends Component {
               align="center"
               render={(text, row) => {
                 // console.log(row.data)
-                return row.data != null ? 
-                <BlobImageDisplay blob={row.data} /> : <></> 
-            }}
+                return row.data != null ? (
+                  <BlobImageDisplay blob={row.data} />
+                ) : (
+                  <></>
+                );
+              }}
             />
             <Column
               title="Operasi"
@@ -200,9 +217,7 @@ class Kalender extends Component {
           onOk={this.handleEditKalenderOk}
         />
         <AddKalenderForm
-          wrappedComponentRef={(formRef) =>
-            (this.addKalenderFormRef = formRef)
-          }
+          wrappedComponentRef={(formRef) => (this.addKalenderFormRef = formRef)}
           visible={this.state.addKalenderModalVisible}
           confirmLoading={this.state.addKalenderModalLoading}
           onCancel={this.handleCancel}

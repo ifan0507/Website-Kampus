@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Button, Table, message, Divider } from "antd";
+import { Card, Button, Table, message, Divider, Modal } from "antd";
 import {
   getDosens,
   deleteDosen,
@@ -40,17 +40,30 @@ class Dosen extends Component {
   };
 
   handleDeleteDosen = (row) => {
-    const { id } = row;
-    if (id === "admin") {
-      message.error("Tidak dapat menghapus！");
-      return;
-    }
-    console.log(id);
-    deleteDosen({ id }).then((res) => {
-      message.success("Berhasil menghapus!");
-      this.getDosens();
-    });
-  };
+     const { id } = row;
+ 
+   
+     if (id === "admin") {
+       message.error("Tidak dapat menghapus！");
+       return;
+     }
+ 
+     Modal.confirm({
+       title: "Konfirmasi Hapus",
+       content: `Apakah Anda yakin ingin menghapus dosen dengan NIP ${row.nip}?`,
+       okText: "Ya, Hapus",
+       cancelText: "Batal",
+       centered: true,
+       onOk: () => {
+         deleteDosen({ id }).then((res) => {
+           message.success("Berhasil menghapus!");
+           this.getDosens();
+         }).catch(() => {
+           message.error("Gagal menghapus, coba lagi!");
+         });
+       },
+     });
+   };
 
   handleEditDosenOk = (_) => {
     const { form } = this.editDosenFormRef.props;

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Button, Table, message, Divider } from "antd";
+import { Card, Button, Table, message, Divider, Modal } from "antd";
 import {
   getSelayangs,
   deleteSelayang,
@@ -41,14 +41,28 @@ class Selayang extends Component {
 
   handleDeleteSelayang = (row) => {
     const { id } = row;
+
     if (id === "admin") {
-      message.error("Tidak dapat menghapus selayang pandang！");
+      message.error("Tidak dapat menghapus！");
       return;
     }
-    console.log(id);
-    deleteSelayang({ id }).then((res) => {
-      message.success("Berhasil dihapus!");
-      this.getSelayangs();
+
+    Modal.confirm({
+      title: "Konfirmasi Hapus",
+      content: `Apakah Anda yakin ingin menghapus salayang pandang dengan Judul ${row.name}?`,
+      okText: "Ya, Hapus",
+      cancelText: "Batal",
+      centered: true,
+      onOk: () => {
+        deleteSelayang({ id })
+          .then((res) => {
+            message.success("Berhasil menghapus!");
+            this.getSelayangs();
+          })
+          .catch(() => {
+            message.error("Gagal menghapus, coba lagi!");
+          });
+      },
     });
   };
 
@@ -149,9 +163,12 @@ class Selayang extends Component {
               align="center"
               render={(text, row) => {
                 // console.log(row.data)
-                return row.data != null ? 
-                <BlobImageDisplay blob={row.data} /> : <></> 
-            }}
+                return row.data != null ? (
+                  <BlobImageDisplay blob={row.data} />
+                ) : (
+                  <></>
+                );
+              }}
             />
             <Column
               title="Operasi"
@@ -191,9 +208,7 @@ class Selayang extends Component {
           onOk={this.handleEditSelayangOk}
         />
         <AddSelayangForm
-          wrappedComponentRef={(formRef) =>
-            (this.addSelayangFormRef = formRef)
-          }
+          wrappedComponentRef={(formRef) => (this.addSelayangFormRef = formRef)}
           visible={this.state.addSelayangModalVisible}
           confirmLoading={this.state.addSelayangModalLoading}
           onCancel={this.handleCancel}

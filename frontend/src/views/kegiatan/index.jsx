@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Button, Table, message, Divider } from "antd";
+import { Card, Button, Table, message, Divider, Modal } from "antd";
 import {
   getKegiatans,
   deleteKegiatan,
@@ -41,14 +41,28 @@ class Kegiatan extends Component {
 
   handleDeleteKegiatan = (row) => {
     const { id } = row;
+
     if (id === "admin") {
-      message.error("Tidak Dapat Menghapus!");
+      message.error("Tidak dapat menghapus！");
       return;
     }
-    console.log(id);
-    deleteKegiatan({ id }).then((res) => {
-      message.success("Berhasil Menghapus");
-      this.getKegiatans();
+
+    Modal.confirm({
+      title: "Konfirmasi Hapus",
+      content: `Apakah Anda yakin ingin menghapus manajemen kegiatan dengan Judul ${row.name}?`,
+      okText: "Ya, Hapus",
+      cancelText: "Batal",
+      centered: true,
+      onOk: () => {
+        deleteKegiatan({ id })
+          .then((res) => {
+            message.success("Berhasil menghapus!");
+            this.getKegiatans();
+          })
+          .catch(() => {
+            message.error("Gagal menghapus, coba lagi!");
+          });
+      },
     });
   };
 
@@ -155,9 +169,12 @@ class Kegiatan extends Component {
               align="center"
               render={(text, row) => {
                 // console.log(row.data)
-                return row.data != null ? 
-                <BlobImageDisplay blob={row.data} /> : <></> 
-            }}
+                return row.data != null ? (
+                  <BlobImageDisplay blob={row.data} />
+                ) : (
+                  <></>
+                );
+              }}
             />
             <Column
               title="Operasi"
@@ -197,9 +214,7 @@ class Kegiatan extends Component {
           onOk={this.handleEditKegiatanOk}
         />
         <AddKegiatanForm
-          wrappedComponentRef={(formRef) =>
-            (this.addKegiatanFormRef = formRef)
-          }
+          wrappedComponentRef={(formRef) => (this.addKegiatanFormRef = formRef)}
           visible={this.state.addKegiatanModalVisible}
           confirmLoading={this.state.addKegiatanModalLoading}
           onCancel={this.handleCancel}

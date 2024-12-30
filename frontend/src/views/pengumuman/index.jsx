@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Button, Table, message, Divider } from "antd";
+import { Card, Button, Table, message, Divider, Modal } from "antd";
 import {
   getPengumuman,
   deletePengumuman,
@@ -30,7 +30,6 @@ class Pengumuman extends Component {
     currentDetailRowData: {},
   };
 
-
   getPengumuman = async () => {
     try {
       const result = await getPengumuman(this.state.page, this.state.size); // Ambil halaman pertama dan 5 pengumuman
@@ -46,7 +45,6 @@ class Pengumuman extends Component {
       message.error(error.message);
     }
   };
-
 
   handleDetailPengumuman = async (row) => {
     try {
@@ -71,24 +69,32 @@ class Pengumuman extends Component {
     });
   };
 
-
-  handleDeletePengumuman = async (row) => {
+  handleDeletePengumuman = (row) => {
     const { id } = row;
 
     if (id === "admin") {
-      message.error("Tidak dapat menghapus pengumuman ini!");
+      message.error("Tidak dapat menghapus！");
       return;
     }
-    try {
-      await deletePengumuman(id); 
-      message.success("Pengumuman berhasil dihapus");
-      this.getPengumuman(); 
-    } catch (error) {
-      message.error("Gagal menghapus pengumuman.");
-      console.error("Error deleting pengumuman:", error);
-    }
-  };
 
+    Modal.confirm({
+      title: "Konfirmasi Hapus",
+      content: `Apakah Anda yakin ingin menghapus manajemen pengumuman dengan Judul ${row.name}?`,
+      okText: "Ya, Hapus",
+      cancelText: "Batal",
+      centered: true,
+      onOk: () => {
+        deletePengumuman({ id })
+          .then((res) => {
+            message.success("Berhasil menghapus!");
+            this.getPengumuman();
+          })
+          .catch(() => {
+            message.error("Gagal menghapus, coba lagi!");
+          });
+      },
+    });
+  };
 
   handleEditPengumumanOk = async () => {
     const { form } = this.editPengumumanFormRef.props;
@@ -123,7 +129,6 @@ class Pengumuman extends Component {
     });
   };
 
-
   handleAddPengumumanOk = async () => {
     const { form } = this.addPengumumanFormRef.props;
     const { fileList } = this.addPengumumanFormRef.state;
@@ -150,7 +155,6 @@ class Pengumuman extends Component {
     });
   };
 
-
   handleCancel = () => {
     this.setState({
       editPengumumanModalVisible: false,
@@ -160,7 +164,6 @@ class Pengumuman extends Component {
       currentDetailRowData: {},
     });
   };
-
 
   handleAddPengumuman = () => {
     this.setState({ addPengumumanModalVisible: true });

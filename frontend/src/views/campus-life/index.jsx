@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Button, Table, message, Divider } from "antd";
+import { Card, Button, Table, message, Divider, Modal } from "antd";
 import {
   getCampusLifes,
   deleteCampusLife,
@@ -39,18 +39,31 @@ class CampusLife extends Component {
     });
   };
 
-  handleDeleteCampusLife = (row) => {
-    const { id } = row;
-    if (id === "admin") {
-      message.error("Tidak dapat menghapus！");
-      return;
-    }
-    console.log(id);
-    deleteCampusLife({ id }).then((res) => {
-      message.success("Berhasil menghapus!");
-      this.getCampusLifes();
-    });
-  };
+ handleDeleteCampusLife = (row) => {
+        const { id } = row;
+    
+      
+        if (id === "admin") {
+          message.error("Tidak dapat menghapus！");
+          return;
+        }
+    
+        Modal.confirm({
+          title: "Konfirmasi Hapus",
+          content: `Apakah Anda yakin ingin menghapus campus life dengan Nama ${row.name}?`,
+          okText: "Ya, Hapus",
+          cancelText: "Batal",
+          centered: true,
+          onOk: () => {
+            deleteCampusLife({ id }).then((res) => {
+              message.success("Berhasil menghapus!");
+              this.getCampusLifes();
+            }).catch(() => {
+              message.error("Gagal menghapus, coba lagi!");
+            });
+          },
+        });
+      };
 
   handleEditCampusLifeOk = (_) => {
     const { form } = this.editCampusLifeFormRef.props;

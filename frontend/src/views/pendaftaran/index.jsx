@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Button, Table, message, Divider } from "antd";
+import { Card, Button, Table, message, Divider, Modal } from "antd";
 import {
   getPendaftarans,
   deletePendaftaran,
@@ -40,17 +40,30 @@ class Pendaftaran extends Component {
   };
 
   handleDeletePendaftaran = (row) => {
-    const { id } = row;
-    if (id === "admin") {
-      message.error("Tidak dapat menghapus pengguna admin！");
-      return;
-    }
-    console.log(id);
-    deletePendaftaran({ id }).then((res) => {
-      message.success("berhasil dihapus");
-      this.getPendaftarans();
-    });
-  };
+         const { id } = row;
+     
+       
+         if (id === "admin") {
+           message.error("Tidak dapat menghapus！");
+           return;
+         }
+     
+         Modal.confirm({
+           title: "Konfirmasi Hapus",
+           content: `Apakah Anda yakin ingin menghapus pendaftaran mahasiswa dengan Jalur Penerima Mahasiswa ${row.name}?`,
+           okText: "Ya, Hapus",
+           cancelText: "Batal",
+           centered: true,
+           onOk: () => {
+             deletePendaftaran({ id }).then((res) => {
+               message.success("Berhasil menghapus!");
+               this.getPendaftarans();
+             }).catch(() => {
+               message.error("Gagal menghapus, coba lagi!");
+             });
+           },
+         });
+       };
 
   handleEditPendaftaranOk = (_) => {
     const { form } = this.editPendaftaranFormRef.props;

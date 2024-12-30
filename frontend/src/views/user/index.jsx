@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Button, Table, message, Divider } from "antd";
+import { Card, Button, Table, message, Divider, Modal } from "antd";
 import { getUsers, deleteUser, editUser, addUser } from "@/api/user";
 import TypingCard from "@/components/TypingCard";
 import EditUserForm from "./forms/edit-user-form";
@@ -38,19 +38,32 @@ class User extends Component {
     });
   };
 
-  handleDeleteUser = (row) => {
-    const { id } = row;
-    if (id === "admin") {
-      message.error("Tidak dapat menghapus pengguna!");
-      return;
-    }
-    console.log(id);
-    deleteUser({ id }).then((res) => {
-      message.success("Berhasil dihapus!");
-      this.getUsers();
-    });
-  };
-
+   handleDeleteUser = (row) => {
+       const { id } = row;
+   
+     
+       if (id === "admin") {
+         message.error("Tidak dapat menghapus！");
+         return;
+       }
+   
+       Modal.confirm({
+         title: "Konfirmasi Hapus",
+         content: `Apakah Anda yakin ingin menghapus user dengan Username ${row.username}?`,
+         okText: "Ya, Hapus",
+         cancelText: "Batal",
+         centered: true,
+         onOk: () => {
+           deleteUser({ id }).then((res) => {
+             message.success("Berhasil menghapus!");
+             this.getUsers();
+           }).catch(() => {
+             message.error("Gagal menghapus, coba lagi!");
+           });
+         },
+       });
+     };
+  
   handleEditUserOk = (_) => {
     const { form } = this.editUserFormRef.props;
     form.validateFields((err, values) => {

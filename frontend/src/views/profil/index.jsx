@@ -1,11 +1,6 @@
 import React, { Component } from "react";
-import { Card, Button, Table, message, Divider } from "antd";
-import {
-  getProfil,
-  deleteProfil,
-  editProfil,
-  addProfil,
-} from "@/api/profil";
+import { Card, Button, Table, message, Divider, Modal } from "antd";
+import { getProfil, deleteProfil, editProfil, addProfil } from "@/api/profil";
 import TypingCard from "@/components/TypingCard";
 import EditProfilForm from "./forms/edit-profil-form";
 import AddProfilForm from "./forms/add-profil-form";
@@ -41,14 +36,28 @@ class Profil extends Component {
 
   handleDeleteProfil = (row) => {
     const { id } = row;
+
     if (id === "admin") {
       message.error("Tidak dapat menghapus！");
       return;
     }
-    console.log(id);
-    deleteProfil({ id }).then((res) => {
-      message.success("berhasil dihapus!");
-      this.getProfil();
+
+    Modal.confirm({
+      title: "Konfirmasi Hapus",
+      content: `Apakah Anda yakin ingin menghapus manajemen profil dengan Judul ${row.name}?`,
+      okText: "Ya, Hapus",
+      cancelText: "Batal",
+      centered: true,
+      onOk: () => {
+        deleteProfil({ id })
+          .then((res) => {
+            message.success("Berhasil menghapus!");
+            this.getProfil();
+          })
+          .catch(() => {
+            message.error("Gagal menghapus, coba lagi!");
+          });
+      },
     });
   };
 
@@ -155,9 +164,12 @@ class Profil extends Component {
               align="center"
               render={(text, row) => {
                 // console.log(row.data)
-                return row.data != null ? 
-                <BlobImageDisplay blob={row.data} /> : <></> 
-            }}
+                return row.data != null ? (
+                  <BlobImageDisplay blob={row.data} />
+                ) : (
+                  <></>
+                );
+              }}
             />
             <Column
               title="Operasi"
@@ -188,18 +200,14 @@ class Profil extends Component {
         </Card>
         <EditProfilForm
           currentRowData={this.state.currentRowData}
-          wrappedComponentRef={(formRef) =>
-            (this.editProfilFormRef = formRef)
-          }
+          wrappedComponentRef={(formRef) => (this.editProfilFormRef = formRef)}
           visible={this.state.editProfilModalVisible}
           confirmLoading={this.state.editProfilModalLoading}
           onCancel={this.handleCancel}
           onOk={this.handleEditProfilOk}
         />
         <AddProfilForm
-          wrappedComponentRef={(formRef) =>
-            (this.addProfilFormRef = formRef)
-          }
+          wrappedComponentRef={(formRef) => (this.addProfilFormRef = formRef)}
           visible={this.state.addProfilModalVisible}
           confirmLoading={this.state.addProfilModalLoading}
           onCancel={this.handleCancel}

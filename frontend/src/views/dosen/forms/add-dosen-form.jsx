@@ -60,28 +60,28 @@ class AddDosenForm extends Component {
         <Form {...formItemLayout} onSubmit={this.handleSubmit}>
           <Form.Item label="NIP:">
             {getFieldDecorator("nip", {
-              rules: [{ required: true, message: "Silakan isikan NIP" }],
+              rules: [{ required: true, message: "Silakan isikan NIP dosen" }],
             })(<Input placeholder="NIP Dosen" />)}
           </Form.Item>
 
           <Form.Item label="Nama:">
             {getFieldDecorator("name", {
               rules: [
-                { required: true, message: "Silakan isikan nama pengguna" },
+                { required: true, message: "Silakan isikan nama dosen" },
               ],
-            })(<Input placeholder="Nama Pengguna" />)}
+            })(<Input placeholder="Nama Dosen" />)}
           </Form.Item>
 
           <Form.Item label="Email:">
             {getFieldDecorator("email", {
               rules: [{ required: true, message: "Silakan isikan email" }],
-            })(<Input placeholder="Email Pengguna" />)}
+            })(<Input placeholder="Email Dosen" />)}
           </Form.Item>
 
           <Form.Item label="Nomer Hp :">
             {getFieldDecorator("no_hp", {
               rules: [{ required: true, message: "Silakan isikan Nomer Hp" }],
-            })(<Input placeholder="Nomer Hp pengguna" />)}
+            })(<Input placeholder="Nomer Hp Dosen" />)}
           </Form.Item>
 
           <Form.Item label="Program Studi:">

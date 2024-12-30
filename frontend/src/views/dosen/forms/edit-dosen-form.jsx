@@ -1,13 +1,5 @@
 import React, { Component } from "react";
-import {
-  Form,
-  Input,
-  Select,
-  Upload,
-  message,
-  Icon,
-  Modal,
-} from "antd";
+import { Form, Input, Select, Upload, message, Icon, Modal } from "antd";
 const { TextArea } = Input;
 class EditDosenForm extends Component {
   constructor(props) {
@@ -53,32 +45,30 @@ class EditDosenForm extends Component {
           </Form.Item>
           <Form.Item label="NIP:">
             {getFieldDecorator("nip", {
-              rules: [{ required: true, message: "Silakan isikan NIP" }],
+              rules: [{ required: true, message: "Silakan isikan NIP dosen" }],
               initialValue: nip,
             })(<Input placeholder="NIP Dosen" />)}
           </Form.Item>
 
           <Form.Item label="Nama:">
             {getFieldDecorator("name", {
-              rules: [
-                { required: true, message: "Silakan isikan nama pengguna" },
-              ],
+              rules: [{ required: true, message: "Silakan isikan nama dosen" }],
               initialValue: name,
-            })(<Input placeholder="Nama Pengguna" />)}
+            })(<Input placeholder="Nama Dosen" />)}
           </Form.Item>
 
           <Form.Item label="Email:">
             {getFieldDecorator("email", {
               rules: [{ required: true, message: "Silakan isikan email" }],
               initialValue: email,
-            })(<Input placeholder="Email Pengguna" />)}
+            })(<Input placeholder="Email Dosen" />)}
           </Form.Item>
 
           <Form.Item label="Nomer Hp :">
             {getFieldDecorator("no_hp", {
               rules: [{ required: true, message: "Silakan isikan Nomer Hp" }],
               initialValue: no_hp,
-            })(<Input placeholder="Nomer Hp pengguna" />)}
+            })(<Input placeholder="Nomer Hp dosen" />)}
           </Form.Item>
 
           <Form.Item label="Program Studi:">
@@ -88,7 +78,7 @@ class EditDosenForm extends Component {
               ],
               initialValue: program_studi,
             })(
-              <Select style={{ width: 300 }}placeholder="Pilih Program Studi">
+              <Select style={{ width: 300 }} placeholder="Pilih Program Studi">
                 <Select.Option value="Jurusan Teknologi Informasi">
                   D-III Jurusan Teknologi Informasi
                 </Select.Option>
@@ -104,23 +94,16 @@ class EditDosenForm extends Component {
               </Select>
             )}
           </Form.Item>
-
           <Form.Item label="Bidang Minat:">
             {getFieldDecorator("bidang_minat", {
               rules: [
-                { required: true, message: "Silahkan pilih Bidang Minat" },
+                {
+                  required: true,
+                  message: "Silahkan isi Bidang Minat",
+                },
               ],
               initialValue: bidang_minat,
-            })(
-              <Select style={{ width: 300 }}>
-                <Select.Option value="Teknologi dan Rekayasa">
-                  Teknologi dan Rekayasa
-                </Select.Option>
-                <Select.Option value="Ekonomi dan Manajemen">
-                  Ekonomi dan Manajemen
-                </Select.Option>
-              </Select>
-            )}
+            })(<TextArea rows={4} placeholder="Bidang Minat" />)}
           </Form.Item>
 
           <Form.Item label="File" name="file">

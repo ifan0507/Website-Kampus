@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Button, Table, message, Divider } from "antd";
+import { Card, Button, Table, message, Divider, Modal } from "antd";
 // import { Image } from "antd";
 import {
   getOrganisasi,
@@ -40,18 +40,31 @@ class Organisasi extends Component {
     });
   };
 
-  handleDeleteOrganisasi = (row) => {
-    const { id } = row;
-    if (id === "admin") {
-      message.error("Tidak Dapat Menghapus!");
-      return;
-    }
-    console.log(id);
-    deleteOrganisasi({ id }).then((res) => {
-      message.success("Berhasil Menghapus");
-      this.getOrganisasi();
-    });
-  };
+ handleDeleteOrganisasi = (row) => {
+        const { id } = row;
+    
+      
+        if (id === "admin") {
+          message.error("Tidak dapat menghapus！");
+          return;
+        }
+    
+        Modal.confirm({
+          title: "Konfirmasi Hapus",
+          content: `Apakah Anda yakin ingin menghapus struktur organisasi dengan Judul ${row.name}?`,
+          okText: "Ya, Hapus",
+          cancelText: "Batal",
+          centered: true,
+          onOk: () => {
+            deleteOrganisasi({ id }).then((res) => {
+              message.success("Berhasil menghapus!");
+              this.getOrganisasi();
+            }).catch(() => {
+              message.error("Gagal menghapus, coba lagi!");
+            });
+          },
+        });
+      };
 
   handleEditOrganisasiOk = (_) => {
     const { form } = this.editOrganisasiFormRef.props;

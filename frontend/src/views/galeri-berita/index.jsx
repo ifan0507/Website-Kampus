@@ -1,6 +1,12 @@
 import React, { Component } from "react";
-import { Card, Button, Table, message, Divider } from "antd";
-import { getGaleriBaru, deleteGaleriBaru, editGaleriBaru, addGaleriBaru, getGaleryBaruById } from "@/api/galeri-berita";
+import { Card, Button, Table, message, Divider, Modal } from "antd";
+import {
+  getGaleriBaru,
+  deleteGaleriBaru,
+  editGaleriBaru,
+  addGaleriBaru,
+  getGaleryBaruById,
+} from "@/api/galeri-berita";
 import TypingCard from "@/components/TypingCard";
 import EditGaleriBaruForm from "./forms/edit-galeribaru-form";
 import AddGaleriBaruForm from "./forms/add-galeribaru-form";
@@ -55,21 +61,31 @@ class GaleriBaru extends Component {
     }
   };
 
-  handleDeleteGaleriBaru = async (row) => {
+  handleDeleteGaleriBaru = (row) => {
     const { id } = row;
+
     if (id === "admin") {
-      message.error("Tidak Dapat Menghapus!");
+      message.error("Tidak dapat menghapus！");
       return;
     }
 
-    try {
-      await deleteGaleriBaru({ id });
-      message.success("Berhasil Menghapus");
-      this.getGaleriBaru();
-    } catch (error) {
-      message.error("Gagal menghapus galeri.");
-      console.error(error);
-    }
+    Modal.confirm({
+      title: "Konfirmasi Hapus",
+      content: `Apakah Anda yakin ingin menghapus galeri berita dengan Nama ${row.name}?`,
+      okText: "Ya, Hapus",
+      cancelText: "Batal",
+      centered: true,
+      onOk: () => {
+        deleteGaleriBaru({ id })
+          .then((res) => {
+            message.success("Berhasil menghapus!");
+            this.getGaleriBaru();
+          })
+          .catch(() => {
+            message.error("Gagal menghapus, coba lagi!");
+          });
+      },
+    });
   };
 
   handleEditGaleriBaru = (row) => {
@@ -174,9 +190,19 @@ class GaleriBaru extends Component {
         <TypingCard title="Manajemen Galeri Baru" source={cardContent} />
         <br />
         <Card title={title}>
-          <Table bordered rowKey="id" dataSource={galeris} pagination={{ pageSize: 5 }}>
+          <Table
+            bordered
+            rowKey="id"
+            dataSource={galeris}
+            pagination={{ pageSize: 5 }}
+          >
             <Column title="Nama" dataIndex="name" key="name" align="center" />
-            <Column title="Deskripsi" dataIndex="description" key="description" align="center" />
+            <Column
+              title="Deskripsi"
+              dataIndex="description"
+              key="description"
+              align="center"
+            />
             <Column
               title="Operasi"
               key="action"
@@ -184,11 +210,29 @@ class GaleriBaru extends Component {
               align="center"
               render={(text, row) => (
                 <span>
-                  <Button type="primary" shape="circle" icon="edit" title="edit" onClick={() => this.handleEditGaleriBaru(row)} />
+                  <Button
+                    type="primary"
+                    shape="circle"
+                    icon="edit"
+                    title="edit"
+                    onClick={() => this.handleEditGaleriBaru(row)}
+                  />
                   <Divider type="vertical" />
-                  <Button type="primary" shape="circle" icon="delete" title="delete" onClick={() => this.handleDeleteGaleriBaru(row)} />
+                  <Button
+                    type="primary"
+                    shape="circle"
+                    icon="delete"
+                    title="delete"
+                    onClick={() => this.handleDeleteGaleriBaru(row)}
+                  />
                   <Divider type="vertical" />
-                  <Button type="primary" shape="circle" icon="info" title="detail" onClick={() => this.handleDetailGaleriBaru(row)} />
+                  <Button
+                    type="primary"
+                    shape="circle"
+                    icon="info"
+                    title="detail"
+                    onClick={() => this.handleDetailGaleriBaru(row)}
+                  />
                 </span>
               )}
             />
@@ -196,20 +240,28 @@ class GaleriBaru extends Component {
         </Card>
         <EditGaleriBaruForm
           currentRowData={this.state.currentRowData}
-          wrappedComponentRef={(formRef) => (this.editGaleriBaruFormRef = formRef)}
+          wrappedComponentRef={(formRef) =>
+            (this.editGaleriBaruFormRef = formRef)
+          }
           visible={this.state.editGaleriBaruModalVisible}
           confirmLoading={this.state.editGaleriBaruModalLoading}
           onCancel={this.handleCancel}
           onOk={this.handleEditGaleriBaruOk}
         />
         <AddGaleriBaruForm
-          wrappedComponentRef={(formRef) => (this.addGaleriBaruFormRef = formRef)}
+          wrappedComponentRef={(formRef) =>
+            (this.addGaleriBaruFormRef = formRef)
+          }
           visible={this.state.addGaleriBaruModalVisible}
           confirmLoading={this.state.addGaleriBaruModalLoading}
           onCancel={this.handleCancel}
           onOk={this.handleAddGaleriBaruOk}
         />
-        <DetailGaleriForm currentDetailRowData={this.state.currentDetailRowData} visible={this.state.detailGaleriBaruModalVisible} onCancel={this.handleCancel} />
+        <DetailGaleriForm
+          currentDetailRowData={this.state.currentDetailRowData}
+          visible={this.state.detailGaleriBaruModalVisible}
+          onCancel={this.handleCancel}
+        />
       </div>
     );
   }

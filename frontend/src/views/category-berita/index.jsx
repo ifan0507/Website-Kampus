@@ -1,6 +1,11 @@
 import React, { Component } from "react";
-import { Card, Button, Table, message, Divider } from "antd";
-import { getCategorys, deleteCategory, editCategory, addCategory } from "@/api/category-berita";
+import { Card, Button, Table, message, Divider, Modal } from "antd";
+import {
+  getCategorys,
+  deleteCategory,
+  editCategory,
+  addCategory,
+} from "@/api/category-berita";
 import TypingCard from "@/components/TypingCard";
 import EditCategoryForm from "./forms/edit-category-form";
 import AddCategoryForm from "./forms/add-category-form";
@@ -36,14 +41,28 @@ class CategoryBerita extends Component {
 
   handleDeleteCategory = (row) => {
     const { id } = row;
+
     if (id === "admin") {
-      message.error("Tidak dapat menghapus category berita！");
+      message.error("Tidak dapat menghapus！");
       return;
     }
-    console.log(id);
-    deleteCategory({ id }).then((res) => {
-      message.success("Berhasil dihapus!");
-      this.getCategorys();
+
+    Modal.confirm({
+      title: "Konfirmasi Hapus",
+      content: `Apakah Anda yakin ingin menghapus categori berita dengan Nama ${row.name}?`,
+      okText: "Ya, Hapus",
+      cancelText: "Batal",
+      centered: true,
+      onOk: () => {
+        deleteCategory({ id })
+          .then((res) => {
+            message.success("Berhasil menghapus!");
+            this.getCategorys();
+          })
+          .catch(() => {
+            message.error("Gagal menghapus, coba lagi!");
+          });
+      },
     });
   };
 
@@ -123,10 +142,20 @@ class CategoryBerita extends Component {
         <TypingCard title="Manajemen Category Berita" source={cardContent} />
         <br />
         <Card title={title}>
-          <Table bordered rowKey="id" dataSource={categorys} pagination={{ pageSize: 5 }}>
+          <Table
+            bordered
+            rowKey="id"
+            dataSource={categorys}
+            pagination={{ pageSize: 5 }}
+          >
             {/* <Column title="ID Selayang" dataIndex="id" key="id" align="center" /> */}
             <Column title="Nama" dataIndex="name" key="name" align="center" />
-            <Column title="Deskripsi" dataIndex="description" key="description" align="center" />
+            <Column
+              title="Deskripsi"
+              dataIndex="description"
+              key="description"
+              align="center"
+            />
             {/* <Column
               title="Images"
               dataIndex="image"
@@ -145,9 +174,21 @@ class CategoryBerita extends Component {
               align="center"
               render={(text, row) => (
                 <span>
-                  <Button type="primary" shape="circle" icon="edit" title="edit" onClick={this.handleEditCategory.bind(null, row)} />
+                  <Button
+                    type="primary"
+                    shape="circle"
+                    icon="edit"
+                    title="edit"
+                    onClick={this.handleEditCategory.bind(null, row)}
+                  />
                   <Divider type="vertical" />
-                  <Button type="primary" shape="circle" icon="delete" title="delete" onClick={this.handleDeleteCategory.bind(null, row)} />
+                  <Button
+                    type="primary"
+                    shape="circle"
+                    icon="delete"
+                    title="delete"
+                    onClick={this.handleDeleteCategory.bind(null, row)}
+                  />
                 </span>
               )}
             />
@@ -155,7 +196,9 @@ class CategoryBerita extends Component {
         </Card>
         <EditCategoryForm
           currentRowData={this.state.currentRowData}
-          wrappedComponentRef={(formRef) => (this.editCategoryFormRef = formRef)}
+          wrappedComponentRef={(formRef) =>
+            (this.editCategoryFormRef = formRef)
+          }
           visible={this.state.editCategoryModalVisible}
           confirmLoading={this.state.editCategoryModalLoading}
           onCancel={this.handleCancel}

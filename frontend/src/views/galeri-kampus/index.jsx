@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Button, Table, message, Divider } from "antd";
+import { Card, Button, Table, message, Divider, Modal} from "antd";
 // import { Image } from "antd";
 import {
   getGaleriKampus,
@@ -41,17 +41,30 @@ class GaleriKampus extends Component {
   };
 
   handleDeleteGaleriKampus = (row) => {
-    const { id } = row;
-    if (id === "admin") {
-      message.error("Tidak Dapat Menghapus!");
-      return;
-    }
-    console.log(id);
-    deleteGaleriKampus({ id }).then((res) => {
-      message.success("Berhasil Menghapus");
-      this.getGaleriKampus();
-    });
-  };
+         const { id } = row;
+     
+       
+         if (id === "admin") {
+           message.error("Tidak dapat menghapus！");
+           return;
+         }
+     
+         Modal.confirm({
+           title: "Konfirmasi Hapus",
+           content: `Apakah Anda yakin ingin menghapus galeri kampus dengan id ${row.id}?`,
+           okText: "Ya, Hapus",
+           cancelText: "Batal",
+           centered: true,
+           onOk: () => {
+             deleteGaleriKampus({ id }).then((res) => {
+               message.success("Berhasil menghapus!");
+               this.getGaleriKampus();
+             }).catch(() => {
+               message.error("Gagal menghapus, coba lagi!");
+             });
+           },
+         });
+       };
 
   handleEditGaleriKampusOk = (_) => {
     const { form } = this.editGaleriKampusFormRef.props;

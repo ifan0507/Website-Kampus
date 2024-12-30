@@ -47,30 +47,30 @@ class EditAlumniForm extends Component {
             {getFieldDecorator("nim", {
               rules: [{ required: true, message: "Silakan isikan NIM" }],
               initialValue: nim,
-            })(<Input placeholder="NIM MAHASISWA" />)}
+            })(<Input placeholder="NIM Alumni" />)}
           </Form.Item>
 
           <Form.Item label="Nama:">
             {getFieldDecorator("name", {
               rules: [
-                { required: true, message: "Silakan isikan nama pengguna" },
+                { required: true, message: "Silakan isikan nama alumni" },
               ],
               initialValue: name,
-            })(<Input placeholder="Nama Pengguna" />)}
+            })(<Input placeholder="Nama Alumni" />)}
           </Form.Item>
 
           <Form.Item label="Email:">
             {getFieldDecorator("email", {
               rules: [{ required: true, message: "Silakan isikan email" }],
               initialValue: email,
-            })(<Input placeholder="Email Pengguna" />)}
+            })(<Input placeholder="Email Alumni" />)}
           </Form.Item>
 
           <Form.Item label="Nomer Hp :">
             {getFieldDecorator("no_hp", {
               rules: [{ required: true, message: "Silakan isikan Nomer Hp" }],
               initialValue: no_hp,
-            })(<Input placeholder="Nomer Hp pengguna" />)}
+            })(<Input placeholder="Nomer Hp alumni" />)}
           </Form.Item>
 
           <Form.Item label="Program Studi:">

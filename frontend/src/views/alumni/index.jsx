@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Button, Table, message, Divider } from "antd";
+import { Card, Button, Table, message, Divider, Modal } from "antd";  // Tambahkan Modal dari Ant Design
 import {
   getAlumnis,
   deleteAlumni,
@@ -7,10 +7,11 @@ import {
   addAlumni,
 } from "@/api/alumni";
 import TypingCard from "@/components/TypingCard";
-import EditAlumniForm from"./forms/edit-alumni-form";
+import EditAlumniForm from "./forms/edit-alumni-form";
 import AddAlumniForm from "./forms/add-alumni-form";
 import { BlobImageDisplay } from "../../components/BlobImageDisplay";
 const { Column } = Table;
+
 class Alumni extends Component {
   state = {
     alumnis: [],
@@ -20,10 +21,9 @@ class Alumni extends Component {
     addAlumniModalVisible: false,
     addAlumniModalLoading: false,
   };
-  
+
   getAlumnis = async () => {
     const result = await getAlumnis();
-    console.log(result);
     const { content, statusCode } = result.data;
 
     if (statusCode === 200) {
@@ -32,6 +32,7 @@ class Alumni extends Component {
       });
     }
   };
+
   handleEditAlumni = (row) => {
     this.setState({
       currentRowData: Object.assign({}, row),
@@ -41,14 +42,28 @@ class Alumni extends Component {
 
   handleDeleteAlumni = (row) => {
     const { id } = row;
+
+  
     if (id === "admin") {
       message.error("Tidak dapat menghapus！");
       return;
     }
-    console.log(id);
-    deleteAlumni({ id }).then((res) => {
-      message.success("Berhasil menghapus!");
-      this.getAlumnis();
+
+   
+    Modal.confirm({
+      title: "Konfirmasi Hapus",
+      content: `Apakah Anda yakin ingin menghapus alumni dengan NIM ${row.nim}?`,
+      okText: "Ya, Hapus",
+      cancelText: "Batal",
+      centered: true,
+      onOk: () => {
+        deleteAlumni({ id }).then((res) => {
+          message.success("Berhasil menghapus!");
+          this.getAlumnis();
+        }).catch(() => {
+          message.error("Gagal menghapus, coba lagi!");
+        });
+      },
     });
   };
 
@@ -58,7 +73,7 @@ class Alumni extends Component {
       if (err) {
         return;
       }
-      this.setState({ editModalLoading: true });
+      this.setState({ editAlumniModalLoading: true });
       editAlumni(values, values.id)
         .then((response) => {
           form.resetFields();
@@ -94,7 +109,7 @@ class Alumni extends Component {
       if (err) {
         return;
       }
-      this.setState({ addAlumninModalLoading: true });
+      this.setState({ addAlumniModalLoading: true });
       addAlumni(values)
         .then((response) => {
           form.resetFields();
@@ -110,10 +125,11 @@ class Alumni extends Component {
         });
     });
   };
+
   componentDidMount() {
     this.getAlumnis();
   }
-  
+
   render() {
     const { alumnis } = this.state;
     const title = (
@@ -124,7 +140,7 @@ class Alumni extends Component {
       </span>
     );
     const cardContent = `Di sini, Anda dapat mengelola informasi Alumni di sistem, seperti menambahkan Alumni baru, atau mengubah Alumni yang sudah ada di sistem.`;
-    
+
     return (
       <div className="app-container">
         <TypingCard title="Manajemen Alumni" source={cardContent} />
@@ -136,57 +152,15 @@ class Alumni extends Component {
             dataSource={alumnis}
             pagination={{ size: 5 }}
           >
-            {/* <Column title="ID Jurusan" dataIndex="id" key="id" align="center" /> */}
             <Column title="NIM" dataIndex="nim" key="nim" align="center" />
+            <Column title="Nama" dataIndex="name" key="name" align="center" />
+            <Column title="Email" dataIndex="email" key="email" align="center" />
+            <Column title="Nomer Hp" dataIndex="no_hp" key="no_hp" align="center" />
+            <Column title="Program Studi" dataIndex="program_studi" key="program_studi" align="center" />
+            <Column title="Judul TA" dataIndex="judul_ta" key="judul_ta" align="center" />
+            <Column title="Tanggal Lulus" dataIndex="tgl_lulus" key="tgl_lulus" align="center" />
+            <Column title="Foto" dataIndex="image" key="image" align="center" render={(text, row) => row.data != null ? <BlobImageDisplay blob={row.data} /> : <></>} />
             <Column
-              title="Nama"
-              dataIndex="name"
-              key="name"
-              align="center"
-            />
-            <Column
-              title="Email"
-              dataIndex="email"
-              key="email"
-              align="center"
-            />
-            <Column
-              title="Nomer Hp"
-              dataIndex="no_hp"
-              key="no_hp"
-              align="center"
-            />
-             <Column
-              title="Program Studi"
-              dataIndex="program_studi"
-              key="program_studi"
-              align="center"
-            />
-             <Column
-              title="Judul TA"
-              dataIndex="judul_ta"
-              key="judul_ta"
-              align="center"
-            />
-             <Column
-              title="Tanggal Lulus"
-              dataIndex="tgl_lulus"
-              key="tgl_lulus"
-              align="center"
-            />
-            <Column
-              title="Foto"
-              dataIndex="image"
-              key="image"
-              align="center"
-              render={(text, row) => {
-                // console.log(row.data)
-                return row.data != null ? 
-                <BlobImageDisplay blob={row.data} /> : <></> 
-            }}
-            />
-            <Column
-            
               title="Operasi"
               key="action"
               width={195}
